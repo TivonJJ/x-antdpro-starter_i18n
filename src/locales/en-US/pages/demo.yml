@@ -1,0 +1,8 @@
+demo:
+  search:
+    numberPlaceholder: Order ID
+    namePlaceholder: Keywords of commodity names
+  detail:
+    title: Order Detail
+    basic: Basic info
+    closeTip: Close this order?

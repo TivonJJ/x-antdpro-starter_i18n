@@ -1,0 +1,12 @@
+login:
+  sign: 登录
+  resetPassword: 找回密码
+  rememberAccount: 记住账号
+  password:
+    placeholder: 密码
+    validate:
+      required: 请填写密码
+  username:
+    placeholder: 用户名
+    validate:
+      required: 请填写用户名

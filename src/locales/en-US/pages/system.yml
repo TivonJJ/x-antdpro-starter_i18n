@@ -1,0 +1,92 @@
+---
+system:
+  area:
+    label:
+      name: Name
+      number: Number
+      areaType: Area Type
+  users:
+    edit:
+      title: Modifying user information
+      deleteConfirm: Do you make sure remove the account:{account}?
+      setStatusConfirm: Are you sure you want to set the account status to {status}?
+      resetPasswordConfirm: Do you decide to reset the password for this account:{account}?
+    resetPassword: Reset password
+    searchByKey:
+      label: Search
+      placeholder: Please input keywords
+    form:
+      username:
+        placeholder: This email will be used as a login account
+      realName:
+        placeholder: Please input your real name
+  logs:
+    label:
+      packet: Packet
+      logNote: Description
+      platform: Platform
+      keywords: Keywords
+      operator: Operator
+      operation: Actions
+      operationType: Operation Type
+      operationTime: Operation Time
+  currency:
+    label:
+      unit: Unit
+      name: Currency Name
+      number: Number
+      symbol: Symbol
+      decimalDigits: Decimal Digits
+    delete:
+      confirm: Are you sure you want to delete the {name} ？
+  taxRate:
+    label:
+      total: Tax Rate
+      remark: Remark
+      areaName: Area Name
+    delete:
+      confirm: Are you sure you want to delete the tax rate of {name} ？
+  industry:
+    label:
+      name: Industry Name
+      code: Industry Code
+      cnName: Chinese Name
+  roles:
+    button:
+      assign: Assign
+    delete:
+      confirm: 'Are you sure to delete the role: {name}?'
+    edit:
+      formTitle: Role information
+      permissionList: Permission list
+    label:
+      assigned: Assigned
+      assignment: User assignment for roles
+      unassigned: Unassigned
+    status:
+      confirm: Are you sure you want to set the role status to {status}?
+    isPreset: Preset roles cannot be operated
+  dictionary:
+    label:
+      key: Key
+      type: Type
+      value: Name
+      number: Number
+      cnValue: Chinese Name
+      businessParameterType: Business Parameter Type
+    delete:
+      confirm: Are you sure you want to delete the {name} ？
+  permissions:
+    addChild: Add child
+    formTitle: Resource Properties
+    addBrother: Add brother
+    deletePrompt: "<div><div>You are about to delete<span class='gutter-left text-primary'>{name}</span></div><div
+      class='text-danger'>Will delete all children resource if they have！</div></div>"
+    importFileError: Invalid documents! Please check you file.
+    searchPlaceholder: Quick search
+    formInvalidMessage: Some form items are incorrect.
+    i18nNameTitle: International name
+  platform:
+    omp: OMP
+    mp: MP
+    ap: AP

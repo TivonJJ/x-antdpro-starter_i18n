@@ -1,0 +1,7 @@
+# App
+appName: Operation Platform
+version: Ver
+copyright: Tivon
+envTestMark: "(TEST)"
+envUATMark: "(UAT)"
+

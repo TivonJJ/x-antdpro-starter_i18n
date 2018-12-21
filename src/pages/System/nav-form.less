@@ -1,0 +1,31 @@
+@import "../../styles/mixins";
+
+.navForm{
+  margin: @design-gutter;
+  border-radius: 5px;
+  overflow: hidden;
+  :global{
+    .form-label{
+      text-align: right;
+    }
+    .form-label,.form-control{
+      height: 55px;
+      line-height: 55px;
+      padding: 0 @design-gutter;
+    }
+    .ant-radio-group{
+      .ant-radio-button-wrapper{
+        margin-right: @design-gutter_large;
+        border-radius: 4px;
+        border: 0;
+        &.ant-radio-button-wrapper-checked{
+          color: #fff;
+          background-color: #108ee9;
+        }
+        &:before{
+          display: none;
+        }
+      }
+    }
+  }
+}

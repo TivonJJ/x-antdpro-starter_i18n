@@ -1,0 +1,33 @@
+task:
+  type:
+    reconciliation: 对账
+    clearing: 清分
+    settlement: 结算
+  status:
+    not: 待对账
+    executing: 对账中
+    failure: 对账失败
+    success: 对账成功
+    end: 已轧账
+  runType:
+    artificial: 手动
+    automatic: 自动
+  settleStatus:
+    unreviewed: 未审核
+    inSettlement: 结算中(审核通过)
+    success: 结算成功
+    failure: 结算失败
+    abolition: 审核未通过
+  stateStatus:
+    not: 未执行
+    executing: 执行中
+    failure: 执行失败
+    success: 执行成功
+  clearingStatus:
+    executing: 清分中
+    failure: 清分失败
+    success: 清分成功
+  settlementType:
+    merchant: 商户
+    agent: 代理商
+    individual: 个人

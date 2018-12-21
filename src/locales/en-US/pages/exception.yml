@@ -1,0 +1,9 @@
+---
+exception:
+  '403':
+    message: Hmm! The page you're looking for cannot access.
+  '404':
+    message: Oops! Page Not Found.
+  '500':
+    message: Hmm! Something went wrong.
+  backToHome: Return To Home

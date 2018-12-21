@@ -1,0 +1,7 @@
+App: !!import/single "zh-CN/app.yml"
+Route: !!import/single "zh-CN/route.yml"
+Validator: !!import/single "zh-CN/validator.yml"
+Common: !!import/single "zh-CN/common.yml"
+Model: !!import/dirMerge "zh-CN/models"
+Component: !!import/single "zh-CN/component.yml"
+Page: !!import/dirMerge "zh-CN/pages"

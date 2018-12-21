@@ -1,0 +1,46 @@
+@import '~@/styles/mixins';
+
+.logo {
+    height: @nav-header-height;
+    position: relative;
+    line-height: @nav-header-height;
+    padding-left: (@menu-collapsed-width - 32px) / 2;
+    transition: all 0.3s;
+    background: @sider-header_background;
+    overflow: hidden;
+    .logoIcon {
+        position: absolute;
+        left: 21px;
+        top: 18px;
+        height: 26px;
+    }
+    .logoName {
+        position: absolute;
+        left: 62px;
+        top: 18px;
+        height: 26px;
+        transition: opacity .3s;
+    }
+    h1 {
+        color: @sider-header_title;
+        font-size: 12px;
+        padding-left: 6px;
+        margin-left: 120px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: clip;
+    }
+    &.light{
+        background: @sider-header_background_light;
+        //box-shadow: 1px 1px 0 0 @border-color-split;
+        h1 {
+            color: @sider-header_title_light;
+        }
+    }
+}
+
+:global(.ant-layout-sider-collapsed){
+    .logo .logoName{
+        opacity: 0;
+    }
+}

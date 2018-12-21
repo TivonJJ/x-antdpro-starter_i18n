@@ -1,0 +1,8 @@
+demo:
+  search:
+    numberPlaceholder: 请填写订单编号
+    namePlaceholder: 商品名称关键字
+  detail:
+    title: 订单详情
+    basic: 基本信息
+    closeTip: 关闭此订单？

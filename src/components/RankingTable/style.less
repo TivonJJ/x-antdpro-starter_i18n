@@ -1,0 +1,15 @@
+@import "~@/styles/mixins";
+
+.table{
+    .topBadge{
+        :global(.ant-badge-count){
+            background: @grey;
+        }
+        &.light{
+            :global(.ant-badge-count){
+                background: @primary-color;
+                color: #fff;
+            }
+        }
+    }
+}

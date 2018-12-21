@@ -1,0 +1,92 @@
+@import "~@/styles/mixins";
+
+.sysMenuCol {
+    flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    :global {
+        .ant-menu-item {
+            margin-top: 0;
+            font-size: 16px;
+            &.ant-menu-item-selected {
+                border-bottom: 0;
+            }
+        }
+        .ant-menu-light {
+            border-right: 0 !important;
+        }
+    }
+}
+
+.menuItem{
+    font-size: @layout-header_font_size;
+    &:global(.ant-menu-item-selected){
+        background: @layout-header_selected_bg;
+        >a{
+            color: @layout-header_selected_color;
+        }
+    }
+}
+
+.statusBarIcon {
+    font-size: 20px;
+    width: 20px;
+}
+.statusBarMenuItem{
+    float: right;
+    :global {
+        .ant-menu-item {
+            padding: 0 8px;
+            .ant-badge,a,.link,.anticon{
+                color: inherit;
+            }
+            &.ant-menu-item-selected {
+                background: transparent;
+                .ant-badge,a,.link,.anticon {
+                    color: @primary-color
+                }
+            }
+        }
+    }
+    .action {
+        cursor: pointer;
+        padding: 0 12px;
+        display: inline-block;
+        transition: all 0.3s;
+        height: 100%;
+        :global(.anticon) {
+            font-size: 18px;
+            vertical-align: middle;
+            color: inherit;
+            margin-right: 0;
+        }
+    }
+}
+
+.menu {
+    border-bottom: 0;
+    line-height: @nav-header-height;
+    transition: max-height .3s ease-in;
+    position: relative;
+    z-index: 9;
+}
+
+.taskBadge {
+    color: inherit;
+}
+.taskIcon{
+
+}
+.noticeCard{
+    width: 450px;
+    :global(.ant-card-body){
+        padding: 0;
+    }
+    .footer {
+        padding: @design-gutter_large 0;
+        text-align: right;
+        border-top: 1px solid @light_grey;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+}

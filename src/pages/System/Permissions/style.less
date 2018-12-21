@@ -1,0 +1,40 @@
+@import "~@/styles/mixins";
+
+.permissionsHeader {
+    padding: @design-gutter_large 0 @design-gutter;
+}
+
+.roleRow {
+    padding-top: @design-gutter_large;
+}
+
+.menuItem {
+    :global {
+        .menu-icon {
+            margin-right: 5px;
+        }
+
+        .menu-item-bars {
+            margin-left: @design-gutter * 3;
+
+            .button {
+                margin-right: @design-gutter;
+                color: @primary-color;
+            }
+        }
+    }
+}
+
+.editForm {
+    padding: @design-gutter;
+}
+
+.editFormTitle {
+    border-left: solid 3px @warning-color;
+    padding-left: 5px;
+    margin-bottom: @design-gutter;
+}
+
+.menuResTreeTools {
+    margin-left: @design-gutter_large;
+}

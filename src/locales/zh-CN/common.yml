@@ -1,0 +1,103 @@
+# 通用
+button:
+  ok: 确定
+  apply: 确定
+  retry: 重试
+  cancel: 取消
+  back: 返回
+  next: 下一步
+  previous: 上一步
+  submit: 提交
+  save: 保存
+  setting: 设置
+  update: 更新
+  refresh: 刷新
+status:
+  'on': 开
+  'off': 关
+  reset: 重置
+  query: 查询
+  failed: 失败
+  detail: 详情
+  success: 成功
+  enabled: 启用
+  disabled: 禁用
+  available: 可用
+  processing: 处理中
+  unavailable: 不可用
+  opened: 已开通
+  notOpened: 未开通
+message:
+  all: 全部
+  create: 新建
+  add: 添加
+  open: 打开
+  edit: 编辑
+  sure: 确定继续?
+  save: 保存
+  reset: 重置
+  error: 错误
+  query: 查询
+  other: 其他
+  close: 关闭
+  import: 导入
+  prompt: 提醒
+  timing: 定时
+  status: 状态
+  delete: 删除
+  remove: 移除
+  enable: 启用
+  export: 导出
+  search: 搜索
+  confirm: 确认
+  warning: 警告!
+  account: 账号
+  disable: 停用
+  fetchFail: 数据加载失败
+  description: 描述
+  operation: 操作
+  operationFailed: 操作失败
+  operationSuccess: 操作成功
+  delSuccess: 删除成功
+  delFaild: 删除失败
+  upload: 上传
+  download: 下载
+  confirmDelete: 确定要删除 {name} 吗？
+  nodata: 无数据
+  thisField: 此项
+  pleaseInput: 请输入
+  untied: 解绑
+placeholder:
+  input: 请输入
+  select: 请选择
+validateError: 验证错误
+language:
+  zh-CN: 中文
+  en-US: English
+pagination:
+  total: 共 {total} 条记录
+unsupported:
+  fileReader: 您的浏览器不支持文件内容读取接口，请更换或升级浏览器后再试！
+bizConfig:
+  trans_fee_rate_credit: 贷记卡
+  trans_fee_rate_debit: 借记卡
+  trans_fee_ul_debit: 借记封顶
+  trans_fee_rate_cost_credit_agent1: 贷记卡
+  trans_fee_rate_cost_debit_agent1: 借记卡
+  trans_fee_ul_cost_agent1: 借记封顶
+  trans_fee_rate_cost_acq_credit: 贷记卡
+  trans_fee_rate_cost_acq_debit: 借记卡
+  trans_fee_ul_cost_acq_debit: 借记封顶
+  trans_fee_rate_cost_pc_credit: 贷记卡
+  trans_fee_rate_cost_pc_debit: 借记卡
+  trans_fee_ul_pc_debit: 借记封顶
+  defaults: 费率
+enum:
+  cardType:
+    credit: 贷记卡
+    debit: 借记卡
+    unknow: 未知
+divisionBit:
+  thousand: 千
+  million: 百万
+  billion: 十亿

@@ -1,0 +1,64 @@
+@import '~@/styles/mixins';
+
+.roles {
+
+  :global{
+    .nav-bar {
+      margin: @design-gutter_large @design-gutter;
+    }
+    .grids {
+      .ant-card {
+        height: 150px;
+        position: relative;
+        margin-top: @design-gutter_large;
+      }
+      .ant-card-head {
+        border-bottom: 0;
+      }
+      .ant-card-extra {
+        font-size: 14px;
+        .count {
+          margin-right: @design-gutter;
+        }
+      }
+      .ant-card-body {
+        padding: 0;
+      }
+      .body {
+        padding: 0 24px;
+      }
+      .footer {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        padding: @design-gutter 24px;
+        background-color: #f4f4f4;
+        border-top: solid 1px #e9e9e9;
+        .links > a {
+          &:not(:last-child):after {
+            content: '|';
+            color: @light_grey;
+            margin: 0 5px;
+          }
+        }
+      }
+      .card-add {
+        text-align: center;
+        cursor: pointer;
+        .icon-add {
+          margin-top: 40px;
+          font-size: 62px;
+          color: @light_grey;
+        }
+      }
+    }
+  }
+
+}
+
+.permissions-tree {
+  .menu-item-title .fa {
+    margin-right: 3px;
+  }
+}

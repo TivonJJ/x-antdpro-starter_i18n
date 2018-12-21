@@ -1,0 +1,13 @@
+---
+login:
+  sign: Login
+  resetPassword: Request a Password Reset
+  rememberAccount: Remember Me
+  password:
+    placeholder: Password
+    validate:
+      required: Please type your password
+  username:
+    placeholder: Username
+    validate:
+      required: Please type your username

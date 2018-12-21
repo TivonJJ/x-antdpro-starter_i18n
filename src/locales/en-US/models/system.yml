@@ -1,0 +1,20 @@
+system:
+  area:
+    city: City
+    province: Province
+    country: Country
+  role:
+    name: Role name
+    description: Role description
+  user:
+    contact: Phone number
+    roleName: Role name
+    username: Login name
+    realName: Real name
+  logs:
+    servicePlatform:
+      bis: Basic Infomation Service
+      pbs: Payment Business Service
+      aps: Acquiring Payment Service
+      aas: Acquiring Accounting Service
+      dms: Device Management Service

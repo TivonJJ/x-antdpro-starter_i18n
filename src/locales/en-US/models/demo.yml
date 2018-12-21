@@ -1,0 +1,9 @@
+demo:
+  name: Name
+  amount: Amount
+  date: Date
+  no: No
+  status:
+    name: Status
+    valid: Valid
+    invalid: Invalid

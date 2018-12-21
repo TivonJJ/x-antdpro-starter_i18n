@@ -1,0 +1,27 @@
+@import "~@/styles/mixins";
+
+.contextMenu{
+    background: #ffffff;
+    border: 1px solid @border-color-base;
+    min-width: 120px;
+    .item{
+        padding: 8px 12px;
+        &:hover{
+            background: @primary-1;
+        }
+    }
+}
+.inputGroup{
+    >div{
+        margin-bottom: 8px;
+    }
+    :global{
+        .ant-input-group .ant-input-group-addon:first-child{
+            min-width: 100px;
+        }
+    }
+    .picker :global(.anticon){
+        color: @primary-color;
+    }
+
+}

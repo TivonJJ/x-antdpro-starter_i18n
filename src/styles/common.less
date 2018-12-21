@@ -1,0 +1,320 @@
+@import "~@/styles/mixins";
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+* {
+    word-wrap: break-word
+}
+
+body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.globalSpin {
+    width: 100%;
+    margin: 40px 0 !important;
+}
+
+// reset default
+li {
+    list-style: none;
+}
+
+canvas {
+    display: block;
+}
+
+.ant-layout {
+    min-height: 100%;
+}
+
+.ant-spin-container {
+    overflow: visible !important;
+}
+
+// utils
+.gutter {
+    margin: @design-gutter;
+}
+
+.gutter-lg {
+    margin: @design-gutter_large;
+}
+
+.gutter-v {
+    margin: @design-gutter 0;
+}
+
+.gutter-h {
+    margin: 0 @design-gutter
+}
+
+.gutter-v_lg {
+    margin: @design-gutter_large 0;
+}
+
+.gutter-left {
+    margin-left: @design-gutter;
+}
+
+.gutter-right {
+    margin-right: @design-gutter;
+}
+
+.gutter-top {
+    margin-top: @design-gutter;
+}
+
+.gutter-h_lg {
+    margin: 0 @design-gutter_large
+}
+
+.gutter-left_lg {
+    margin-left: @design-gutter_large;
+}
+
+.gutter-right_lg {
+    margin-right: @design-gutter_large;
+}
+
+.gutter-top_lg {
+    margin-top: @design-gutter_large;
+}
+
+.gutter-bottom {
+    margin-bottom: @design-gutter;
+}
+
+.gutter-bottom_lg {
+    margin-bottom: @design-gutter_large;
+}
+
+.text-sm {
+    font-size: 80%;
+}
+
+.text-md {
+    font-size: 120%;
+}
+
+.text-lg {
+    font-size: 150%;
+}
+
+.text-left{
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-middle {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.text-danger {
+    color: @error-color;
+}
+
+.text-primary {
+    color: @primary-color;
+}
+
+.text-warning {
+    color: @warning-color;
+}
+
+.text-success {
+    color: @success-color;
+}
+
+.text-muted {
+    color: rgba(0, 0, 0, 0.45);
+}
+
+.text-dark {
+    color: @dark_grey;
+}
+
+.bg-white {
+    background-color: #ffffff;
+}
+
+.bg-warning {
+    background-color: @warning-color;
+}
+
+.bg-danger {
+    background-color: @error-color;
+}
+
+.bg-info {
+    background-color: @info-color;
+}
+
+.bg-primary {
+    background-color: @primary-color;
+}
+
+.bg-success {
+    background-color: @success-color;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.inline {
+    display: inline;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.block {
+    display: block;
+}
+
+.invisible {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pull-right {
+    float: right;
+}
+
+.pull-left {
+    float: left;
+}
+
+.btn-group {
+    > button, .button {
+        &:not(:last-child) {
+            margin-right: @design-gutter;
+        }
+    }
+}
+
+.link-group {
+    > a, > .link {
+        &:not(:last-child):after {
+            content:' ';
+            margin-left: 4px;
+            margin-right: 6px;
+            border-right: 1px solid @light_grey;
+        }
+    }
+}
+.link-group_dark {
+    > a, > .link {
+        &:not(:last-child):after {
+            content:' ';
+            margin-left: 4px;
+            margin-right: 6px;
+            border-right: 1px solid @grey;
+        }
+    }
+}
+
+[role='button'] {
+    cursor: pointer;
+}
+
+.x-scroll {
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: @light_grey;
+        border-radius: 3px;
+        border: solid 1px @deep_grey;
+    }
+}
+
+.card-group {
+    .ant-card:not(:last-child) {
+        margin-bottom: @design-gutter_large;
+    }
+}
+
+.card-without_headerborder {
+    .ant-card-head {
+        border-bottom: 0;
+    }
+}
+.card-body_nopadding {
+    .ant-card-body {
+        padding: 0 !important;
+    }
+}
+
+.card-without-title {
+    background: #ffffff;
+    border-radius: 3px;
+    padding: 24px;
+}
+
+.input-lite {
+    outline: none !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    border-bottom: 1px solid #ececec !important;
+    border-radius: 0 !important;
+    &:focus {
+        box-shadow: none;
+    }
+}
+
+.card-lite{
+    .ant-card-head {
+        border-bottom: 0;
+    }
+}
+
+td.table-amount-font{
+  font-size: 18px;
+  text-align: right;
+}
+
+th.table-amount-font{
+  text-align: right !important;
+}
+
+.ant-tabs-large .ant-tabs-nav-wrap{
+    padding-left: @design-gutter_large;
+    .ant-tabs-tab{
+        padding-top: 16px;
+        padding-bottom: 14px;
+        line-height: 24px;
+    }
+}
+
+.middle-inline_group{
+    >span{
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
+}

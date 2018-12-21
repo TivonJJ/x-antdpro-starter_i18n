@@ -1,0 +1,33 @@
+task:
+  type:
+    reconciliation: Reconciliation
+    clearing: Clearing
+    settlement: Settlement
+  status:
+    not: wait
+    executing: Processing
+    failure: Failed
+    success: Success
+    end: Closed
+  runType:
+    artificial: Manual
+    automatic: Automatic
+  settleStatus:
+    unreviewed: Unreviewed
+    inSettlement: approval
+    success: Successful settlement
+    failure: Billing failure
+    abolition: audit failed 
+  stateStatus:
+    not: Not performed
+    executing: Executing
+    failure: Execution failed
+    success: execution succeed
+  clearingStatus:
+    executing: Clearing
+    failure: Clear failure
+    success: Clear success     
+  settlementType:
+    merchant: merchant
+    agent: agent
+    individual: individual   
