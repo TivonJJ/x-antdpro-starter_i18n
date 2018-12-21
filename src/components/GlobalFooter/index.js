@@ -3,12 +3,7 @@ import classNames from 'classnames';
 import styles from './index.less';
 import { Button, Icon } from 'antd';
 import { FormattedMessage,getLocale,setLocale } from 'umi/locale';
-import { connect } from 'dva';
 
-@connect(({locale,loading}) => ({
-    locale,
-    setting:loading.effects['locale/setLanguage']
-}))
 export default class GlobalFooter extends React.Component{
     render(){
         const { className, links } = this.props;

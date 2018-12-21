@@ -23,6 +23,11 @@ class LoginPage extends Component {
         };
     }
 
+    handleSubmit=(evt)=>{
+        evt.preventDefault();
+        this.login();
+    };
+
     login=()=>{
         return new Promise((resolve, reject) => {
             this.props.form.validateFields((err,values)=>{
@@ -77,7 +82,7 @@ class LoginPage extends Component {
         const { getFieldDecorator } = this.props.form;
         return <div className={styles.login}>
             <Spin spinning={submitting}>
-                <Form onSubmit={this.login}>
+                <Form onSubmit={this.handleSubmit}>
                     {error && !submitting && this.renderMessage(error)}
                     <Form.Item>
                         {getFieldDecorator('username', {
@@ -86,7 +91,7 @@ class LoginPage extends Component {
                                 {required: true, message: formatMessage({id:'Page.login.username.validate.required'})}
                             ]
                         })(
-                            <TrimInput prefix={<Icon type={'user'} className={styles.prefixIcon}/>} size={'large'}
+                            <TrimInput prefix={<Icon type={'user'}/>} size={'large'}
                                        placeholder={formatMessage({id:'Page.login.username.placeholder'})}/>
                         )}
                     </Form.Item>
@@ -96,7 +101,7 @@ class LoginPage extends Component {
                                 {required: true, message: formatMessage({id:'Page.login.password.validate.required'})}
                             ]
                         })(
-                            <Input prefix={<Icon type={'lock'} className={styles.prefixIcon}/>} type={'password'} size={'large'}
+                            <Input prefix={<Icon type={'lock'}/>} type={'password'} size={'large'}
                                    placeholder={formatMessage({id:'Page.login.password.placeholder'})}/>
                         )}
                     </Form.Item>

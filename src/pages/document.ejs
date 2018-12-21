@@ -6,23 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SnapPay-OMP</title>
     <link rel="icon" href="<%=APP_METADATA.baseUrl%>favicon.ico" type="image/x-icon">
-    <style type="text/css">
-        body.env-test:after{
-            content: "Test platform";
-            color: #fff;
-            text-align: center;
-            display: block;
-            position: fixed;
-            left: 0;
-            top: 0;
-            right: 0;
-            height: 23px;
-            background: -webkit-gradient(linear, left 0, right 0, from(rgba(28, 26, 29, .6)), to(rgba(7, 16, 214, .6)));
-            z-index: 9999999999999999;
-        }
-    </style>
+    <% if(APP_METADATA.env==='test'){ %>
+        <style type="text/css">
+            body:after{
+                content: "Test platform";
+                color: #fff;
+                text-align: center;
+                display: block;
+                position: fixed;
+                left: 0;
+                top: 0;
+                right: 0;
+                height: 23px;
+                background: -webkit-gradient(linear, left 0, right 0, from(rgba(233, 35, 19, 0.6)), to(rgba(237, 101, 207, 0.6)));
+                z-index: 9999999999999999;
+            }
+        </style>
+    <% } %>
 </head>
-<body class="env-<%=APP_METADATA.env%>">
+<body>
 <div id="root"></div>
 </body>
 </html>
