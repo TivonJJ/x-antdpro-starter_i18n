@@ -15,7 +15,6 @@ router的父子路由显示时同时显示的，子路由显示的时候父路�
 
 | 参数      | 说明                                      | 类型         | 默认值 |
 |----------|------------------------------------------|-------------|-------|
-| root | 根路由视图元素 | ReactNode | - |
-| children    | 子路由视图元素     | ReactNode  | -    |
-| accessParent | any    | 子路由props中的parent属性指向，一般传入父元素的this，这个子元素就能访问父元素的属性和方法了(不建议使用)  | -    |
-
+| child | 子视图元素 | ReactNode | - |
+| childProps | 子视图对应的component扩展Props属性   | Object  | -    |
+| onResume | 根视图重新显示时回调,注(首次加载不会调用) | Function | - |

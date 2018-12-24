@@ -9,29 +9,32 @@ import withRouter from 'umi/withRouter';
  */
 class SeesawRoute extends React.PureComponent {
     static propTypes={
-        root: PropsTypes.element.isRequired,
-        accessParent: PropsTypes.any
+        child: PropsTypes.element.isRequired,
+        childProps: PropsTypes.object,
+        onResume: PropsTypes.func
     };
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(this.props.match.isExact !== nextProps.match.isExact){
+            if(nextProps.match.isExact && this.props.onResume){
+                this.props.onResume(nextProps.match);
+            }
+        }
+    }
     render() {
         const isRoot = this.props.match.isExact;
-        const {root,children,accessParent} = this.props;
-        let renderChildren = children;
-        if(accessParent){
-            const accessedParentChildren = [];
-            const childrenComponents = renderChildren.props.children;
-            if(childrenComponents){
-                childrenComponents.map(item=>{
-                    const _render = item.props.render;
-                    accessedParentChildren.push(React.cloneElement(item,{render:props=>{
-                            return _render({...props,parent:accessParent});
-                        }}))
-                });
-                renderChildren = React.cloneElement(children,{children:accessedParentChildren})
-            }
+        let {child:children,children:root,childProps} = this.props;
+        if(childProps && children.props.children){
+            const childrenWithProps = React.Children.map(children.props.children,(item=>{
+                const _render = item.props.render;
+                return React.cloneElement(item,{render:props=>{
+                        return _render({...props,...childProps});
+                    }})
+            }));
+            children = React.cloneElement(children,{children:childrenWithProps})
         }
         return <Fragment>
             <div style={{display:isRoot?'':'none'}} className={'seesaw-route'}>{root}</div>
-            {!isRoot&&<div className={'seesaw-route'}>{renderChildren}</div>}
+            {!isRoot&&<div className={'seesaw-route'}>{children}</div>}
         </Fragment>
     }
 }

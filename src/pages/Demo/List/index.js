@@ -22,7 +22,7 @@ class Demo extends Component {
     render() {
         const {demoList:{query},children} = this.props;
         return (
-            <SeesawView root={
+            <SeesawView child={children}>
                 <div className={'card-group'}>
                     <Card bordered={false}>
                         <Filter onSubmit={this.handleFilter}/>
@@ -31,8 +31,6 @@ class Demo extends Component {
                         <Table query={query}/>
                     </Card>
                 </div>
-            }>
-                {children}
             </SeesawView>
         );
     }
