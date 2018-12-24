@@ -17,3 +17,8 @@ title:
 | onError     | 接口返回错误后回调  | function(error)  | - |
 | onDataLoaded     | 获取到数据的回调  | function(page)  | - |
 | ... | 其他参数和ant的API一致，(dataSource会被忽略)| ... | - |
+
+| 方法   | 说明
+|----------|------------------------------------------|
+| refresh | 刷新当前页数据 |
+| reload | 恢复到初始分页状态刷新数据 |

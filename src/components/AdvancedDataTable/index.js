@@ -33,7 +33,11 @@ export default class AdvancedDataTable extends React.Component{
         if(this.props.params !== nextProps.params){
             setTimeout(()=>{
                 const {resetPageOnParamsChange} = this.props;
-                this.fetchData(resetPageOnParamsChange?createNormalPagination():{});
+                if(resetPageOnParamsChange){
+                    this.reload();
+                }else{
+                    this.refresh();
+                }
             })
         }
     }
@@ -70,8 +74,11 @@ export default class AdvancedDataTable extends React.Component{
         this.fetchData(pagination);
         this.props.onChange&&this.props.onChange(pagination);
     };
-    reload=(resetPage)=>{
-        this.fetchData(resetPage===true?createNormalPagination():null);
+    refresh=()=>{
+        this.fetchData();
+    };
+    reload=()=>{
+        this.fetchData(createNormalPagination());
     };
     render(){
         const {error,busy,page} = this.state;
@@ -92,7 +99,7 @@ export default class AdvancedDataTable extends React.Component{
                         message={error}
                         type="error"
                         description={<div className={'text-center gutter-top'}>
-                            <Button onClick={this.fetchData}><FormattedMessage id={'Common.button.retry'}/></Button>
+                            <Button onClick={this.refresh}><FormattedMessage id={'Common.button.retry'}/></Button>
                         </div>}
                     />
                     :
