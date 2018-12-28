@@ -1,7 +1,4 @@
 "use strict";
-import { fetchTasks } from '../services/task';
-import { createNormalPagination } from '../utils';
-import {notification} from 'antd';
 import {formatMessage} from 'umi/locale';
 
 export default {
