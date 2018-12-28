@@ -15,12 +15,12 @@ export default class NoticeIcon extends PureComponent {
     this.state = {};
   }
   render() {
-    const { className, count, popupAlign, onPopupVisibleChange,children,trigger='click',icon='bell' } = this.props;
+    const { className, count,dot, popupAlign, onPopupVisibleChange,children,trigger='click',icon='bell' } = this.props;
     const noticeButtonClass = classNames(className, styles.noticeButton);
     const notificationBox = children;
     const triggerIcon = (
       <span className={noticeButtonClass}>
-        <Badge count={count} className={styles.badge}>
+        <Badge count={count} dot={dot} className={styles.badge}>
           <Icon type={icon} className={styles.icon} />
         </Badge>
       </span>

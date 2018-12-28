@@ -4,9 +4,9 @@ import { Icon, Card, Pagination, Tag, Spin,notification } from 'antd';
 import styles from '../../index.less';
 import {connect} from "dva";
 import NoticeIcon from '@/components/NoticeIcon';
-import DateFormat from '@/components/DateFormat';
 import {FormattedMessage,formatMessage} from "umi/locale";
 import { getPublicPath } from '@/utils';
+import DateFormat from "@/components/DateFormat";
 
 export const Status = {
     0:{name:<FormattedMessage id={'Common.status.processing'}/>,tagColor:'blue'},
@@ -20,27 +20,18 @@ export const Types = {
     4:{name:<FormattedMessage id={'Common.message.other'}/>,icon:getPublicPath('img/icon-task_other.png')}
 };
 
-@connect(({global,loading}) => ({
-    global,
-    fetching:loading.effects['global/fetchTasks']
+@connect(({task,loading}) => ({
+    task,
+    fetching:loading.effects['task/fetch']
 }))
 export default class Task extends React.Component{
     static Options={
         noTitleTips:true
     };
-    componentWillMount(){
-        this.fetchPendingTaskCount();
-        this.taskRefresher = setInterval(()=>{
-            this.fetchPendingTaskCount();
-        },30000);
-    }
-    componentWillUnmount(){
-        clearInterval(this.taskRefresher);
-    }
     fetchTasks=()=>{
         if(this.props.fetching)return;
         this.props.dispatch({
-            type:'global/fetchTasks',
+            type:'task/fetch',
             payload:{
                 page:this.page
             }
@@ -51,14 +42,6 @@ export default class Task extends React.Component{
                 message:formatMessage({id:'Common.message.fetchFail'}),
                 description:err.message
             })
-        });
-        this.fetchPendingTaskCount();
-    };
-    fetchPendingTaskCount=()=>{
-        this.props.dispatch({
-            type:'global/syncPendingTaskCount'
-        }).catch(e=>{
-            console.error(e);
         });
     };
     handlePageChange=(page,pageSize)=>{
@@ -71,11 +54,18 @@ export default class Task extends React.Component{
     handlePopUpChange=(visible)=>{
         if(visible){
             this.fetchTasks();
+            // 清除气泡
+            this.props.dispatch({
+                type:'task/changeState',
+                payload:{
+                    hasUnread:false
+                }
+            })
         }
     };
     render(){
-        const {menu,global,fetching=false,title} = this.props;
-        const {tasksPage} = global;
+        const {menu,task,fetching=false,title} = this.props;
+        const {tasksPage} = task;
         const noticeList = [];
         tasksPage.data.map(item=>{
             const statusTag = Status[item.status];
@@ -93,7 +83,7 @@ export default class Task extends React.Component{
         });
         return <NoticeIcon
             icon={menu.icon}
-            count={global.taskCount}
+            dot={task.hasUnread}
             className={styles.action}
             onPopupVisibleChange={this.handlePopUpChange}>
             <Card title={title}

@@ -10,8 +10,6 @@ export default {
     state: {
         collapsed: false,
         isFullScreen: checkIsFullScreen(),
-        tasksPage: createPagination(),
-        taskCount: 0
     },
 
     effects: {
@@ -25,37 +23,6 @@ export default {
             });
             return isFullScreen;
         },
-        *fetchTasks({ payload }, { call, put ,select}){
-            const pagination = yield select((state) => state.global.tasksPage);
-            if (payload.page) Object.assign(pagination, payload.page);
-            const result = yield call(fetchTasks, {
-                ...payload,
-                page_num: pagination.current,
-                page_size: pagination.page_size,
-                page: undefined
-            });
-            pagination.total = result.total;
-            pagination.data = result.data;
-            yield put({type: 'changeState', payload: {pagination}});
-        },
-        *syncPendingTaskCount({notice},{call,put}){
-            const result = yield call(fetchTasks, {status: 0, page_num: 1, page_size: 1});
-            yield put({
-                type: 'changeState',
-                payload: {
-                    taskCount: result.total
-                }
-            });
-            if(notice){
-                const config = {
-                    message:formatMessage({id:'Component.taskBar.noticeTitle'}),
-                };
-                if(typeof notice !== 'boolean'){
-                    config.description = notice;
-                }
-                notification.success(config)
-            }
-        }
     },
 
     reducers: {
@@ -65,22 +32,10 @@ export default {
                 collapsed: payload,
             };
         },
-        changeLanguage(state,{payload}){
-            return {
-                ...state,
-                language:payload
-            }
-        },
         changeState(state,{payload}){
             return {
                 ...state,
                 ...payload
-            }
-        },
-        resetTaskPage(state){
-            return {
-                ...state,
-                tasksPage:createPagination()
             }
         },
     },
@@ -101,13 +56,6 @@ export default {
         }
     }
 };
-
-function createPagination() {
-    return createNormalPagination({
-        showSizeChanger:false,
-        showQuickJumper:false
-    })
-}
 
 function checkIsFullScreen() {
     return document.fullScreen||document.mozFullScreen||document.webkitIsFullScreen;
