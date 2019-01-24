@@ -6,7 +6,11 @@ import { Alert, Button, Card, Spin,Modal,message } from 'antd';
 const {Description} = DescriptionList;
 import {formatMessage,FormattedMessage} from 'umi/locale';
 import { Status } from '@/constants/demo';
+import EasyTable from '@/components/EasyTable';
 
+@EasyTable.connect(({demoTable})=>({
+    demoTable
+}))
 @connect(({demoDetail,loading})=>({
     demoDetail,
     fetching:loading.effects['demoDetail/getDetail']
@@ -28,9 +32,7 @@ class Detail extends Component {
         })
     }
     refreshParent(){
-        this.props.dispatch({
-            type:'demoList/refresh',
-        })
+        this.props.demoTable.refresh();// 刷新父页面列表数据
     }
     close=()=>{
         Modal.confirm({

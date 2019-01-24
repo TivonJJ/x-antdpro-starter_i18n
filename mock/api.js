@@ -1,3 +1,5 @@
+import Mock from 'mockjs';
+
 const demoList = [
     { no: '1293281', name: '星巴克拿铁', amount: 36, status: 1 },
     { no: '1293282', name: '星巴克至臻手冲咖啡', amount: 46, status: 1 },
@@ -5,6 +7,14 @@ const demoList = [
     { no: '1293284', name: '顺旺基', amount: 19, status: 2 },
     { no: '1293285', name: '阿尼玛', amount: 236, status: 1 },
 ];
+for(let i=0;i<300;i++){
+    demoList.push({
+        no: Mock.Random.natural(1000,9999999),
+        name: Mock.Random.cparagraph(1),
+        amount: Mock.Random.float(1,1000),
+        status: Mock.Random.integer(1,2)
+    })
+}
 
 export default {
     'POST /api/demo/list': {

@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { Button, Col, DatePicker, Form, Input, InputNumber, Row } from 'antd';
 import {FormattedMessage,formatMessage} from 'umi/locale';
+import { removeEmptyProperty } from '@/utils';
+import EasyTable from '@/components/EasyTable';
 
+@EasyTable.connect(({demoTable})=>({
+    demoTable
+}))
 @Form.create()
 class Filter extends Component {
     handleSubmit=(evt)=>{
@@ -14,7 +19,7 @@ class Filter extends Component {
                 values.end_date = values.date[1].format('YYYY-MM-DD');
                 values.date = undefined;
             }
-            this.props.onSubmit(values);
+            this.props.demoTable.fetch(removeEmptyProperty(values))
         })
     };
     render() {

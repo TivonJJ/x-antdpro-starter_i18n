@@ -1,11 +1,11 @@
 import React from 'react';
-import AdvancedDataTable from '@/components/AdvancedDataTable';
 import {Card} from 'antd';
 import style from './style.less'
 import {connect} from 'dva'
 import {FormattedMessage, formatMessage} from 'umi/locale'
 import {ServicePlatform} from '@/constants/logs';
 import DateFormat from '@/components/DateFormat';
+import EasyTable from '@/components/EasyTable';
 
 @connect(({logs}) => {
     return {
@@ -21,7 +21,6 @@ export default class LogFilterTable extends React.Component {
     }
 
     render() {
-        const {query} = this.props
         const columns = [
             {
                 title: formatMessage({id: 'Page.system.logs.label.operationTime'}),
@@ -50,7 +49,7 @@ export default class LogFilterTable extends React.Component {
         ]
         return (
             <Card bordered={false} className={style.layoutVerticalSpace}>
-                <AdvancedDataTable params={query} columns={columns} source={'basis/oplog/list'}/>
+                <EasyTable name={'logsDataTable'} columns={columns} source={'basis/oplog/list'}/>
             </Card>
         );
     }

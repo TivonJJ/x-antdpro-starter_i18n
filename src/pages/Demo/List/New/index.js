@@ -3,9 +3,12 @@ import { Button, Card, Form, Input, InputNumber, Modal,message } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import {formatMessage} from 'umi/locale';
+import EasyTable from '@/components/EasyTable';
 
-@connect(({demoList,loading})=>({
-    demoList,
+@EasyTable.connect(({demoTable})=>({
+    demoTable
+}))
+@connect(({loading})=>({
     creating: loading.effects['demoList/insert']
 }))
 @Form.create()
@@ -19,10 +22,8 @@ class New extends Component {
             }).then(()=>{
                 message.success(formatMessage({id:'Common.message.operationSuccess'}));
                 router.goBack();
-                // 更新父页面数据
-                this.props.dispatch({
-                    type:'demoList/refresh',
-                });
+                // 更新父页面数据 并回调第一页
+                this.props.demoTable.refresh({current:1});
             },err=>{
                 Modal.error({
                     title:err.message

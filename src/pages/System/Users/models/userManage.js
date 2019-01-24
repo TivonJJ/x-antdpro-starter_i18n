@@ -1,13 +1,13 @@
 "use strict";
 import {fetchUsers,fetchRoles,resetUserPassword,updateUserStatus,deleteUser,upsertUser} from '@/services/system';
-import {createNormalPagination} from "@/utils";
+import {createPagination} from "@/utils";
 
 export default {
     namespace:'userManage',
 
     state:{
         users:[],
-        pagination: createNormalPagination(),
+        pagination: createPagination(),
         roles:[]
     },
     effects:{

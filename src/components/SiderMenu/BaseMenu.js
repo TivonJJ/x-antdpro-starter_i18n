@@ -3,7 +3,7 @@ import { Menu, Icon } from 'antd';
 import Link from 'umi/link';
 import { formatMessage, FormattedMessage,getLocale } from 'umi/locale';
 import pathToRegexp from 'path-to-regexp';
-import { urlToList } from '../_utils/pathTools';
+import { urlToList } from '@/utils';
 import styles from './index.less';
 
 const { SubMenu } = Menu;

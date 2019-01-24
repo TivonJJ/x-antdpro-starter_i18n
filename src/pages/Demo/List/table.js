@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import AdvancedDataTable from '@/components/AdvancedDataTable';
 import Amount from '@/components/Amount';
 import { getList } from '@/services/demo';
 import Link from 'umi/link';
 import { Badge, Button } from 'antd';
 import {formatMessage} from 'umi/locale';
+import EasyTable from '@/components/EasyTable';
 
 class Table extends Component {
     columns=[
@@ -29,16 +29,16 @@ class Table extends Component {
         }
     ];
     render() {
-        const {query} = this.props;
         return (
-            <AdvancedDataTable
+            <EasyTable
+                autoFetch
+                name={'demoTable'}
                 extra={<Link to={'/demo/list/new'}>
                     <Button type={'primary'}>{formatMessage({ id: 'Common.message.add' })}</Button>
                 </Link>}
                 source={getList}
                 rowKey={'no'}
-                columns={this.columns}
-                params={query}/>
+                columns={this.columns}/>
         );
     }
 }

@@ -1,6 +1,6 @@
 "use strict";
 import { fetchTasks } from '../services/task';
-import { createNormalPagination } from '../utils';
+import { createPagination } from '../utils';
 import {notification} from 'antd';
 import {formatMessage} from 'umi/locale';
 
@@ -50,14 +50,14 @@ export default {
         resetTaskPage(state){
             return {
                 ...state,
-                tasksPage:createPagination()
+                tasksPage:createTaskPagination()
             }
         },
     }
 }
 
-function createPagination() {
-    return createNormalPagination({
+function createTaskPagination() {
+    return createPagination({
         showSizeChanger:false,
         showQuickJumper:false
     })

@@ -189,7 +189,7 @@ export function deepClone(obj) {
 }
 
 // 创建一个默认的分页对象
-export function createNormalPagination(props = {}) {
+export function createPagination(props = {}) {
     const {
         showSizeChanger = true,
         showQuickJumper = true,

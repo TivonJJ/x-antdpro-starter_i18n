@@ -3,7 +3,7 @@ import pathToRegexp from 'path-to-regexp';
 import { Breadcrumb, Tabs, Skeleton, Icon } from 'antd';
 import classNames from 'classnames';
 import styles from './index.less';
-import { urlToList } from '../_utils/pathTools';
+import { urlToList } from '@/utils';
 import router from 'umi/router';
 
 const { TabPane } = Tabs;
