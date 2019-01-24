@@ -31,12 +31,21 @@ function createDefaultRequest() {
         }
         return data;
     },(r)=>{
-        if(r instanceof Error)return Promise.reject(r);
+        if(r instanceof Error){
+            return Promise.reject({
+                code:r.code,
+                message:r.message,
+                type:'NetError'
+            });
+        }
         const response = r.response;
         const status = response.status;
-        const error = new Error(`[${status}]${response.statusText}`);
-        error.code = status;
-        error.response = response;
+        const error = {
+            message:`[${status}]${response.statusText}`,
+            code:status,
+            response,
+            type:'NetError'
+        };
         return Promise.reject(error);
     });
     instance.getAbsUrl = function(url) {
