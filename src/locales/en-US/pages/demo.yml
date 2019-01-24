@@ -6,3 +6,4 @@ demo:
     title: Order Detail
     basic: Basic info
     closeTip: Close this order?
+  keepListTip: Here the data of the Table will not be destroyed after the View is destroyed, so it will remain in the state.

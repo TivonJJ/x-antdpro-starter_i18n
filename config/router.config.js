@@ -49,6 +49,10 @@ export default [
                             }
                         ]
                     },
+                    {
+                        path: '/demo/listKeep',
+                        component: './Demo/ListKeep',
+                    }
                 ],
             },
             {

@@ -6,3 +6,4 @@ demo:
     title: 订单详情
     basic: 基本信息
     closeTip: 关闭此订单？
+  keepListTip: 这里Table的数据在View销毁后数据不会销毁，所以会保持状态
