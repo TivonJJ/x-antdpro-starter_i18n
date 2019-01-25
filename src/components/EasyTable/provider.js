@@ -22,7 +22,7 @@ const model = {
                 params = state.params[name];
             }else {
                 yield put({
-                    type:'update',
+                    type:'_update',
                     payload:{
                         name,
                         params
@@ -43,7 +43,7 @@ const model = {
             const state = yield select(state=>state[NameSpace]);
             check(name,state);
             yield put({
-                type:'update',
+                type:'_update',
                 payload:{
                     name,
                     params
@@ -88,7 +88,7 @@ const model = {
             state.loading[name] = false;
             return {...state};
         },
-        update(state,{payload}){
+        _update(state,{payload}){
             const {name} = payload;
             if('page' in payload){
                 state.page = {
@@ -111,13 +111,19 @@ const model = {
             }
             return {...state};
         },
+        // 修改list内的数据
+        update(state,{payload:{name,data}}){
+            if(!Array.isArray(data))throw new TypeError('Data must be an array');
+            state.page[name].data = data;
+            return {...state}
+        },
         loading(state,{payload:{name,action}}){
             state.loading = {
                 ...state.loading,
                 [name]: action === ShowLoading
             };
             return {...state}
-        }
+        },
     }
 };
 if(!window.g_app._models.some(({namespace})=>namespace===NameSpace)){
@@ -142,7 +148,7 @@ function *loadData(name,page,params,put,call) {
         page.total = result.total;
         page.data = result.data;
         yield put({
-            type:'update',
+            type:'_update',
             payload:{
                 name,
                 page

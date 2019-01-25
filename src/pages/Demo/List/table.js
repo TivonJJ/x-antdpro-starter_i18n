@@ -6,6 +6,9 @@ import { Badge, Button } from 'antd';
 import {formatMessage} from 'umi/locale';
 import EasyTable from '@/components/EasyTable';
 
+@EasyTable.connect(({demoTable})=>({
+    demoTable
+}))
 class Table extends Component {
     columns=[
         {
@@ -28,14 +31,25 @@ class Table extends Component {
             }
         }
     ];
+    update=(num)=>{
+        this.props.demoTable.update(data=>{
+            data[num].name = '我的名字变化了' + Date.now();
+            return data;
+        });
+    };
     render() {
         return (
             <EasyTable
                 autoFetch
                 name={'demoTable'}
-                extra={<Link to={'/demo/list/new'}>
-                    <Button type={'primary'}>{formatMessage({ id: 'Common.message.add' })}</Button>
-                </Link>}
+                extra={<div>
+                    <Button type={'primary'} onClick={() => this.update(0)} className={'gutter-right'}>
+                        {formatMessage({ id: 'Common.button.update' })}
+                    </Button>
+                    <Link to={'/demo/list/new'}>
+                        <Button type={'primary'}>{formatMessage({ id: 'Common.message.add' })}</Button>
+                    </Link>
+                </div>}
                 source={getList}
                 rowKey={'no'}
                 columns={this.columns}/>

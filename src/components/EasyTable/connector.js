@@ -69,6 +69,15 @@ function extendProvider(props,option) {
                     }
                 })
             },
+            update(callback){
+                props.dispatch({
+                    type:'easyTableProvider/update',
+                    payload:{
+                        name,
+                        data:callback(props.easyTableProvider.page[name].data)
+                    }
+                })
+            },
             clean(){
                 props.dispatch({
                     type:'easyTableProvider/clean',

@@ -7,7 +7,7 @@ title:
 
 ## API
 
-### EasyTable
+### EasyTable 组件属性
 
 | 参数      | 说明                                      | 类型         | 默认值 |
 |----------|------------------------------------------|-------------|-------|
@@ -23,18 +23,29 @@ title:
 | wrappedComponentRef | 获取table真实的Ref | function(ref) | - |
 | ... | 其他参数和ant的API一致，(dataSource会被忽略)| ... | - |
 
-| 方法   | 参数 | 说明
+### 方法 这些方法在Component和Provider中都提供，建议使用Provider,使用connect注入Provider后 component的props将自动扩展这些方法
+
+| 方法   | 参数 | 类型 | 说明
+|----------|--------------|-------------|---------------|
+| fetch | params,pagination | Object | 恢复到初始分页状态刷新数据 |
+| refresh | pagination | Object | 刷新当前页数据 |
+| paging | *pagination | Object | 切换分页(params,参数会保持) |
+| clean | name | String | 清空数据,name是table名称，不填则清空所有 |
+| update | data<Array> => data<Array> | Array | 会传入当前页的list数据，return一个新的list |
+
+### 属性 使用connect注入Provider后 component的props将自动扩展这些属性，请不要直接修改这些属性！
+
+|   属性 | 类型 | 说明
 |----------|--------------|----------------------------|
-| fetch | params,pagination | 刷新当前页数据 |
-| refresh | pagination | 恢复到初始分页状态刷新数据 |
-| paging | *pagination | 切换分页(params,参数会保持) |
-| clean | - | 清空数据 |
+| page | Object | 分页数据信息 |
+| loading | Boolean | 加载状态 |
+| params | Object | 筛选参数 |
 
 
 ### Provider连接
 > 所有数据都保存在store中，可以使用 'easyTableProvider' 的默认命名空间访问Provider提供的数据驱动服务，但是这个服务是
 全局的数据，需要对应的table 的 name来取值，EasyTable提供一个快速连接工具，直接通过name注入到props中。
-Provider提供的方法和上面的方法一样，当然也可以直接获取对应的数据源，分别有 params,page,loading *(禁止直接修改数据源)
+Provider提供的方法和上面的方法一样，当然也可以直接获取对应的数据源，分别有 params,page,loading (!禁止直接修改数据源!)
 
 ##### 示列
 
