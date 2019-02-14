@@ -6,9 +6,8 @@ import {
     updateRole, updateRoleStatus,
 } from '@/services/system';
 
-export default {
-    namespace : 'role',
-    state : {
+function getInitalState() {
+    return {
         status : undefined,
         busy : false,
         roles : [],
@@ -17,7 +16,12 @@ export default {
         permissions : null,
         permissionsIDMap : {},
         permissionsDNAMap : {},
-    },
+    }
+}
+
+export default {
+    namespace : 'role',
+    state : getInitalState(),
     effects : {
         * fetch({ payload }, { call, put}){
             const result = yield call(fetchRoles, payload);
@@ -55,6 +59,9 @@ export default {
                 ...state,
                 ...payload,
             }
+        },
+        reset(){
+            return getInitalState()
         }
     }
 }

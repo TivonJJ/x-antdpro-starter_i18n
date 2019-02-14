@@ -2,14 +2,16 @@
 import {fetchUsers,fetchRoles,resetUserPassword,updateUserStatus,deleteUser,upsertUser} from '@/services/system';
 import {createPagination} from "@/utils";
 
-export default {
-    namespace:'userManage',
-
-    state:{
+function getInitalState() {
+    return {
         users:[],
         pagination: createPagination(),
         roles:[]
-    },
+    }
+}
+export default {
+    namespace:'userManage',
+    state: getInitalState(),
     effects:{
         *fetch({payload}, {call, put, select}){
             const state = yield select(state => state.userManage);
@@ -89,6 +91,9 @@ export default {
                 ...state,
                 roles:payload.roles
             }
+        },
+        reset(){
+            return getInitalState()
         }
     }
 }

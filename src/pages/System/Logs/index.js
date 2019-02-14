@@ -10,7 +10,7 @@ import { connect } from 'dva/index';
 export default class extends React.Component{
     componentWillUnmount(){
         this.props.dispatch({
-            type:'logs/$RESET'
+            type:'logs/reset'
         })
     }
     render(){

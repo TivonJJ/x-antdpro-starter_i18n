@@ -6,6 +6,7 @@ import {FormattedMessage, formatMessage} from 'umi/locale'
 import {ServicePlatform} from '@/constants/logs';
 import DateFormat from '@/components/DateFormat';
 import EasyTable from '@/components/EasyTable';
+import { getLogs } from '@/services/basic';
 
 @connect(({logs}) => {
     return {
@@ -46,10 +47,10 @@ export default class LogFilterTable extends React.Component {
                 render: (item) => <a onClick={() => this.showDetailView(item)}><FormattedMessage
                     id={'Common.status.detail'}/></a>
             },
-        ]
+        ];
         return (
             <Card bordered={false} className={style.layoutVerticalSpace}>
-                <EasyTable name={'logsDataTable'} columns={columns} source={'basis/oplog/list'}/>
+                <EasyTable name={'logsDataTable'} columns={columns} source={getLogs}/>
             </Card>
         );
     }

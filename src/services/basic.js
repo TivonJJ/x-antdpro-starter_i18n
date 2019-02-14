@@ -8,3 +8,7 @@ export async function fetchDemoDataList(params) {
 export async function resetPassword(params) {
     return request.post('basis/employees/resetPassword',params)
 }
+
+export async function getLogs(params) {
+    return request.post('basis/oplog/list',params);
+}

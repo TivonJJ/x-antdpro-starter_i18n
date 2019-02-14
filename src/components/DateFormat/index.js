@@ -10,7 +10,7 @@ export default class extends React.Component{
         format:PropTypes.string
     };
     render(){
-        const {date,format='lll',utcOffset=0,emptyContent='-',tz='locale'} = this.props;
+        const {date,format='lll',utcOffset=false,emptyContent='-',tz='locale'} = this.props;
         if(!date)return emptyContent;
         if(utcOffset===false)return moment(date).format(format);
         let m = moment.utc(date).utcOffset(utcOffset);

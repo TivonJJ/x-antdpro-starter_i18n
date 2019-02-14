@@ -12,7 +12,7 @@ import { connect } from 'dva';
 export default class extends React.Component{
     componentWillUnmount() {
         this.props.dispatch({
-            type: 'role/$RESET'
+            type: 'role/reset'
         })
     }
     render(){

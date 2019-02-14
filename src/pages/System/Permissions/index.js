@@ -12,7 +12,7 @@ import {formatMessage} from 'umi/locale';
 export default class extends React.Component{
     componentWillUnmount(){
         this.props.dispatch({
-            type:'permission/$RESET'
+            type:'permission/reset'
         })
     }
     render(){

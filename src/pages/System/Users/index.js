@@ -79,7 +79,7 @@ export default class UserList extends React.Component{
     }
     componentWillUnmount(){
         this.props.dispatch({
-            type:'userManage/$RESET'
+            type:'userManage/reset'
         })
     }
     handleFilter=()=>{
