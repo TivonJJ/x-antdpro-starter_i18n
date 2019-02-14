@@ -1,23 +1,12 @@
 import React from 'react';
 import FilterForm from './filter'
-import FilterTable from './table'
-import DetailModal from './detail'
-import { connect } from 'dva/index';
+import DataTable from './table'
 
-@connect(({logs}) => {
-    logs
-})
 export default class extends React.Component{
-    componentWillUnmount(){
-        this.props.dispatch({
-            type:'logs/reset'
-        })
-    }
     render(){
         return <React.Fragment>
             <FilterForm/>
-            <FilterTable/>
-            <DetailModal/>
+            <DataTable/>
         </React.Fragment>
     }
 }

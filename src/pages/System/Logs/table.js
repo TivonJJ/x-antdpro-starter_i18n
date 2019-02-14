@@ -1,26 +1,17 @@
 import React from 'react';
 import {Card} from 'antd';
 import style from './style.less'
-import {connect} from 'dva'
 import {FormattedMessage, formatMessage} from 'umi/locale'
 import {ServicePlatform} from '@/constants/logs';
 import DateFormat from '@/components/DateFormat';
 import EasyTable from '@/components/EasyTable';
 import { getLogs } from '@/services/basic';
+import Detail from './detail';
 
-@connect(({logs}) => {
-    return {
-        query: logs.query
-    }
-})
-export default class LogFilterTable extends React.Component {
+export default class LogsTable extends React.Component {
     showDetailView = (item) => {
-        this.props.dispatch({
-            type: 'logs/changeDetailViewData',
-            payload: item
-        })
-    }
-
+        this.detail.show(item);
+    };
     render() {
         const columns = [
             {
@@ -50,7 +41,11 @@ export default class LogFilterTable extends React.Component {
         ];
         return (
             <Card bordered={false} className={style.layoutVerticalSpace}>
-                <EasyTable name={'logsDataTable'} columns={columns} source={getLogs}/>
+                <EasyTable name={'logsDataTable'}
+                           columns={columns}
+                           autoFetch
+                           source={getLogs}/>
+                <Detail ref={ref => this.detail = ref}/>
             </Card>
         );
     }

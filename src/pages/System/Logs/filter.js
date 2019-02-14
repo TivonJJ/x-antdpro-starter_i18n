@@ -3,23 +3,21 @@ import { Button, Card, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import { FormattedMessage } from 'umi/locale';
 import { ServicePlatform } from '@/constants/logs';
 import style from './style.less';
-import { connect } from 'dva';
-import moment from 'moment';
-
-
-
+import EasyTable from '@/components/EasyTable';
 const { Item } = Form;
 const { RangePicker } = DatePicker;
-// const DEFAULT_OP_TIME = [moment().startOf('day'), moment()];
-@connect()
+
+@EasyTable.connect(({logsDataTable})=>({
+    logsDataTable
+}))
 @Form.create()
 export default class LogFilterForm extends React.Component {
     handleSubmit = (e) =>{
         e.preventDefault();
-        this.props.dispatch({
-            type : 'logs/handleSearch',
-            payload : this.props.form.getFieldsValue(),
-        });
+        this.props.form.validateFields((errors,values)=>{
+            if(errors)return;
+            this.props.logsDataTable.fetch(values);
+        })
     };
 
 
