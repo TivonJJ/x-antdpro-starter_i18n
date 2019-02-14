@@ -230,12 +230,10 @@ export default class extends React.Component {
                             <EditTree permission={permission} filter={filter} onSelect={this.handleTreeSelect} onChange={this.handleTreeChange}/>
                         </Col>
                         <Col span={14}>
-                            {permission.selectedPermission &&
-                            <div className={classNames(style.editForm)}>
+                            <div className={classNames(style.editForm,{'hidden':!permission.selectedPermission})}>
                                 <div className={style.editFormTitle}><FormattedMessage id={'Page.system.permissions.formTitle'}/></div>
                                 <EditForm permission={permission} ref={ref=>this.editForm=ref} onChange={this.handleFormChange}/>
                             </div>
-                            }
                         </Col>
                     </Row>
                 </Spin>}
