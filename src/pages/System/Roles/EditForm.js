@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import { Form, Row, Col, Input, Tree, Spin, Icon } from 'antd';
+import {Form, Input, Tree, Spin, Icon} from 'antd';
 import {FormattedMessage, formatMessage,getLocale} from "umi/locale";
 
 const TreeNode = Tree.TreeNode;
@@ -11,22 +11,16 @@ export default class EditForm extends React.Component {
         expandedPermissions: [],
     };
 
-    componentWillReceiveProps(nextProps) {
-        // if ('role' in nextProps && !nextProps.role) {
-        //   this.setState({ expandedPermissions: [] });
-        // }
-    }
-
     handlePermissionExpand=(expandedPermissions)=> {
         this.setState({expandedPermissions});
-    }
+    };
 
     handleFormChange = (evt) => {
         this.props.onChange && this.props.onChange(evt);
     }
 
     render() {
-        const {permissions=[],busy=false} = this.props;
+        const {permissions=[]} = this.props;
         const {getFieldDecorator} = this.props.form;
         const {expandedPermissions} = this.state;
         const formItemLayout = {
@@ -41,48 +35,39 @@ export default class EditForm extends React.Component {
         return (
             <Form onChange={this.handleFormChange}>
                 {getFieldDecorator('role_id', {})(<Input type="hidden"/>)}
-                <Spin spinning={busy}>
-                    <Row gutter={24}>
-                        <Col span={12}>
-                            <Form.Item {...formItemLayout} label={labels.roleName}>
-                                {getFieldDecorator('role_name', {
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: <FormattedMessage id={'Validator.required'}
-                                                                       values={{name: labels.roleName}}/>,
-                                        },
-                                    ],
-                                })(<Input/>)}
-                            </Form.Item>
-                            <Form.Item {...formItemLayout} label={labels.roleDesc}>
-                                {getFieldDecorator('description')(<Input type="textarea" rows="5"/>)}
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <div>{labels.permissionList}：</div>
-                            <Form.Item>
-                                {getFieldDecorator('res_list', {
-                                    initialValue: [],
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: <FormattedMessage id={'Validator.required'}
-                                                                       values={{name: labels.permissionList}}/>,
-                                        },
-                                    ],
-                                })(
-                                    <PermissionsTreeSelect
-                                        permissions={permissions}
-                                        onChange={this.props.onChange}
-                                        onExpand={this.handlePermissionExpand}
-                                        expandedKeys={expandedPermissions}
-                                    />
-                                )}
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                </Spin>
+                <Form.Item {...formItemLayout} label={labels.roleName}>
+                    {getFieldDecorator('role_name', {
+                        rules: [
+                            {
+                                required: true,
+                                message: <FormattedMessage id={'Validator.required'}
+                                                           values={{name: labels.roleName}}/>,
+                            },
+                        ],
+                    })(<Input/>)}
+                </Form.Item>
+                <Form.Item {...formItemLayout} label={labels.roleDesc}>
+                    {getFieldDecorator('description')(<Input type="textarea" rows="5"/>)}
+                </Form.Item>
+                <Form.Item {...formItemLayout} label={labels.permissionList}>
+                    {getFieldDecorator('res_list', {
+                        initialValue: [],
+                        rules: [
+                            {
+                                required: true,
+                                message: <FormattedMessage id={'Validator.required'}
+                                                           values={{name: labels.permissionList}}/>,
+                            },
+                        ],
+                    })(
+                        <PermissionsTreeSelect
+                            permissions={permissions}
+                            onChange={this.handleFormChange}
+                            onExpand={this.handlePermissionExpand}
+                            expandedKeys={expandedPermissions}
+                        />
+                    )}
+                </Form.Item>
             </Form>
         );
     }
@@ -140,8 +125,11 @@ export class PermissionsTreeSelect extends React.Component {
         const loopTree = data =>
             data.map(item => {
                 let before = null;
+                item.name = item.res_name;
                 try{
-                    item.name = JSON.parse(item.res_name);
+                    if(typeof item.name==='string'){
+                        item.name = JSON.parse(item.name);
+                    }
                 }catch (e) {
                     item.name = {};
                     console.error('Invalid Res name',item.res_name);

@@ -43,6 +43,7 @@ export default class LogsTable extends React.Component {
             <Card bordered={false} className={style.layoutVerticalSpace}>
                 <EasyTable name={'logsDataTable'}
                            columns={columns}
+                           rowKey={'id'}
                            autoFetch
                            source={getLogs}/>
                 <Detail ref={ref => this.detail = ref}/>

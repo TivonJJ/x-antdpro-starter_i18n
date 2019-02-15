@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import {Alert, notification, Card, Col, Icon, message, Modal, Radio, Row, Spin, Switch} from 'antd';
+import {Alert, notification, Card, Col, Icon, message, Modal, Radio, Row, Spin, Switch, Drawer} from 'antd';
 import EditForm from './EditForm';
 import AssignForm from './AssignForm';
 import Authorized from '@/components/Authorized';
@@ -16,6 +16,7 @@ import style from '../nav-form.less'
 import roleStyle from './style.less'
 import {FormattedMessage,formatMessage} from "umi/locale";
 import {Status} from "@/constants/role";
+import DrawerConfirm from "@/components/DrawerConfirm";
 
 export default class extends React.Component {
     state = {
@@ -188,7 +189,7 @@ export default class extends React.Component {
 
     closeRoleEditModal() {
         this.setState({editFormVisible: false, currentRole: null, editFormChanged: false});
-        this.editForm.resetFields();
+        // this.editForm.resetFields();
     }
 
     updateInsertRole(role) {
@@ -320,27 +321,28 @@ export default class extends React.Component {
                     </Row>
                 </div>
             </Spin>
-            <Modal
-                width={800}
+            <DrawerConfirm
+                width={500}
+                destroyOnClose
                 title={<FormattedMessage id={'Page.system.roles.edit.formTitle'}/>}
                 visible={editFormVisible}
                 onCancel={() => this.closeRoleEditModal()}
                 onOk={() => this.editRoleDone()}
-                okButtonProps={{disabled: !this.state.editFormChanged}}
                 confirmLoading={updating}
+                okButtonProps={{disabled: !this.state.editFormChanged}}
             >
-                <Spin spinning={updating}>
+                <Spin spinning={fetching}>
                     <EditForm
                         ref={ref => (this.editForm = ref)}
                         role={currentRole}
                         permissions={role.permissions}
-                        busy={fetching}
                         onChange={() => this.setState({editFormChanged: true})}
                     />
                 </Spin>
-            </Modal>
+            </DrawerConfirm>
             <Modal
                 width={600}
+                destroyOnClose
                 title={<FormattedMessage id={'Page.system.roles.label.assignment'}/>}
                 visible={assignVisible}
                 onCancel={() => this.closeAssignUserModal()}
