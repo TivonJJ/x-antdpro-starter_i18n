@@ -1,11 +1,11 @@
 'use strict';
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Icon, message, Modal, Spin, Upload } from 'antd';
 import PropTypes from 'prop-types';
 import request from '@/utils/request';
 import { FormattedMessage,formatMessage } from 'umi/locale';
 import { joinPath } from '@/utils';
-
+import styles from './index.less';
 
 class FileUploader extends React.Component {
     state = {
@@ -49,7 +49,7 @@ class FileUploader extends React.Component {
         Object.keys(params).map(key =>{
             formData.append(key, params[key]);
         });
-        request.post('file/upload', formData).then(res =>{
+        request.post('basis/file/upload', formData).then(res =>{
             onChange(responseInValue ? res.data[0] : res.data[0].file_key);
             return res.data[0];
         }, err =>{
@@ -93,6 +93,11 @@ FileUploader.Image = class extends React.Component {
     static defaultProps={
         allowFileExt:['jpg','jpeg','png']
     };
+    isImage=(path)=>{
+        if(!path)return false;
+        const ext = path.substr(path.lastIndexOf('.')+1).toLowerCase();
+        return ['jpg','jpeg','png','bmp','ico'].indexOf(ext) !== -1;
+    };
     handleChange = (resp) =>{
         const url = joinPath(resp.access_url, resp.file_key);
         this.setState({ preview : url} );
@@ -103,9 +108,13 @@ FileUploader.Image = class extends React.Component {
         this.props.onChange('');
     };
     handlePreview = (file) => {
-        this.setState({
-            previewVisible: true,
-        });
+        if(!this.isImage(file.url)){
+            window.open(file.url)
+        }else {
+            this.setState({
+                previewVisible: true,
+            });
+        }
     };
     closePreview=()=>{
         this.setState({
@@ -121,7 +130,7 @@ FileUploader.Image = class extends React.Component {
             status: 'done',
             url: preview,
         });
-        return <Fragment>
+        return <div>
             <FileUploader
                 {...this.props}
                 responseInValue
@@ -138,10 +147,49 @@ FileUploader.Image = class extends React.Component {
                     </div>
                 }
             </FileUploader>
+            <div className={styles.fileTypeTip}>
+                <FormattedMessage id={'Component.fileUploader.allowTypes'} values={{types:this.props.allowFileExt.join(',')}}/>
+            </div>
             <Modal visible={previewVisible} footer={null} onCancel={this.closePreview}>
                 <img style={{ width: '100%' }} src={preview} />
             </Modal>
-        </Fragment>;
+        </div>;
+    }
+};
+
+FileUploader.Native = class extends React.PureComponent {
+    static propTypes = {
+        onChange:PropTypes.func
+    };
+
+    onChange = (e) =>{
+        this.props.onChange(e.target.files[0]);
+    };
+
+    emit = () =>{
+        this.refs.file.click();
+    };
+
+
+    render(){
+        const {value} = this.props
+        return (
+            <span className={'ant-upload ant-upload-select-picture-card'} onClick={this.emit}>
+                <span className={'ant-upload'}>
+                    <input onChange={this.onChange} ref={'file'} style={{ display : 'none' }} type={'file'}/>
+                    {this.props.children || (
+                        <div>
+                            <Icon type="plus" style={{fontSize:32}}/>
+                            <div className={'ant-upload-text'}>
+                                {
+                                 value ? value.name : <FormattedMessage id={'Common.message.upload'}/>
+                                }
+                            </div>
+                        </div>
+                    )}
+                </span>
+            </span>
+        );
     }
 };
 

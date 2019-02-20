@@ -1,20 +1,8 @@
-.nativeUpload{
-  border: 1px dashed #d3d3d3;
-  border-radius: 4px;
-  width: 72px;
-  height: 72px;
-  text-align: center;
-  background: #f8f8f8;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  &:hover{
-    border: 1px dashed #108ee9;
-    cursor: pointer;
-  }
-}
-.nativeText{
-  font-size: 12px;
-  line-height: 12px;
-  height: 12px;
+@import "~@/styles/mixins";
+
+.fileTypeTip{
+    font-size: 12px;
+    color: @grey;
+    line-height: 1;
+    clear: both;
 }
