@@ -1,6 +1,6 @@
 {
   "name": "x-antdpro-starter_i18n",
-  "version": "1.0.0",
+  "version": "3.0.1",
   "private": true,
   "scripts": {
     "precommit": "npm run lint-staged",

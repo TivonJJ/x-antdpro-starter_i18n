@@ -59,16 +59,16 @@ export default [
                 path:'/sys',
                 routes:[
                     {
-                        path: '/sys/permissions/users',
-                        component: './System/Users',
+                        path: '/sys/user/manage',
+                        component: './System/User/Manage',
                     },
                     {
-                        path: '/sys/permissions/roles',
-                        component: './System/Roles',
+                        path: '/sys/user/roles',
+                        component: './System/User/Roles',
                     },
                     {
-                        path: '/sys/permissions/resource',
-                        component: './System/Permissions',
+                        path: '/sys/user/resource',
+                        component: './System/User/Resource',
                     },
                     {
                         path: '/sys/logs',

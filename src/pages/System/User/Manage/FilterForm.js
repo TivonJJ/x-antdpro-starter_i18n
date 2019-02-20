@@ -4,14 +4,17 @@ import {Form,Row,Col,Radio,Input} from 'antd';
 import styles from '../nav-form.less';
 import {Status} from '@/constants/user';
 import {FormattedMessage,formatMessage} from "umi/locale";
+import EasyTable from "@/components/EasyTable";
 
-@Form.create()
-export default class FilterForm extends React.Component{
-    handelFilter(){
-        setTimeout(()=>{//避免radio状态value未更新
-            this.props.onFilter && this.props.onFilter(this.props.form);
-        },10);
+@EasyTable.connect(({userManageDataTable})=>({
+    userManageDataTable
+}))
+@Form.create({
+    onValuesChange(props,changedVal,vals){
+        props.userManageDataTable.fetch(vals);
     }
+})
+export default class FilterForm extends React.Component{
     render(){
         const {getFieldDecorator} = this.props.form;
         return <Form className={styles.navForm}>
@@ -20,7 +23,7 @@ export default class FilterForm extends React.Component{
                 <Col span={21} className='form-control'>
                     {getFieldDecorator('status', {
                     })(
-                        <Radio.Group onChange={this.handelFilter.bind(this)}>
+                        <Radio.Group>
                             <Radio.Button>(<FormattedMessage id={"Common.message.all"}/>)</Radio.Button>
                             {Object.keys(Status).map(key=>(
                                 <Radio.Button key={key} value={key}><FormattedMessage id={Status[key]}/></Radio.Button>
@@ -34,7 +37,7 @@ export default class FilterForm extends React.Component{
                 <Col span={21} className='form-control'>
                     {getFieldDecorator('keywords', {
                     })(
-                        <Input.Search onSearch={this.handelFilter.bind(this)} placeholder={
+                        <Input.Search placeholder={
                             formatMessage({id:'Page.system.users.searchByKey.placeholder'})
                         } style={{width:260}}/>
                     )}

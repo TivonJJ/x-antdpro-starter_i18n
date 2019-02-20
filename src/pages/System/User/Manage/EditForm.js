@@ -1,36 +1,47 @@
 "use strict";
 import React from 'react';
-import {Form,Input,Select,Spin} from 'antd';
+import {Form, Input, Modal, Select, Spin} from 'antd';
 import {FormattedMessage,formatMessage} from "umi/locale";
+import {connect} from "dva";
 
+@connect(({userManage, loading}) => ({
+    userManage,
+    loadingRoles: loading.effects['userManage/fetchRoles']
+}))
 @Form.create()
 export default class EditForm extends React.Component{
-    componentDidMount(){
-        this.handlerUserChange(this.props.user);
+    componentDidMount() {
+        this.fetchRoles();
     }
-    componentWillReceiveProps(nextProps){
-        if('user' in nextProps && this.props.user !== nextProps.user){
-            this.handlerUserChange(nextProps.user)
-        }
-    }
+
     fetchRoles(){
-        this.props.onFetchRoles();
+        this.props.dispatch({
+            type:'userManage/fetchRoles',
+            payload:{}
+        }).catch(e=>{
+            Modal.error({
+                title:formatMessage({id:'Common.message.fetchFail'}),
+                content:e.message
+            })
+        })
     }
-    handlerUserChange(user){
-        if(undefined !== user)this.fetchRoles();
-        if(!user)return;
-        const values = {
-            user_id:user.user_id,
-            username:user.username,
-            real_name:user.real_name,
-            tel_phone:user.tel_phone,
-            role_id:String(user.role_id)
-        };
+    setValues(values){
         this.props.form.setFieldsValue(values);
+    }
+    getValues(){
+        return new Promise((resolve,reject)=>{
+            this.props.form.validateFields((errors, values) => {
+                if(errors)return reject(errors);
+                resolve(values)
+            })
+        })
+    }
+    reset(){
+        this.props.form.resetFields()
     }
     render(){
         const {getFieldDecorator} = this.props.form;
-        const {roles,busy=false} = this.props;
+        const {userManage:{roles},loadingRoles=false} = this.props;
         const formItemLayout = {
             labelCol:{ span: 6 },
             wrapperCol: { span: 18 }
@@ -67,17 +78,17 @@ export default class EditForm extends React.Component{
                 {getFieldDecorator('tel_phone', {
                     rules: [{pattern: /^1\d{10}$/, message: <FormattedMessage id={'Validator.phone'}/>}]
                 })(
-                    <Input maxLength="11"/>
+                    <Input maxLength={11}/>
                 )}
             </Form.Item>
-            <Spin spinning={busy}>
+            <Spin spinning={loadingRoles}>
                 <Form.Item {...formItemLayout} label={labels.roleName}>
                     {getFieldDecorator('role_id', {
                         rules: [{required:true, message: <FormattedMessage id={'Validator.phone'} values={{name:labels.roleName}}/>}]
                     })(
                         <Select>
                             {roles.map(role=>{
-                                return <Select.Option key={role.role_id} value={String(role.role_id)}>{role.role_name}</Select.Option>
+                                return <Select.Option key={role.role_id} value={role.role_id}>{role.role_name}</Select.Option>
                             })}
                         </Select>
                     )}

@@ -1,8 +1,8 @@
 import {
     addRole,
-    deleteRole, fetchRoles,
+    deleteRole, getRoles,
     getPermissionsByRoleId,
-    getPermissions,
+    getPermissionsMap,
     updateRole, updateRoleStatus,
 } from '@/services/system';
 
@@ -24,13 +24,13 @@ export default {
     state : getInitalState(),
     effects : {
         * fetch({ payload }, { call, put}){
-            const result = yield call(fetchRoles, payload);
+            const result = yield call(getRoles, payload);
             let status;
             if(payload)status = payload.status;
             yield put({type : 'changeRoleState',payload:{roles:result.data,status}});
         },
         * fetchPermissions(_, { call, put }){
-            const result = yield call(getPermissions);
+            const result = yield call(getPermissionsMap);
             yield put({type : 'changeRoleState',payload : result});
         },
         * fetchPermissionsByRoleId({ payload }, { call }){

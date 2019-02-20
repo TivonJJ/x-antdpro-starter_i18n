@@ -32,13 +32,13 @@ function mapPermissions(list=[]){
         permissionsDNAMap:DNAMap
     }
 }
-export async function fetchPermissions(params) {
+export async function getPermissions(params) {
     return request.post('resource/list',params).then(res=>decoratePermission(res.data))
 }
 export async function savePermissions(data) {
     return request.post('resource/addOrUpdate',data)
 }
-export async function fetchRoles(params){
+export async function getRoles(params){
     return  request.post('role/list', params);
 }
 export async function updateRole(params){
@@ -50,13 +50,13 @@ export async function updateRoleStatus(params){
 export async function addRole(role){
     return request.post('basis/role/add',role)
 }
-export async function getPermissions(){
+export async function getPermissionsMap(){
     return request.post('basis/resource/list').then(res=>(mapPermissions(res.data)))
 }
 export async function getPermissionsByRoleId(roleId){
     return request.post('basis/role/detail', { role_id:roleId }).then(res => res.data);
 }
-export async function fetchUsers(params) {
+export async function getUsers(params) {
     return request.post('user/list',removeEmptyProperty(params));
 }
 export async function getUserByRole  (role_id){

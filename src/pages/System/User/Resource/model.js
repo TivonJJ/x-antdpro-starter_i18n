@@ -1,12 +1,12 @@
 "use strict";
-import {fetchPermissions, savePermissions} from "@/services/system";
+import {getPermissions, savePermissions} from "@/services/system";
 import {PermissionsUtil} from '@/utils';
 import {
     getPermissionByDNA,
     insertPermission,
     loopPermissions,
     sortPermissions,
-} from '@/pages/System/Permissions/utils';
+} from './utils';
 
 export default {
     namespace: 'permission',
@@ -17,7 +17,7 @@ export default {
     },
     effects: {
         * fetch({payload}, {call, put}) {
-            const response = yield call(fetchPermissions, payload);
+            const response = yield call(getPermissions, payload);
             yield put({
                 type: 'updatePermissions',
                 payload: {
