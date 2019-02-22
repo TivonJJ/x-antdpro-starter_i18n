@@ -21,6 +21,8 @@ title:
 | onError     | 接口返回错误后回调  | function(error)  | - |
 | onDataLoaded | 获取到数据的回调  | function(page,action,params)  | - |
 | wrappedComponentRef | 获取table真实的Ref | function(ref) | - |
+| before | 表格前面的内容 | any | - |
+| after | 表格后面的内容 | any | - |
 | ... | 其他参数和ant的API一致，(dataSource会被忽略)| ... | - |
 
 ### 方法 这些方法在Component和Provider中都提供，建议使用Provider,使用connect注入Provider后 component的props将自动扩展这些方法

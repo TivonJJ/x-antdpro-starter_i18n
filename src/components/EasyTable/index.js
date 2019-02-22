@@ -1,11 +1,12 @@
 'use strict';
-import React from 'react';
+import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Button, Col, Row, Spin, Table } from 'antd';
+import { Alert, Button, Spin, Table } from 'antd';
 import {connect} from "dva";
 import './provider';
 import connector from './connector';
 import { FormattedMessage } from 'umi/locale';
+import './style.less';
 
 @connect(({easyTableProvider})=>({
     easyTableProvider
@@ -23,16 +24,20 @@ export default class EasyTable extends React.Component{
         onDataLoaded: PropTypes.func,// 数据加载成功后回调
         onError: PropTypes.func,// 发生错误时回调
         onChange: PropTypes.func,// Table发生变化时回调
-        wrappedComponentRef: PropTypes.func
+        before: PropTypes.any,// 表格前面的内容
+        after: PropTypes.any,// 表格后面的内容
+        wrappedComponentRef: PropTypes.func,
+        rowKey: PropTypes.oneOfType([PropTypes.string,PropTypes.func]).isRequired,
+        columns: PropTypes.array
     };
     static defaultProps={
         autoFetch: false,
         keepData: false,
         renderHeader:(title,extra)=>{
-            return <Row className={'gutter-bottom_lg'}>
-                <Col span={12}>{title}</Col>
-                <Col span={12} className={'text-right'}>{extra}</Col>
-            </Row>
+            return <div className={'comp-easytable_header'}>
+                <div className={'comp-easytable_header_title'}>{title}</div>
+                <div className={'comp-easytable_header_extra'}>{extra}</div>
+            </div>
         },
         onDataLoaded(){},
         onError(){}
@@ -111,7 +116,7 @@ export default class EasyTable extends React.Component{
             busy = loading[name] || false;
         let {title=(page)=>(
             <FormattedMessage id={'Common.pagination.total'} values={{total:page.total}}/>
-        ),extra,className,style,renderHeader,...restProps} = this.props;
+        ),extra,className,style,renderHeader,before,after,...restProps} = this.props;
         if(title===false)title = null;
         if(typeof title === 'function')title = title(page);
         return <div className={className} style={style}>
@@ -128,7 +133,11 @@ export default class EasyTable extends React.Component{
                         </div>}
                     />
                     :
-                    <Table {...restProps} pagination={page} dataSource={page.data} onChange={this.handleChange}/>
+                    <Fragment>
+                        {before!=null && <div className={'comp-easytable_before'}>{before}</div>}
+                        <Table {...restProps} pagination={page} dataSource={page.data} onChange={this.handleChange}/>
+                        {after!=null && <div className={'comp-easytable_after'}>{after}</div>}
+                    </Fragment>
                 }
             </Spin>
         </div>
