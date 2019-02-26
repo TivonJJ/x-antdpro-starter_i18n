@@ -17,10 +17,16 @@ for(let i=0;i<300;i++){
 }
 
 export default {
-    'POST /api/demo/list': {
-        code: 0,
-        total: demoList.length,
-        data: demoList,
+    'POST /api/demo/list': (req,res)=>{
+        const {page_size,page_num} = req.body;
+        let total = demoList.length,
+            start = (page_num-1)*page_size,
+            end = start + page_size;
+        res.send({
+            code: 0,
+            total: total,
+            data: demoList.slice(start,end),
+        })
     },
     'POST /api/demo/detail': (req, res) => {
         const data = [];

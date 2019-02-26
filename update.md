@@ -1,5 +1,10 @@
 # 更新记录 #
 
+### 3.0.3
+    移除PageHeaderLayout，请直接使用components里面的PageHeaderWrapper
+
+---
+
 ### 3.0.2
     更新EasyTable,新增 after和before属性，优化header渲染
 

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PageHeaderLayout from '@/layouts/PageHeaderLayout';
 import DescriptionList from '@/components/DescriptionList';
 import { connect } from 'dva';
 import { Alert, Button, Card, Spin,Modal,message } from 'antd';
@@ -7,6 +6,7 @@ const {Description} = DescriptionList;
 import {formatMessage,FormattedMessage} from 'umi/locale';
 import { Status } from '@/constants/demo';
 import EasyTable from '@/components/EasyTable';
+import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 @EasyTable.connect(({demoTable})=>({
     demoTable
@@ -59,7 +59,7 @@ class Detail extends Component {
         if(this.state.error)return <Alert type={'error'} message={this.state.error}/>;
         if(!detail)return null;
         return (
-            <PageHeaderLayout title={formatMessage({id:'Page.demo.detail.title'})}
+            <PageHeaderWrapper title={formatMessage({id:'Page.demo.detail.title'})}
                               content={
                                   <DescriptionList>
                                       <Description term={formatMessage({id:'Model.demo.no'})}>{detail.no}</Description>
@@ -79,7 +79,7 @@ class Detail extends Component {
                         <Description term={formatMessage({id:'Model.demo.name'})}>{detail.name}</Description>
                     </DescriptionList>
                 </Card>
-            </PageHeaderLayout>
+            </PageHeaderWrapper>
         );
     }
 }
