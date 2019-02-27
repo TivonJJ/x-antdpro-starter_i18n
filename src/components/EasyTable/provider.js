@@ -2,9 +2,8 @@ import request from "@/utils/request";
 import {createPagination} from "@/utils";
 
 const NameSpace = 'easyTableProvider';
-const ShowLoading = 'SHOW',
-    HideLoading = 'HIDE';
 let SourceActionMap = {};
+let CallbackMap = {};
 
 // Redux 数据池
 const model = {
@@ -12,7 +11,8 @@ const model = {
     state:{
         params:{},
         page:{},
-        loading:{}
+        loading:{},
+        errors:{}
     },
     effects:{
         *fetch({payload:{name,params,pagination}},{put,call,select}){
@@ -75,7 +75,7 @@ const model = {
     },
     reducers:{
         // 数据池初始化
-        _initialize(state,{payload:{name,source}}){
+        _initialize(state,{payload:{name,source,onDataLoaded,onError}}){
             let fetch = source;
             if(typeof fetch === 'string'){
                 fetch = ((params)=> {
@@ -83,6 +83,7 @@ const model = {
                 });
             }
             SourceActionMap[name] = fetch;
+            CallbackMap[name] = {onDataLoaded,onError};
             if(state.page[name])return state;
             state.page[name] = createPagination();
             state.loading[name] = false;
@@ -98,6 +99,12 @@ const model = {
             }
             if('params' in payload){
                 state.params[name] = payload.params
+            }
+            if('loading' in payload){
+                state.loading[name] = payload.loading
+            }
+            if('error' in payload){
+                state.errors[name] = payload.error;
             }
             return {...state};
         },
@@ -117,10 +124,17 @@ const model = {
             state.page[name].data = data;
             return {...state}
         },
-        loading(state,{payload:{name,action}}){
+        loading(state,{payload:{name,isLoading}}){
             state.loading = {
                 ...state.loading,
-                [name]: action === ShowLoading
+                [name]: isLoading
+            };
+            return {...state}
+        },
+        error(state,{payload:{name,error}}){
+            state.errors = {
+                ...state.errors,
+                [name]: error
             };
             return {...state}
         },
@@ -132,12 +146,14 @@ if(!window.g_app._models.some(({namespace})=>namespace===NameSpace)){
 
 function *loadData(name,page,params,put,call) {
     yield put({
-        type:'loading',
+        type:'_update',
         payload:{
             name,
-            action:ShowLoading
+            loading:true,
+            error:undefined,
         }
     });
+    const callbacks = CallbackMap[name] || {};
     try{
         const fetch = SourceActionMap[name];
         const result = yield call(fetch,{
@@ -147,6 +163,7 @@ function *loadData(name,page,params,put,call) {
         });
         page.total = result.total;
         page.data = result.data;
+        if(callbacks.onDataLoaded)callbacks.onDataLoaded(page,params);
         yield put({
             type:'_update',
             payload:{
@@ -155,13 +172,21 @@ function *loadData(name,page,params,put,call) {
             }
         });
     }catch (e) {
-        throw e;
+        yield put({
+            type:'error',
+            payload:{
+                name,
+                error:e
+            }
+        });
+        if(callbacks.onError)callbacks.onError(e);
+        // throw e;
     }finally {
         yield put({
             type:'loading',
             payload:{
                 name,
-                action:HideLoading
+                isLoading:false
             }
         });
     }

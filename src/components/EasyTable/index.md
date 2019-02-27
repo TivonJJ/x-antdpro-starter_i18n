@@ -78,7 +78,7 @@ Provider提供的方法和上面的方法一样，当然也可以直接获取对
          }
      ];
      reload=()=>{
-         // this.dataTable.reload(); Ref调用
+         // this.dataTable.refresh(); Ref调用
          this.props.demoList.refresh();
      };
      goPage=(num)=>{

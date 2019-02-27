@@ -1,5 +1,10 @@
 # 更新记录 #
 
+### 3.0.4
+    更新EasyTable，修复一些已知BUG
+
+---
+
 ### 3.0.3
     移除PageHeaderLayout，请直接使用components里面的PageHeaderWrapper
 

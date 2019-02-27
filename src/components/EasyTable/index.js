@@ -12,9 +12,6 @@ import './style.less';
     easyTableProvider
 }))
 export default class EasyTable extends React.Component{
-    state={
-        error:null
-    };
     static propTypes={
         source:PropTypes.oneOfType([PropTypes.func,PropTypes.string]).isRequired, // 数据源
         name: PropTypes.string.isRequired, // Table的名称，provider数据池识别的键,必须唯一。
@@ -48,7 +45,9 @@ export default class EasyTable extends React.Component{
             type:'easyTableProvider/_initialize',
             payload:{
                 name:props.name,
-                source:props.source
+                source:props.source,
+                onDataLoaded:props.onDataLoaded,
+                onError:props.onError
             }
         });
         if(typeof props.name !== 'string'){
@@ -83,37 +82,26 @@ export default class EasyTable extends React.Component{
         return this._dispatch('easyTableProvider/paging',{pagination});
     };
     clean(){
-        this._dispatch('easyTableProvider/clean',{},false);
+        this._dispatch('easyTableProvider/clean',{});
     }
-    _dispatch(action,params,shouldCatch=true){
-        this.setState({error:null});
-        const pro = this.props.dispatch({
+    _dispatch(action,params){
+        return this.props.dispatch({
             type: action,
             payload: {
                 name:this.props.name,
                 ...params
             }
         });
-        if(shouldCatch){
-            pro.then((res)=>{
-                this.props.onDataLoaded(res,action,params);
-            },error=>{
-                if(error instanceof Error) throw error;
-                this.setState({error});
-                this.props.onError(error);
-            })
-        }
-        return pro;
     }
     handleChange=(pagination)=>{
         this.paging(pagination);
         this.props.onChange&&this.props.onChange(pagination);
     };
     render(){
-        const {easyTableProvider:{page:dataPage,loading},name} = this.props;
-        const {error} = this.state;
+        const {easyTableProvider:{page:dataPage,loading,errors},name} = this.props;
         let page = dataPage[name],
-            busy = loading[name] || false;
+            busy = loading[name] || false,
+            error = errors[name];
         let {title=(page)=>(
             <FormattedMessage id={'Common.pagination.total'} values={{total:page.total}}/>
         ),extra,className,style,renderHeader,before,after,...restProps} = this.props;
