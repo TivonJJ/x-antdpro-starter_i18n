@@ -4,4 +4,9 @@ version: Ver
 copyright: Tivon
 envTestMark: "(TEST)"
 envUATMark: "(UAT)"
-
+pwa:
+  offline: You are offline now
+  serviceworker:
+    updated: New content is available
+    updatedHint: Please press the "Refresh" button to reload current page
+    updatedOk: Refresh

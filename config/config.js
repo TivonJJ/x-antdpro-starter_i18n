@@ -33,6 +33,14 @@ export default {
                 dynamicImport: {
                     loadingComponent: './components/PageLoading/index',
                 },
+                pwa: defaultSettings.pwa
+                    ? {
+                        workboxPluginMode: 'InjectManifest',
+                        workboxOptions: {
+                            importWorkboxFrom: 'local',
+                        },
+                    }
+                    : {},
                 ...(!process.env.TEST && os.platform() === 'darwin'
                     ? {
                         dll: {
@@ -53,6 +61,7 @@ export default {
                 loadingComponent: './components/PageLoading/index',
             }
         }],
+
     ],
     define: {
         APP_TYPE: process.env.APP_TYPE || '',
