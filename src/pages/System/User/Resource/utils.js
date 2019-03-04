@@ -65,7 +65,6 @@ export function sortPermissions(permissions,info) {
 export const insertPermission = (permissions,permission,level)=>{
     let found = null;
     if(!permission){
-        permissions = exports.state.get('permissions');
         found = {item:null,index:0,arr:permissions};
     }else {
         permissions = loopPermissions(permissions,(item,index,arr) => {
