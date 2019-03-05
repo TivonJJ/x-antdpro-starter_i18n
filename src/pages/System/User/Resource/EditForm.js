@@ -112,7 +112,7 @@ export default class extends React.Component{
             <Form.Item {...formItemLayout} label={labels.describe}>
                 {getFieldDecorator('description', {
                 })(
-                    <Input rows={5} type='textarea'/>
+                    <Input.TextArea rows={5}/>
                 )}
             </Form.Item>
         </Form>
