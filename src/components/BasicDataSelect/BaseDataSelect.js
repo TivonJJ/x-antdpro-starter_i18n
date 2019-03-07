@@ -31,6 +31,7 @@ export default class extends React.Component{
         }
         const hasPage = !!pagination;
         if(!hasPage)pagination = this.state.pagination;
+        this.setState({error:null});
         return action(removeEmptyProperty({
             page_num:pagination.page_num,
             page_size:pagination.page_size,
