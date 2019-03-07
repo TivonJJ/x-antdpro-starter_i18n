@@ -1,5 +1,8 @@
 # 更新记录 #
 
+### 3.1.1
+    EasyTable增加options配置
+
 ### 3.1.0
     增加IconFont组件
     集成PWA功能

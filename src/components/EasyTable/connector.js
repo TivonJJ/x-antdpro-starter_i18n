@@ -1,32 +1,34 @@
 import {connect} from "dva";
 import React from 'react';
 
-export default function (option) {
+export default function (getProps,options={}) {
     return function (Component) {
-        return createWrapperComponent(option,Component);
+        return createWrapperComponent(getProps,options,Component);
     }
 }
 
-function createWrapperComponent(option,Component) {
+function createWrapperComponent(getProps,options,Component) {
     @connect(({easyTableProvider})=>({
         easyTableProvider
     }))
     class WrapperComponent extends React.PureComponent {
         render() {
-            return React.createElement(Component,{
+            const extProps = extendProvider(this.props, getProps);
+            if(options.ensureProvider && Object.keys(extProps).some(key=>!extProps[key]))return null;
+            return React.createElement(Component, {
                 ...this.props,
-                ...extendProvider(this.props,option)
+                ...extProps
             })
         }
     }
     return WrapperComponent;
 }
 
-function extendProvider(props,option) {
-    if(!option)return;
+function extendProvider(props,getProps) {
     const args = {
         easyTableProvider:props.easyTableProvider
     };
+    if(!getProps)return args;
     Object.keys(props.easyTableProvider.page).map(name=>{
         args[name] = {
             page:props.easyTableProvider.page[name],
@@ -88,5 +90,5 @@ function extendProvider(props,option) {
             }
         }
     });
-    return option(args);
+    return getProps(args);
 }

@@ -49,6 +49,17 @@ title:
 全局的数据，需要对应的table 的 name来取值，EasyTable提供一个快速连接工具，直接通过name注入到props中。
 Provider提供的方法和上面的方法一样，当然也可以直接获取对应的数据源，分别有 params,page,loading (!禁止直接修改数据源!)
 
+#### @EasyTable.connect(propsGetter,options)
+
+##### propsGetter: 扩展props属性的回调，会把所有的tableProvider当做参数传入，返回一个object即可，这个Object会被扩展到组件的props上
+
+##### options
+
+|   属性 | 类型 | 说明
+|----------|--------------|----------------------------|
+| ensureProvider | boolean | 是否保证所有的provider都连接成功后再渲染组件，避免component刚初始化的时候provider还未初始化完成无法访问的情况 |
+
+
 ##### 示列
 
 ``` javascript
