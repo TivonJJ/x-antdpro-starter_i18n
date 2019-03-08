@@ -4,6 +4,7 @@ import AssociativeSearch from '../AssociativeSearch';
 import PropTypes from 'prop-types';
 import { Alert } from 'antd';
 import { removeEmptyProperty } from '@/utils';
+import diff from 'deep-diff'
 
 function createPage() {
     return {page_num:1,page_size:20,total:Infinity,data:[]}
@@ -18,7 +19,7 @@ export default class extends React.Component{
         action: PropTypes.func.isRequired
     };
     componentWillReceiveProps(nextProps){
-        if(this.props.params !== nextProps.params){
+        if(diff(this.props.params,nextProps.params)){
             setTimeout(()=>{
                 this.handleFetch(this.state.filter,createPage())
             })
