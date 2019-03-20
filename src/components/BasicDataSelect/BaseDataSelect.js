@@ -25,13 +25,16 @@ export default class extends React.Component{
             })
         }
     }
+    hasFoundItems=false;
+    lastData=[];
     handleFetch=(filter,pagination)=>{
-        const {action,labelKey,searchKey=labelKey,params} = this.props;
+        const {action,labelKey,searchKey=labelKey,params,showAll} = this.props;
         if(filter!==this.state.filter){
             pagination = createPage();
         }
         const hasPage = !!pagination;
         if(!hasPage)pagination = this.state.pagination;
+        if(showAll)pagination.page_size = 999;
         this.setState({error:null});
         return action(removeEmptyProperty({
             page_num:pagination.page_num,
@@ -41,6 +44,8 @@ export default class extends React.Component{
         })).then(res=>{
             pagination.total = res.total;
             pagination.data = hasPage?pagination.data.concat(res.data):res.data;
+            this.lastData = this.state.pagination;
+            this.hasFoundItems = pagination.data.length>0;
             this.setState({pagination,filter});
             return pagination.data;
         },err=>{
@@ -54,6 +59,10 @@ export default class extends React.Component{
         pagination.page_num++;
         return this.handleFetch(this.state.filter,pagination);
     };
+    handleBlur=(evt)=>{
+        if(!this.hasFoundItems)this.setState({pagination:this.lastData});
+        if(this.props.onBlur)this.props.onBlur(evt);
+    };
     render(){
         if(this.state.error)return <Alert type={'error'} showIcon message={this.state.error}/>;
         const {fetchOnSearch=true,fetchOnMount=true,...restProps} = this.props;
@@ -62,6 +71,7 @@ export default class extends React.Component{
                                   fetchOnSearch={fetchOnSearch}
                                   onFetch={this.handleFetch}
                                   data={this.state.pagination.data}
+                                  onBlur={this.handleBlur}
                                   onScrollBottom={this.handleScrollBottom}/>
     }
 }

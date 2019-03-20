@@ -4,7 +4,7 @@ title:
   zh-CN: AssociativeSearch
 subtitle: 异步数据Select组件
 ---
-# Select下拉框，异步获取数据，支持异步检索，滑动加载
+ Select下拉框，异步获取数据，支持异步检索，滑动加载
  
 ### 参数说明
 

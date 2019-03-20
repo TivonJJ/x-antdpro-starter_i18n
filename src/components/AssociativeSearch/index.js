@@ -27,6 +27,8 @@ export default class extends React.Component{
         data:[],
         fetching: false,
     };
+    hasFoundItems=false;
+    lastData=[];
     constructor(props){
         super(props);
         //异步节流时序控制
@@ -71,20 +73,29 @@ export default class extends React.Component{
         const fetchId = this.lastFetchId;
         if (fetchId !== this.lastFetchId)return;
         const rs = onFetch(filter);
-        this.handleFetchResult(rs);
+        this.lastData = this.state.data;
+        this.handleFetchResult(rs).then(data=>{
+            this.hasFoundItems = data.length > 0;
+        },err=>{
+            console.warn(err);
+        });
     }
     handleFetchResult=(rs,isFetchOnBottom)=>{
-        if(rs===null)return;
-        if(isPromise(rs)){
-            this.setState({fetching:true});
-            rs.then(data=>{
-                this.setSelectList(data,isFetchOnBottom);
-            }).finally(()=>{
-                this.setState({fetching:false});
-            });
-        }else {
-            this.setSelectList(rs,isFetchOnBottom);
-        }
+        return new Promise((resolve, reject) => {
+            if(rs===null)return reject();
+            if(isPromise(rs)){
+                this.setState({fetching:true});
+                rs.then(data=>{
+                    this.setSelectList(data,isFetchOnBottom);
+                    resolve(data);
+                },reject).finally(()=>{
+                    this.setState({fetching:false});
+                });
+            }else {
+                this.setSelectList(rs,isFetchOnBottom);
+                resolve(rs);
+            }
+        })
     };
     handlePopupScroll=({currentTarget})=>{
         const el = currentTarget.children[0];
@@ -94,6 +105,14 @@ export default class extends React.Component{
                 this.handleFetchResult(rs,true);
             }
         }
+    };
+    handleBlur=(evt)=>{
+        if(!this.hasFoundItems){
+            setTimeout(()=>{
+                this.setSelectList(this.lastData)
+            })
+        }
+        this.props.onBlur && this.props.onBlur(evt);
     };
     getLabel(item){
         const {labelKey} = this.props;
@@ -129,7 +148,7 @@ export default class extends React.Component{
         const options = data.map((item,index) => <Select.Option key={this.getKey(item,index)} value={this.getValue(item)}>{this.getLabel(item)}</Select.Option>);
         const loading = fetching?
             <Select.Option key={'$loading'} disabled><Spin size={'small'}/></Select.Option>:null;
-        if(hasPage){
+        if(hasPage && loading){
             options.unshift(loading);
         }else {
             options.push(loading);
@@ -144,6 +163,7 @@ export default class extends React.Component{
             onSearch={this.handleSearch}
             onChange={this.handleChange}
             onPopupScroll={this.handlePopupScroll}
+            onBlur={this.handleBlur}
         >
             {options}
         </Select>

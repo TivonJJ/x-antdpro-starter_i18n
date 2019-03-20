@@ -1,7 +1,5 @@
 ---
-title: 
-  en-US: TagSelect
-  zh-CN: TagSelect
+title: TagSelect
 subtitle: 标签选择器
 cols: 1
 order: 13
@@ -19,7 +17,7 @@ order: 13
 | defaultValue    |默认选中的项   |string[] \| number[] | |
 | onChange | 标签选择的回调函数 | Function(checkedTags) |  |
 | expandable | 是否展示 `展开/收起` 按钮 | Boolean | false |
-
+| hideCheckAll | 隐藏 `全部` 按钮 | Boolean | false |
 
 ### TagSelectOption
 
