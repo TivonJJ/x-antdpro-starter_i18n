@@ -75,7 +75,7 @@ export default class extends React.Component{
         const rs = onFetch(filter);
         this.lastData = this.state.data;
         this.handleFetchResult(rs).then(data=>{
-            this.hasFoundItems = data.length > 0;
+            this.hasFoundItems = data && data.length > 0;
         },err=>{
             console.warn(err);
         });
