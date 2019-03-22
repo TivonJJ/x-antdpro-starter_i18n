@@ -13,6 +13,7 @@ title:
 |----------|------------------------------------------|-------------|-------|
 | source | 源数据,URL地址或回调函数，回调函数需要返回promise | String/Function | - |
 | name | table名，必须参数，每个Table保证唯一，这个name是store数据的key | String | - |
+| fixedParams | 固定的请求附加参数 | Object | - |
 | title    | 左上角标题        | boolean/ReactNode/function(page){}  | true |
 | extra       | 右上角显示内容          | ReactNode  | null |
 | renderHeader | 自定义Table顶部渲染,使用这个后title和extra将无效 | function(title,extra,page) | - |

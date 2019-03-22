@@ -1,5 +1,9 @@
 # 更新记录 #
 
+### 3.1.2
+    修复EasyTable的筛选条件未清除的BUG
+    EasyTable新增fixedParams参数
+
 ### 3.1.1
     EasyTable增加options配置
 

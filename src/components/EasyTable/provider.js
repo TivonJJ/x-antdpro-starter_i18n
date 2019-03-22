@@ -12,7 +12,8 @@ const model = {
         params:{},
         page:{},
         loading:{},
-        errors:{}
+        errors:{},
+        fixedParams:{}
     },
     effects:{
         *fetch({payload:{name,params,pagination}},{put,call,select}){
@@ -37,7 +38,8 @@ const model = {
                     ...pagination
                 }
             }
-            return yield loadData(name, pagination, params, put, call);
+            const fixedParams = state.fixedParams[name];
+            return yield loadData(name, pagination, {...params,...fixedParams}, put, call);
         },
         *search({payload:{name,params}},{put,call,select}){
             const state = yield select(state=>state[NameSpace]);
@@ -75,7 +77,7 @@ const model = {
     },
     reducers:{
         // 数据池初始化
-        _initialize(state,{payload:{name,source,onDataLoaded,onError}}){
+        _initialize(state,{payload:{name,source,fixedParams,onDataLoaded,onError}}){
             let fetch = source;
             if(typeof fetch === 'string'){
                 fetch = ((params)=> {
@@ -87,6 +89,7 @@ const model = {
             if(state.page[name])return state;
             state.page[name] = createPagination();
             state.loading[name] = false;
+            state.fixedParams[name] = fixedParams;
             return {...state};
         },
         _update(state,{payload}){
@@ -106,15 +109,29 @@ const model = {
             if('error' in payload){
                 state.errors[name] = payload.error;
             }
+            if('fixedParams' in payload){
+                state.fixedParams[name] = payload.fixedParams;
+            }
             return {...state};
         },
         // 清空数据池
         clean(state,{payload:{name}}){
             if(null == name){
                 state.page = {};
+                state.params = {};
+                state.loading = {};
+                state.errors = {};
+                state.fixedParams = {};
+                SourceActionMap = {};
+                CallbackMap = {};
             }else {
-                state.page[name] = undefined;
                 delete state.page[name];
+                delete state.params[name];
+                delete state.loading[name];
+                delete state.errors[name];
+                delete state.fixedParams[name];
+                delete SourceActionMap[name];
+                delete CallbackMap[name];
             }
             return {...state};
         },

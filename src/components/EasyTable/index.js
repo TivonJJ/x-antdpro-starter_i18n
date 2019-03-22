@@ -16,7 +16,8 @@ export default class EasyTable extends React.Component{
         source:PropTypes.oneOfType([PropTypes.func,PropTypes.string]).isRequired, // 数据源
         name: PropTypes.string.isRequired, // Table的名称，provider数据池识别的键,必须唯一。
         autoFetch:PropTypes.bool, // 是否在初始化后自动加载数据
-        keepData:PropTypes.bool, // 在销毁时清除Redux数据
+        keepData:PropTypes.bool, // 持久保存Redux数据
+        fixedParams: PropTypes.object, // 请求固定携带的附加参数
         renderHeader:PropTypes.func, // 顶部渲染回调
         onDataLoaded: PropTypes.func,// 数据加载成功后回调
         onError: PropTypes.func,// 发生错误时回调
@@ -25,7 +26,7 @@ export default class EasyTable extends React.Component{
         after: PropTypes.any,// 表格后面的内容
         wrappedComponentRef: PropTypes.func,
         rowKey: PropTypes.oneOfType([PropTypes.string,PropTypes.func]).isRequired,
-        columns: PropTypes.array
+        columns: PropTypes.array,
     };
     static defaultProps={
         autoFetch: false,
@@ -44,10 +45,11 @@ export default class EasyTable extends React.Component{
         props.dispatch({
             type:'easyTableProvider/_initialize',
             payload:{
-                name:props.name,
-                source:props.source,
-                onDataLoaded:props.onDataLoaded,
-                onError:props.onError
+                name: props.name,
+                source: props.source,
+                onDataLoaded: props.onDataLoaded,
+                onError: props.onError,
+                fixedParams: props.fixedParams
             }
         });
         if(typeof props.name !== 'string'){
@@ -69,6 +71,18 @@ export default class EasyTable extends React.Component{
             this.clean();
         }
     }
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(this.props.fixedParams !== nextProps.fixedParams){
+            this.props.dispatch({
+                type:'easyTableProvider/_update',
+                payload:{
+                    name: this.props.name,
+                    fixedParams: nextProps.fixedParams
+                }
+            });
+        }
+    }
+
     fetch=(params,pagination)=>{
         return this._dispatch('easyTableProvider/fetch',{
             params,
