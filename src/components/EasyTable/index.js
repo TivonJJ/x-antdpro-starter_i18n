@@ -72,12 +72,23 @@ export default class EasyTable extends React.Component{
         }
     }
     componentWillReceiveProps(nextProps, nextContext) {
-        if(this.props.fixedParams !== nextProps.fixedParams){
+        if(this.props.name !== nextProps.name){
+            throw new Error('The name of the EasyTable cannot be changed，You can switch between multiple tables')
+        }
+        const watchProps =  ['fixedParams','source','onDataLoaded','onError'];
+        const changed = watchProps.find(key=>this.props[key] !== nextProps[key]);
+        if(changed){
+            let changeValue = {};
+            watchProps.map(key=>{
+                if(key in nextProps){
+                    changeValue[key] = nextProps[key];
+                }
+            });
             this.props.dispatch({
                 type:'easyTableProvider/_update',
                 payload:{
                     name: this.props.name,
-                    fixedParams: nextProps.fixedParams
+                    ...changeValue
                 }
             });
         }
@@ -94,6 +105,9 @@ export default class EasyTable extends React.Component{
     };
     paging=(pagination)=>{
         return this._dispatch('easyTableProvider/paging',{pagination});
+    };
+    search=(params)=>{
+        return this._dispatch('easyTableProvider/search',{params});
     };
     clean(){
         this._dispatch('easyTableProvider/clean',{});

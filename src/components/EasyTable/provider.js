@@ -38,8 +38,7 @@ const model = {
                     ...pagination
                 }
             }
-            const fixedParams = state.fixedParams[name];
-            return yield loadData(name, pagination, {...params,...fixedParams}, put, call);
+            return yield loadData(name, pagination, params,state.fixedParams[name], put, call);
         },
         *search({payload:{name,params}},{put,call,select}){
             const state = yield select(state=>state[NameSpace]);
@@ -51,7 +50,7 @@ const model = {
                     params
                 }
             });
-            return yield loadData(name, state.page[name], params, put, call);
+            return yield loadData(name, state.page[name], params,state.fixedParams[name], put, call);
         },
         *paging({payload:{name,pagination}},{put,call,select}){
             const state = yield select(state=>state[NameSpace]);
@@ -59,7 +58,7 @@ const model = {
             return yield loadData(name, {
                 ...state.page[name],
                 ...pagination
-            }, state.params[name], put, call);
+            }, state.params[name],state.fixedParams[name], put, call);
         },
         *refresh({payload:{name,pagination}},{put,call,select}){
             const state = yield select(state=>state[NameSpace]);
@@ -72,19 +71,13 @@ const model = {
             }else {
                 pagination = state.page[name];
             }
-            return yield loadData(name,pagination,state.params[name],put,call);
+            return yield loadData(name,pagination,state.params[name],state.fixedParams[name],put,call);
         },
     },
     reducers:{
         // 数据池初始化
         _initialize(state,{payload:{name,source,fixedParams,onDataLoaded,onError}}){
-            let fetch = source;
-            if(typeof fetch === 'string'){
-                fetch = ((params)=> {
-                    return request.post(source,params);
-                });
-            }
-            SourceActionMap[name] = fetch;
+            SourceActionMap[name] = source;
             CallbackMap[name] = {onDataLoaded,onError};
             if(state.page[name])return state;
             state.page[name] = createPagination();
@@ -111,6 +104,17 @@ const model = {
             }
             if('fixedParams' in payload){
                 state.fixedParams[name] = payload.fixedParams;
+            }
+            if('source' in payload){
+                SourceActionMap[name] = payload.source;
+            }
+            if('onDataLoaded' in payload){
+                if(!CallbackMap[name])CallbackMap[name] = {};
+                CallbackMap[name]['onDataLoaded'] = payload.onDataLoaded;
+            }
+            if('onError' in payload){
+                if(!CallbackMap[name])CallbackMap[name] = {};
+                CallbackMap[name]['onError'] = payload.onError;
             }
             return {...state};
         },
@@ -161,7 +165,7 @@ if(!window.g_app._models.some(({namespace})=>namespace===NameSpace)){
     window.g_app.model(model);
 }
 
-function *loadData(name,page,params,put,call) {
+function *loadData(name,page,params,fixedParams,put,call) {
     yield put({
         type:'_update',
         payload:{
@@ -172,10 +176,16 @@ function *loadData(name,page,params,put,call) {
     });
     const callbacks = CallbackMap[name] || {};
     try{
-        const fetch = SourceActionMap[name];
+        let fetch = SourceActionMap[name];
+        if(typeof fetch === 'string'){
+            fetch = ((params)=> {
+                return request.post(source,params);
+            });
+        }
         const result = yield call(fetch,{
             page_num:page.current,
             page_size:page.pageSize,
+            ...fixedParams,
             ...params
         });
         page.total = result.total;
