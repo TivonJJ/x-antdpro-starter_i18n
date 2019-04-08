@@ -44,14 +44,18 @@ const model = {
         *search({payload:{name,params}},{put,call,select}){
             const state = yield select(state=>state[NameSpace]);
             check(name,state);
+            let mergeParams = {
+                ...state.params[name],
+                ...params
+            };
             yield put({
                 type:'_update',
                 payload:{
                     name,
-                    params
+                    mergeParams
                 }
             });
-            return yield loadData(name, state.page[name], params, put, call);
+            return yield loadData(name, state.page[name], mergeParams, put, call);
         },
         *paging({payload:{name,pagination}},{put,call,select}){
             const state = yield select(state=>state[NameSpace]);
