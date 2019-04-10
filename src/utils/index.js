@@ -6,10 +6,17 @@ const crypto = require('crypto');
 import moment from 'moment-timezone';
 import pathJoin from 'join-path';
 
-const URL_REG = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/g;
+// 常用正则验证规则
+export const ValidateRegex = {
+    Number: /^\d+$/,
+    NumberOrLetter: /^[0-9a-zA-Z]*$/g,
+    ABARNO: /\d{9}/,
+    Tel: /^[0-9#,*()-]*$/g,
+    URL: /^((ht|f)tps?):\/\/([\w\-]+(\.[\w\-]+)*\/)*[\w\-]+(\.[\w\-]+)*\/?(\?([\w\-.,@?^=%&:\/~+#]*)+)?/,
+};
 
 export function isUrl(path) {
-    return URL_REG.test(path);
+    return ValidateRegex.URL.test(path);
 }
 
 
@@ -270,14 +277,6 @@ export function toUTC0Date(date, opts) {
     date = date.utc(0);
     return date.format(format);
 }
-// 常用正则验证规则
-export const ValidateRegex = {
-    Number: /^\d+$/,
-    NumberOrLetter: /^[0-9a-zA-Z]*$/g,
-    ABARNO: /\d{9}/,
-    Tel: /^[0-9#,*()-]*$/g,
-    URL: URL_REG,
-};
 // 补零
 export function zeroize(str,n){
     if(null==str)return null;
