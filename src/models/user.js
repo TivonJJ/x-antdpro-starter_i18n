@@ -33,7 +33,14 @@ export default {
                 }
             });
             setAuthority(null);
-            router.push('/user/login');
+            let query = {};
+            if(payload && payload.takeRouteInfo){
+                query.r = window.location.href;
+            }
+            router.push({
+                pathname:'/user/login',
+                query
+            });
         },
         *modifyPassword({payload}, {call}){
             const params = payload.params;

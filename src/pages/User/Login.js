@@ -4,6 +4,8 @@ import { Checkbox, Alert, Modal, Form, Input, Icon, Spin, Button } from 'antd';
 import styles from './Login.less';
 import {FormattedMessage,formatMessage,getLocale,setLocale} from "umi/locale";
 import TrimInput from '@/components/TrimInput';
+import { isUrl } from '@/utils';
+import router from 'umi/router';
 
 export default
 @Form.create()
@@ -56,9 +58,13 @@ class LoginPage extends Component {
     };
 
     goHome(){
-        // const redirect = this.props.location.query.r || '/';
-        // this.props.history.replace(redirect)
-        this.props.history.replace('/')
+        let {query:{r:redirect}} = this.props.location;
+        if(isUrl(redirect)){
+            console.log('redirect to',redirect);
+            window.location.href = redirect;
+        }else {
+            router.push('/');
+        }
     }
 
     changeSaveUsername = e => {

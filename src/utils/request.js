@@ -19,6 +19,9 @@ function createDefaultRequest() {
             if(data.code === 'SYS010'){//未登录或登录超时
                 window.g_app._store.dispatch({
                     type: 'user/logout',
+                    payload:{
+                        takeRouteInfo:true
+                    }
                 });
             }
             const error = {

@@ -7,7 +7,7 @@ export default ({ children, route, location }) => {
     if(!checkPermissions(location.pathname,true)){
         const loginPath = '/user/login';
         const ignorePath = [loginPath,'/'];
-        const query = ignorePath.indexOf(location.pathname)!==-1?{}:{r:location.pathname};
+        const query = ignorePath.indexOf(location.pathname)!==-1?{}:{r:window.location.href};
         return <Redirect to={{pathname:loginPath,query}}/>
     }
     return children;
