@@ -36,6 +36,15 @@ export default class extends React.Component{
         const {debounceWait} = this.props;
         this.handleSearch = debounce(this.handleSearch, debounceWait);
     }
+    static getDerivedStateFromProps(props, state) {
+        const { data } = state;
+        if (props.data !== data) {
+            return {
+                data: props.data,
+            };
+        }
+        return null;
+    }
     componentDidMount(){
         const {fetchOnMount=true} = this.props;
         if(fetchOnMount)this.doFetch();
@@ -44,7 +53,7 @@ export default class extends React.Component{
         this.setState({data},()=>{
             if(!isFetchOnBottom && this.props.autoSelectFirst){
                 if(data && data[0]){
-                    this.props.onChange(data[0][this.props.valueKey]);
+                    this.props.onChange(this.getValue(data[0]),data[0]);
                 }
             }
             if(!isFetchOnBottom){
@@ -61,11 +70,22 @@ export default class extends React.Component{
             onSearch(value);
         }
     };
-    handleChange=(val)=>{
+    handleChange=(val,option)=>{
         const {onChange,trim} = this.props;
         if(trim && typeof val==='string')val = val.trim();
-        if(!val)this.handleSearch('');
-        onChange&&onChange(val);
+        onChange&&onChange(val,this.getDataByValue(val),option);
+    };
+    getDataByValue=(val)=>{
+        if(!val)return null;
+        const {data} = this.state;
+        const getFullData=(val)=>{
+            return data.find(item=>this.getValue(item)===val);
+        };
+        if(Array.isArray(val)){
+            return val.map(getFullData)
+        }else {
+            return getFullData(val)
+        }
     };
     doFetch(filter){
         const {onFetch} = this.props;
@@ -127,10 +147,10 @@ export default class extends React.Component{
     getKey(item,index){
         const {itemKey,valueKey} = this.props;
         if(itemKey){
-           if(typeof itemKey==='string')return itemKey;
-           if(typeof itemKey==='function'){
-               return itemKey(item,index);
-           }
+            if(typeof itemKey==='string')return itemKey;
+            if(typeof itemKey==='function'){
+                return itemKey(item,index);
+            }
         }
         return valueKey;
     }
@@ -141,11 +161,10 @@ export default class extends React.Component{
             ...restProps
         } = this.props;
         let {fetching,data} = this.state;
-        if('data' in this.props){
-            data = this.props.data;
-        }
         const hasPage = !!this.props.onScrollBottom;
-        const options = data.map((item,index) => <Select.Option key={this.getKey(item,index)} value={this.getValue(item)}>{this.getLabel(item)}</Select.Option>);
+        const options = data.map((item,index) => (
+            <Select.Option key={this.getKey(item,index)} value={this.getValue(item)}>{this.getLabel(item)}</Select.Option>
+        ));
         const loading = fetching?
             <Select.Option key={'$loading'} disabled><Spin size={'small'}/></Select.Option>:null;
         if(hasPage && loading){
@@ -164,6 +183,7 @@ export default class extends React.Component{
             onChange={this.handleChange}
             onPopupScroll={this.handlePopupScroll}
             onBlur={this.handleBlur}
+            loading={fetching}
         >
             {options}
         </Select>
