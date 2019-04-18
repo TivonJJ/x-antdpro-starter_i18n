@@ -1,41 +1,76 @@
 'use strict';
 import React from 'react';
-import JSONInput from 'react-json-editor-ajrm';
+import {Modal} from 'antd';
+import controllable from "@/components/react-controllables";
+import Editor from './Editor';
+import ace from 'brace';
+import classnames from 'classnames';
+import 'brace/mode/json';
+import 'brace/theme/github';
+import diff from 'deep-diff';
 
-const theme = {
-    style:{
-        outerBox:{
-            lineHeight: 1.5
-        }
-    }
-};
-
+@controllable(['value'])
 export default class JSONEditor extends React.Component{
-    static formatValidator = function(rule, value, callback){
-        const errors = [];
-        if(value === '$$ERROR$$')errors.push(new Error('JSON format error'));
-        callback(errors);
-    };
     static defaultProps = {
-        onKeyPressUpdate:false,
+        mode:'code',
     };
-    handleChange=(val)=>{
-        this.props.onChange(val.error?'$$ERROR$$':val.json);
-    };
-    render(){
-        const {value,disabled,...rest} = this.props;
-        let placeholder = undefined;
-        if(value && value !== '$$ERROR$$' && typeof value === 'string'){
-            try{
-                placeholder = JSON.parse(value);
-            }catch (e) {
-                console.warn('json data error');
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(this.currentVal !== nextProps.value){
+            if(!diff(this.props.value,this.currentVal) && diff(this.currentVal,nextProps.value)){
+                let value = this.parseValue(nextProps.value);
+                this.editor.jsonEditor.set(value);
+                this.currentVal = value;
             }
         }
-        return <JSONInput {...rest}
-                          {...theme}
-                          viewOnly={disabled}
-                          placeholder={placeholder}
-                          onChange={this.handleChange}/>
+    }
+    handleError=(err)=>{
+        Modal.error({
+            title:'ERROR',
+            content:err.toString()
+        })
+    };
+    onRef=(ref)=>{
+        const {editorRef} = this.props;
+        if(editorRef)editorRef(ref);
+        if(ref){
+            this.editor = ref;
+        }else {
+            this.editor = null;
+        }
+    };
+    handleChange=(val)=>{
+        this.currentVal = val;
+        this.props.onChange(val);
+    };
+    parseValue=(value)=>{
+        // if(typeof value === 'string'){
+        //     try{
+        //         value = JSON.parse(value);
+        //     }catch (e) {
+        //         value = {
+        //             jsonParseError:e.message,
+        //             data:value
+        //         }
+        //     }
+        // }
+        if(null==value)value = '';
+        return value;
+    };
+    render(){
+        let {value,disabled,editorRef,id,width,height,className,style,mode,...rest} = this.props;
+        value = this.parseValue(value);
+        return <div className={classnames('comp-jsoneditor', {'disabled': disabled},className)}
+                    style={{width,height,...style}}
+                    id={id}>
+            <Editor ace={ace}
+                    theme="ace/theme/github"
+                    allowedModes={['code', 'form', 'text', 'tree', 'view']}
+                    {...rest}
+                    mode={mode}
+                    value={value}
+                    onError={this.handleError}
+                    onChange={this.handleChange}
+                    ref={this.onRef}/>
+        </div>
     }
 }

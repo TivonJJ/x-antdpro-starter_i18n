@@ -1,5 +1,5 @@
 import React from 'react';
-import { notification, Button, message } from 'antd';
+import { notification, Button, message, Input } from 'antd';
 import { formatMessage } from 'umi/locale';
 import defaultSettings from './defaultSettings';
 
@@ -13,6 +13,31 @@ window.addEventListener("unhandledrejection", function (event) {
         console.error('Error handled on unhandledrejection',event.reason.message);
     }
 });
+
+// 初始化百度地图的配置
+const BmapConfig = config.baiduMap;
+Map.defaultProps = Object.assign({
+    ak:BmapConfig.key,
+    version: Number(BmapConfig.version)
+},Map.defaultProps);
+
+// 模态窗上扩展prompt 弹出输入组件
+Modal.prompt = function (opts) {
+    const {inputProps,onOk,content,...restProps} = opts;
+    let ref = React.createRef();
+    return Modal.confirm({
+        ...restProps,
+        content: <div className={'gutter-v_lg'} ref={ref}>
+            {content}
+            <Input.TextArea {...inputProps}/>
+        </div>,
+        onOk:()=>{
+            const value = ref.current.querySelector('.ant-input').value;
+            return onOk(value);
+        }
+    })
+};
+
 
 const { pwa } = defaultSettings;
 // if pwa is true

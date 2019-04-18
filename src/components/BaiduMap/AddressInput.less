@@ -1,0 +1,20 @@
+@import "~@/styles/mixins";
+
+:global{
+  .comp-bmap_input{
+    >div{
+      margin-bottom: @design-gutter;
+    }
+    :global{
+      .ant-input-group .ant-input-group-addon:first-child{
+        min-width: 100px;
+      }
+    }
+    .comp-bmap_input__picker {
+      margin-bottom: @design-gutter;
+      .anticon{
+        color: @primary-color;
+      }
+    }
+  }
+}

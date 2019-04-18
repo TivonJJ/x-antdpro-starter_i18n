@@ -1,0 +1,22 @@
+@import "~@/styles/mixins";
+
+:global{
+    .comp-bmap_picker__container{
+        .BMap_pop,.BMap_shadow{
+            display: none;
+        }
+    }
+    .comp-bmap_picker_search_container{
+        position: relative;
+        padding: @design-gutter;
+        .comp-bmap_picker_search_input{
+            width: 260px;
+        }
+    }
+    .tangram-suggestion-main{
+        z-index: 9999;
+    }
+    .comp-bmap_picker_current_location{
+        margin-top: @design-gutter;
+    }
+}
