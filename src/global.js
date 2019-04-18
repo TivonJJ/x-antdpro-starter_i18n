@@ -1,5 +1,5 @@
 import React from 'react';
-import { notification, Button, message, Input } from 'antd';
+import { notification, Button, message, Input, Modal } from 'antd';
 import { formatMessage } from 'umi/locale';
 import defaultSettings from './defaultSettings';
 import config from 'config';
