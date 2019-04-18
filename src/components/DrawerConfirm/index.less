@@ -3,7 +3,7 @@
 :global{
   .comp-DrawerConfirm_content{
     padding-bottom: 60px;
-    overflow: auto;
+    overflow-y: auto;
   }
   .comp-DrawerConfirm_footer{
     position: absolute;
@@ -14,6 +14,7 @@
     border-top: 1px solid #e9e9e9;
     background: #ffffff;
     text-align: right;
+    z-index: 99;
     > button:not(:last-child){
       margin-right: @design-gutter;
     }

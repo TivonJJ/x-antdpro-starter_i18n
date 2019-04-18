@@ -16,7 +16,7 @@ export default class extends React.PureComponent{
                 }
                 <div className={classnames(styles.content,contentClass)}>
                     <div className={styles.title}>{title}</div>
-                    <div className={styles.amount}>{children || '-'}</div>
+                    <div className={styles.amount}>{children==null? '-':children}</div>
                     <div className={styles.extra}>{extra}</div>
                 </div>
             </div>

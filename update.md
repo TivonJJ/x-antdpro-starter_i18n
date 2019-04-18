@@ -1,5 +1,17 @@
 # 更新记录 #
 
+### 3.1.3
+    更新组件
+    新增PhotoViewer图片查看组件
+    修改react-controllables组件，onChange透传所有arguments
+    更换JSONEditor组件内核
+    新增BaiduMap百度地图组件
+    移除RateInput组件，请直接使用InputNumber
+    优化FileUploader,图片上传增加OCR识别功能
+    新增FormItemInterceptor表单元素管道拦截器
+    新增SensitiveText文字密文显示
+    新增Group分组组件
+
 ### 3.1.2
     修复EasyTable的筛选条件未清除的BUG
     EasyTable新增fixedParams参数

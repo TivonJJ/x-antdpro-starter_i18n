@@ -1,0 +1,40 @@
+@import '~@/styles/mixins';
+
+:global {
+  .comp-group {
+    &:not(:last-child){
+      margin-bottom: @design-gutter_large * 2;
+    }
+    .comp-group_header {
+      margin-bottom: @design-gutter_large;
+      display: flex;
+      align-items: center;
+
+      .comp-group-header_title {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        flex: 1 1;
+        display: inline-block;
+
+        .comp-group_header_icon {
+          font-size: 14px;
+          color: @primary-color;
+          margin-right: @design-gutter;
+        }
+
+        .comp-group-header_text {
+          font-weight: 600;
+        }
+      }
+
+      .comp-group-header_extra {
+        float: right;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.65);
+        font-weight: normal;
+        margin-left: auto;
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 "use strict";
-import React from 'react';
+import React, { Fragment } from 'react';
 import {Button, Drawer} from 'antd';
 import {formatMessage} from "umi/locale";
 import './index.less';
@@ -15,7 +15,9 @@ export default class DrawerConfirm extends React.Component {
         okText:PropTypes.any,
         okType:PropTypes.string,
         okButtonProps:PropTypes.object,
-        cancelButtonProps:PropTypes.object
+        cancelButtonProps:PropTypes.object,
+        footer: PropTypes.any,
+        extraFooter: PropTypes.any
     };
     render() {
         const {children,onCancel,onOk,
@@ -24,17 +26,22 @@ export default class DrawerConfirm extends React.Component {
             cancelText=formatMessage({id:"Common.button.cancel"}),
             okText=formatMessage({id:"Common.button.ok"}),
             okType='primary',okButtonProps,cancelButtonProps,
+            footer,
+            extraFooter,
             ...restProps} = this.props;
         return <Drawer {...restProps}
                        className={classnames(className,'comp-DrawerConfirm')}
                        onClose={onCancel}>
             <div className={'comp-DrawerConfirm_content'}>{children}</div>
             <div className={'comp-DrawerConfirm_footer'}>
-                <Button {...cancelButtonProps} onClick={onCancel}>{cancelText}</Button>
-                <Button type={okType}
-                        loading={confirmLoading}
-                        {...okButtonProps}
-                        onClick={onOk}>{okText}</Button>
+                {footer?footer:<Fragment>
+                    <div className={'pull-left'}>{extraFooter}</div>
+                    <Button {...cancelButtonProps} onClick={onCancel}>{cancelText}</Button>
+                    <Button type={okType}
+                            loading={confirmLoading}
+                            {...okButtonProps}
+                            onClick={onOk}>{okText}</Button>
+                </Fragment>}
             </div>
         </Drawer>
     }
