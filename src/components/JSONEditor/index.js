@@ -42,6 +42,10 @@ export default class JSONEditor extends React.Component{
         this.currentVal = val;
         this.props.onChange(val);
     };
+    handleEditable=(edit)=>{
+        if(this.props.disabled)return false;
+        return edit;
+    };
     parseValue=(value)=>{
         // if(typeof value === 'string'){
         //     try{
@@ -70,6 +74,7 @@ export default class JSONEditor extends React.Component{
                     value={value}
                     onError={this.handleError}
                     onChange={this.handleChange}
+                    onEditable={this.handleEditable}
                     ref={this.onRef}/>
         </div>
     }
