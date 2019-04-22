@@ -8,7 +8,7 @@ window.appMeta = APP_METADATA;
 window.React = React;
 
 window.addEventListener("unhandledrejection", function (event) {
-    if(event.reason.type === 'NetError'){
+    if(event.reason&&event.reason.type === 'NetError'){
         event.preventDefault();
         message.error(event.reason.message);
         console.error('Error handled on unhandledrejection',event.reason.message);
