@@ -1,5 +1,10 @@
 # 更新记录 #
 
+### 3.1.4
+    更新组件
+    DescriptionList支持Type参数
+    修复EasyTable的fixdParams属性会造成死循环的问题
+
 ### 3.1.3
     更新组件
     新增PhotoViewer图片查看组件

@@ -7,6 +7,7 @@ import './provider';
 import connector from './connector';
 import { FormattedMessage } from 'umi/locale';
 import './style.less';
+import diff from 'deep-diff';
 
 @connect(({easyTableProvider})=>({
     easyTableProvider
@@ -75,11 +76,20 @@ export default class EasyTable extends React.Component{
         if(this.props.name !== nextProps.name){
             throw new Error('The name of the EasyTable cannot be changed，You can switch between multiple tables')
         }
-        const watchProps =  ['fixedParams','source','onDataLoaded','onError'];
-        const changed = watchProps.find(key=>this.props[key] !== nextProps[key]);
-        if(changed){
+        const changedProps = [];
+        ['source', 'onDataLoaded', 'onError'].map(key=>{
+            if(this.props[key] !== nextProps[key]){
+                changedProps.push(key)
+            }
+        });
+        ['fixedParams'].map(key=>{
+            if(diff(this.props[key],nextProps[key])){
+                changedProps.push(key)
+            }
+        });
+        if(changedProps.length>0){
             let changeValue = {};
-            watchProps.map(key=>{
+            changedProps.map(key=>{
                 if(key in nextProps){
                     changeValue[key] = nextProps[key];
                 }
