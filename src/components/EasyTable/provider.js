@@ -13,7 +13,7 @@ const model = {
         page:{},
         loading:{},
         errors:{},
-        fixedParams:{}
+        fixedParams:{},
     },
     effects:{
         *fetch({payload:{name,params,pagination}},{put,call,select}){

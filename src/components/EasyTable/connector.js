@@ -13,7 +13,7 @@ function createWrapperComponent(getProps,options,Component) {
     }))
     class WrapperComponent extends React.PureComponent {
         render() {
-            const extProps = extendProvider(this.props, getProps);
+            const extProps = mapProviderProps(this.props, getProps);
             if(options.ensureProvider && Object.keys(extProps).some(key=>!extProps[key]))return null;
             return React.createElement(Component, {
                 ...this.props,
@@ -24,7 +24,7 @@ function createWrapperComponent(getProps,options,Component) {
     return WrapperComponent;
 }
 
-function extendProvider(props,getProps) {
+function mapProviderProps(props,getProps) {
     const args = {
         easyTableProvider:props.easyTableProvider
     };
@@ -34,8 +34,10 @@ function extendProvider(props,getProps) {
             page:props.easyTableProvider.page[name],
             loading:props.easyTableProvider.loading[name],
             params:props.easyTableProvider.params[name],
+            fixedParams:props.easyTableProvider.fixedParams[name],
+            errors:props.easyTableProvider.errors[name],
             fetch(params,pagination){
-                props.dispatch({
+                return props.dispatch({
                     type: 'easyTableProvider/fetch',
                     payload: {
                         name,
@@ -45,7 +47,7 @@ function extendProvider(props,getProps) {
                 })
             },
             search(params){
-                props.dispatch({
+                return props.dispatch({
                     type: 'easyTableProvider/search',
                     payload: {
                         name,
@@ -54,7 +56,7 @@ function extendProvider(props,getProps) {
                 })
             },
             paging(pagination){
-                props.dispatch({
+                return props.dispatch({
                     type: 'easyTableProvider/paging',
                     payload: {
                         name,
@@ -63,7 +65,7 @@ function extendProvider(props,getProps) {
                 })
             },
             refresh(pagination){
-                props.dispatch({
+                return props.dispatch({
                     type: 'easyTableProvider/refresh',
                     payload: {
                         name,
@@ -72,7 +74,7 @@ function extendProvider(props,getProps) {
                 })
             },
             update(callback){
-                props.dispatch({
+                return props.dispatch({
                     type:'easyTableProvider/update',
                     payload:{
                         name,
@@ -81,7 +83,7 @@ function extendProvider(props,getProps) {
                 })
             },
             clean(){
-                props.dispatch({
+                return props.dispatch({
                     type:'easyTableProvider/clean',
                     payload:{
                         name
