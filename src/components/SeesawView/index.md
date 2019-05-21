@@ -18,3 +18,4 @@ router的父子路由显示时同时显示的，子路由显示的时候父路�
 | child | 子视图元素 | ReactNode | - |
 | childProps | 子视图对应的component扩展Props属性   | Object  | -    |
 | onResume | 根视图重新显示时回调,注(首次加载不会调用) | Function | - |
+| forceRender | 强制渲染所有路由 | Boolean | false |

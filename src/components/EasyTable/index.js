@@ -119,6 +119,16 @@ export default class EasyTable extends React.Component{
     search=(params)=>{
         return this._dispatch('easyTableProvider/search',{params});
     };
+    getProviderState=()=>{
+        const {easyTableProvider,name} = this.props;
+        return {
+            errors: easyTableProvider.errors[name],
+            fixedParams: easyTableProvider.fixedParams[name],
+            params: easyTableProvider.params[name],
+            loading: easyTableProvider.loading[name],
+            page: easyTableProvider.page[name],
+        }
+    };
     clean(){
         this._dispatch('easyTableProvider/clean',{});
     }

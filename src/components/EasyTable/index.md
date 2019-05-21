@@ -35,6 +35,7 @@ title:
 | paging | *pagination | Object | 切换分页(params,参数会保持) |
 | clean | name | String | 清空数据,name是table名称，不填则清空所有 |
 | update | data<Array> => data<Array> | Array | 会传入当前页的list数据，return一个新的list |
+| getProviderState | - | - | 获取table的provider数据 |
 
 ### 属性 使用connect注入Provider后 component的props将自动扩展这些属性，请不要直接修改这些属性！
 

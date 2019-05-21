@@ -59,10 +59,10 @@ export default class extends React.Component{
         pagination.page_num++;
         return this.handleFetch(this.state.filter,pagination);
     };
-    handleBlur=(evt)=>{
-        if(!this.hasFoundItems)this.setState({pagination:this.lastData});
-        if(this.props.onBlur)this.props.onBlur(evt);
-    };
+    // handleBlur=(evt)=>{
+    //     if(!this.hasFoundItems)this.setState({pagination:this.lastData});
+    //     if(this.props.onBlur)this.props.onBlur(evt);
+    // };
     render(){
         if(this.state.error)return <Alert type={'error'} showIcon message={this.state.error}/>;
         const {fetchOnSearch=true,fetchOnMount=true,...restProps} = this.props;
@@ -71,7 +71,7 @@ export default class extends React.Component{
                                   fetchOnSearch={fetchOnSearch}
                                   onFetch={this.handleFetch}
                                   data={this.state.pagination.data}
-                                  onBlur={this.handleBlur}
+                                  // onBlur={this.handleBlur}
                                   onScrollBottom={this.handleScrollBottom}/>
     }
 }
