@@ -43,6 +43,7 @@ function _initMenus(menus,parent) {
         menu.isDir = menu.res_type === "Folder";
         menu.isMenu = menu.res_type === "Menu";
         menu.isAction = menu.res_type === "Action";
+        menu.isStatusBar = menu.res_type === "StatusBar";
         menu.route = parent?joinPath('/',parent.route,menu.res_url):joinPath('/',menu.res_url);
         menu.icon = menu.icon_url;
         menu.res_id = menu.id || Date.now();

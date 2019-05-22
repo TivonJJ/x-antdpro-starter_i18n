@@ -1,29 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CheckPermissions from './CheckPermissions';
-import pathToRegexp from 'path-to-regexp';
 
-//缓存的权限信息
-let Authority = null;
+function getCurrentUser() {
+    const user = window.g_app._store.getState().user;
+    return user && user.currentUser;
+}
 
-export const setAuthority = (authority)=> {
-    let auth = authority;
-    if(authority){
-        auth = {};
-        Object.keys(authority).map(key=>{
-            const item = authority[key];
-            if(item.status == 1){
-                if(item.route)item.pathRegexp=pathToRegexp(item.route);
-                auth[key] = item;
-            }
-        })
+export function checkUserLogged() {
+    const user = getCurrentUser();
+    return !!user;
+}
+
+export function checkUserAuth(route){
+    // 没有权限.跳转异常
+    const user = getCurrentUser();
+    if(!user)return false;
+    const authedRoutes = user.routeMap;
+    if(!authedRoutes)return false;
+    // 有权限
+    if(typeof route === 'string'){
+        if(!route || route === '/')return true;
+        return Object.values(authedRoutes).some(({pathRegexp})=>{
+            if(!pathRegexp)return false;
+            return pathRegexp.test(route)
+        });
     }
-    Authority = auth;
-};
-
-export const getAuthority = ()=>{
-    return Authority;
-};
+    // Function 处理
+    if (typeof route === 'function') {
+        return route(authedRoutes);
+    }
+    return false;
+}
 
 class Authorized extends React.Component {
     static propTypes = {
@@ -35,7 +42,7 @@ class Authorized extends React.Component {
     render() {
         const {children, noMatch = null, route, onlyCheckSign} = this.props;
         const childrenRender = typeof children === 'undefined' ? null : children;
-        return CheckPermissions(route,onlyCheckSign)?childrenRender:noMatch;
+        return checkUserAuth(route,onlyCheckSign)?childrenRender:noMatch;
     }
 }
 

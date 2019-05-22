@@ -1,10 +1,9 @@
 import {login, modifyPassword} from '../services/user';
-import {setAuthority} from '@/components/Authorized';
 import { md5 } from '@/utils';
 import router from 'umi/router';
+import pathToRegexp from 'path-to-regexp';
 
 const localUser = getUserFromStore();
-if(localUser)setAuthority(localUser.routeMap);
 
 export default {
     namespace: 'user',
@@ -16,7 +15,6 @@ export default {
             payload.password = SignPassword(payload.username,payload.password);
             const response = yield call(login, payload);
             const AuthUser = extUserAuthMap(response);
-            setAuthority(AuthUser.routeMap);
             yield put({
                 type: 'changeStatus',
                 payload: {
@@ -25,14 +23,13 @@ export default {
             });
             return AuthUser;
         },
-        * logout(_, {put}) {
+        * logout({payload}, {put}) {
             yield put({
                 type: 'changeStatus',
                 payload: {
                     currentUser: null
                 }
             });
-            setAuthority(null);
             let query = {};
             if(payload && payload.takeRouteInfo){
                 query.r = window.location.href;
@@ -94,6 +91,7 @@ function extUserAuthMap(user) {
         menus.map(menu=>{
             routeMap[menu.route] = menu;
             dnaMap[menu.dna] = menu;
+            menu.pathRegexp=pathToRegexp(menu.route);
             if(menu.children){
                 walkMenu(menu.children);
             }

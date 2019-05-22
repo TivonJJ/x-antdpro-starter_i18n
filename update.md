@@ -1,5 +1,9 @@
 # 更新记录 #
 
+### 3.1.5
+    升级antd版本
+    优化Authorized权限组件，和权限路由拦截器
+
 ### 3.1.4
     更新组件
     DescriptionList支持Type参数

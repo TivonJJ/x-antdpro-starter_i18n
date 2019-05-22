@@ -1,14 +1,14 @@
 {
   "name": "x-antdpro-starter_i18n",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "private": true,
   "scripts": {
     "precommit": "npm run lint-staged",
     "presite": "npm run generate-mock && cd functions && npm install",
-    "dev": "cross-env APP_TYPE=site MOCK=none BROWSER=none PORT=8200 umi dev",
-    "dev:mock": "cross-env APP_TYPE=site BROWSER=none PORT=8200 umi dev",
-    "start": "cross-env MOCK=none APP_TYPE=site PORT=8200 umi dev",
-    "start:mock": "cross-env APP_TYPE=site PORT=8200 umi dev",
+    "dev": "cross-env APP_TYPE=site MOCK=none BROWSER=none PORT=3000 umi dev",
+    "dev:mock": "cross-env APP_TYPE=site BROWSER=none PORT=3000 umi dev",
+    "start": "cross-env MOCK=none APP_TYPE=site PORT=3000 umi dev",
+    "start:mock": "cross-env APP_TYPE=site PORT=3000 umi dev",
     "build": "cross-env umi build",
     "build:test": "cross-env BUILD_ENV=test umi build",
     "build:uat": "cross-env BUILD_ENV=uat umi build",
@@ -28,7 +28,7 @@
   "dependencies": {
     "@antv/data-set": "^0.10.0",
     "@babel/runtime": "^7.3.1",
-    "antd": "^3.13.0",
+    "antd": "^3.18.2",
     "axios": "^0.18.0",
     "bizcharts": "^3.4.1",
     "bizcharts-plugin-slider": "^2.1.1-beta.1",

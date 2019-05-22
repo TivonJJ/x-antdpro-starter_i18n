@@ -7,7 +7,7 @@ export default [
             // { path: '/user', redirect: '/user/login' },
             { path: '/user/login', component: './User/Login', title: 'Route.login' },
             {
-                Routes: ['src/router-interceptor/authorized/Sign'],
+                Routes: ['src/router-interceptor/authorized/Logged'],
                 routes:[
                     { path: '/user/changePassword', component: './User/ChangePassword', title: 'Route.changePassword' },
                 ]
@@ -26,7 +26,7 @@ export default [
     {
         path: '/',
         component: '../layouts/BasicLayout',
-        Routes: ['src/router-interceptor/authorized/Sign','src/router-interceptor/authorized/Role'],
+        Routes: ['src/router-interceptor/authorized/Logged','src/router-interceptor/authorized/Authed'],
         routes: [
             {
                 path: '/demo',
