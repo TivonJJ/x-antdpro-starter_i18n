@@ -97,9 +97,9 @@
     "stylelint": "^9.4.0",
     "stylelint-config-prettier": "^4.0.0",
     "stylelint-config-standard": "^18.0.0",
-    "umi": "^2.5.5",
+    "umi": "^2.6.1",
     "umi-plugin-locale-yaml": "^2.0.3",
-    "umi-plugin-react": "^1.4.2"
+    "umi-plugin-react": "^1.6.0"
   },
   "lint-staged": {
     "**/*.{js,jsx,less}": [
