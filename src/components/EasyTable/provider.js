@@ -14,6 +14,8 @@ const model = {
         loading:{},
         errors:{},
         fixedParams:{},
+        pageProps: {},
+        dataProp: {}
     },
     effects:{
         *fetch({payload:{name,params,pagination}},{put,call,select}){
@@ -38,7 +40,14 @@ const model = {
                     ...pagination
                 }
             }
-            return yield loadData(name, pagination, params,state.fixedParams[name], put, call);
+            return yield loadData(
+                name,
+                pagination,
+                params,
+                state.fixedParams[name],
+                state.pageProps[name],
+                state.dataProp[name],
+                put, call);
         },
         *search({payload:{name,params}},{put,call,select}){
             const state = yield select(state=>state[NameSpace]);
@@ -50,15 +59,28 @@ const model = {
                     params
                 }
             });
-            return yield loadData(name, state.page[name], params,state.fixedParams[name], put, call);
+            return yield loadData(
+                name,
+                state.page[name],
+                params,
+                state.fixedParams[name],
+                state.pageProps[name],
+                state.dataProp[name],
+                put, call);
         },
         *paging({payload:{name,pagination}},{put,call,select}){
             const state = yield select(state=>state[NameSpace]);
             check(name,state);
-            return yield loadData(name, {
-                ...state.page[name],
-                ...pagination
-            }, state.params[name],state.fixedParams[name], put, call);
+            return yield loadData(
+                name, {
+                    ...state.page[name],
+                    ...pagination
+                },
+                state.params[name],
+                state.fixedParams[name],
+                state.pageProps[name],
+                state.dataProp[name],
+                put, call);
         },
         *refresh({payload:{name,pagination}},{put,call,select}){
             const state = yield select(state=>state[NameSpace]);
@@ -71,18 +93,31 @@ const model = {
             }else {
                 pagination = state.page[name];
             }
-            return yield loadData(name,pagination,state.params[name],state.fixedParams[name],put,call);
+            return yield loadData(
+                name,
+                pagination,
+                state.params[name],
+                state.fixedParams[name],
+                state.pageProps[name],
+                state.dataProp[name],
+                put,call);
         },
     },
     reducers:{
         // 数据池初始化
-        _initialize(state,{payload:{name,source,fixedParams,onDataLoaded,onError}}){
+        _initialize(state,{payload:{name,source,fixedParams,onDataLoaded,pageProps,dataProp,onError}}){
             SourceActionMap[name] = source;
             CallbackMap[name] = {onDataLoaded,onError};
             if(state.page[name])return state;
             state.page[name] = createPagination();
             state.loading[name] = false;
             state.fixedParams[name] = fixedParams;
+            if(pageProps){
+                state.pageProps[name] = pageProps;
+            }
+            if(dataProp){
+                state.dataProp[name] = dataProp;
+            }
             return {...state};
         },
         _update(state,{payload}){
@@ -165,7 +200,17 @@ if(!window.g_app._models.some(({namespace})=>namespace===NameSpace)){
     window.g_app.model(model);
 }
 
-function *loadData(name,page,params,fixedParams,put,call) {
+function *loadData(name,
+                   page,
+                   params,
+                   fixedParams,
+                   pageProps={
+                       current: 'page_num',
+                       pageSize: 'page_size',
+                       total: 'total'
+                   },
+                   dataProp='data'
+                   ,put,call) {
     yield put({
         type:'_update',
         payload:{
@@ -183,13 +228,19 @@ function *loadData(name,page,params,fixedParams,put,call) {
             });
         }
         const result = yield call(fetch,{
-            page_num:page.current,
-            page_size:page.pageSize,
+            [pageProps.current]:page.current,
+            [pageProps.pageSize]:page.pageSize,
             ...fixedParams,
             ...params
         });
-        page.total = result.total;
-        page.data = result.data;
+        if(pageProps.current in result){
+            page.current = result[pageProps.current];
+        }
+        if(pageProps.pageSize in result){
+            page.pageSize = result[pageProps.pageSize];
+        }
+        page.total = result[pageProps.total];
+        page.data = result[dataProp];
         if(callbacks.onDataLoaded)callbacks.onDataLoaded(page,params);
         yield put({
             type:'_update',

@@ -24,7 +24,19 @@ title:
 | wrappedComponentRef | 获取table真实的Ref | function(ref) | - |
 | before | 表格前面的内容 | any | - |
 | after | 表格后面的内容 | any | - |
+| pageProps | 分页的配置参数 | object | 见下方 |
+| dataProp | 数据值对于的参数名 | string | data |
 | ... | 其他参数和ant的API一致，(dataSource会被忽略)| ... | - |
+
+> 默认pageProps
+
+`
+{current: 'page_num',
+pageSize: 'page_size',
+total: 'total'
+}
+`
+
 
 ### 方法 这些方法在Component和Provider中都提供，建议使用Provider,使用connect注入Provider后 component的props将自动扩展这些方法
 

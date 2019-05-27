@@ -12,7 +12,7 @@ import diff from 'deep-diff';
 @connect(({easyTableProvider})=>({
     easyTableProvider
 }))
-export default class EasyTable extends React.Component{
+class EasyTable extends React.Component{
     static propTypes={
         source:PropTypes.oneOfType([PropTypes.func,PropTypes.string]).isRequired, // 数据源
         name: PropTypes.string.isRequired, // Table的名称，provider数据池识别的键,必须唯一。
@@ -28,6 +28,8 @@ export default class EasyTable extends React.Component{
         wrappedComponentRef: PropTypes.func,
         rowKey: PropTypes.oneOfType([PropTypes.string,PropTypes.func]).isRequired,
         columns: PropTypes.array,
+        pageProps: PropTypes.object,// Page的参数属性
+        dataProp: PropTypes.string, // data取值的属性
     };
     static defaultProps={
         autoFetch: false,
@@ -50,7 +52,9 @@ export default class EasyTable extends React.Component{
                 source: props.source,
                 onDataLoaded: props.onDataLoaded,
                 onError: props.onError,
-                fixedParams: props.fixedParams
+                fixedParams: props.fixedParams,
+                pageProps: props.pageProps,
+                dataProp: props.dataProp,
             }
         });
         if(typeof props.name !== 'string'){
@@ -127,6 +131,8 @@ export default class EasyTable extends React.Component{
             params: easyTableProvider.params[name],
             loading: easyTableProvider.loading[name],
             page: easyTableProvider.page[name],
+            pageProps: easyTableProvider.pageProps[name],
+            dataProp: easyTableProvider.dataProp[name],
         }
     };
     clean(){
@@ -179,3 +185,5 @@ export default class EasyTable extends React.Component{
         </div>
     }
 }
+
+export default EasyTable;

@@ -36,6 +36,8 @@ function mapProviderProps(props,getProps) {
             params:props.easyTableProvider.params[name],
             fixedParams:props.easyTableProvider.fixedParams[name],
             errors:props.easyTableProvider.errors[name],
+            pageProps:props.easyTableProvider.errors[name],
+            dataProp:props.easyTableProvider.errors[name],
             fetch(params,pagination){
                 return props.dispatch({
                     type: 'easyTableProvider/fetch',
