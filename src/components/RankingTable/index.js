@@ -10,7 +10,7 @@ export default class RankingTable extends React.PureComponent{
     };
     render() {
         let {columns=[],data=[],max,top,rowKey=(item,index)=>index} = this.props;
-        data = data.splice(0,max);
+        data = data.slice(0,max);
         columns = [{
             title: '',
             width: 20,
