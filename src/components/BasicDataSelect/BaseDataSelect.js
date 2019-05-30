@@ -65,10 +65,11 @@ export default class extends React.Component{
     // };
     render(){
         if(this.state.error)return <Alert type={'error'} showIcon message={this.state.error}/>;
-        const {fetchOnSearch=true,fetchOnMount=true,...restProps} = this.props;
+        const {fetchOnSearch=true,fetchOnMount=false,notFoundContent=null,...restProps} = this.props;
         return <AssociativeSearch {...restProps}
                                   fetchOnMount={fetchOnMount}
                                   fetchOnSearch={fetchOnSearch}
+                                  notFoundContent={notFoundContent}
                                   onFetch={this.handleFetch}
                                   data={this.state.pagination.data}
                                   // onBlur={this.handleBlur}
