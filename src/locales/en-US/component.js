@@ -1,0 +1,18 @@
+export default {
+    'Component.googleMap.title': 'Pick address',
+    'Component.googleMap.pickHere': 'Pick here',
+    'Component.googleMap.label.city': 'City',
+    'Component.googleMap.label.street': 'Street',
+    'Component.googleMap.label.country': 'Country',
+    'Component.googleMap.label.province': 'Province',
+    'Component.googleMap.label.postalCode': 'Postal Code',
+    'Component.googleMap.currentLocation': 'Current location',
+    'Component.googleMap.pickerButton': 'Pick on Google maps',
+    'Component.googleMap.search.placeholder': 'Search address',
+    'Component.googleMap.addressPreviewTitle': 'Address preview',
+    'Component.globalHeader.menu.logout': 'Logout',
+    'Component.globalHeader.menu.ChooseLanguage': 'Language',
+    'Component.globalHeader.menu.changePassword': 'Change Password',
+    'Component.statusIcon.task.emptyText': 'No task',
+    'Component.taskBar.noticeTitle': 'Task created',
+};

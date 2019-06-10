@@ -25,11 +25,11 @@ export default {
                 dva: {
                     hmr: true,
                 },
-                // locale: {
-                //     enable: true, // default false
-                //     default: 'zh-CN', // default zh-CN
-                //     baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
-                // },
+                locale: {
+                    enable: true, // default false
+                    default: 'zh-CN', // default zh-CN
+                    baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
+                },
                 dynamicImport: {
                     loadingComponent: './components/PageLoading/index',
                 },
@@ -52,16 +52,6 @@ export default {
                     : {}),
             },
         ],
-        ['umi-plugin-locale-yaml', {
-            enable: true, // default false
-            antd: true,
-            default: 'zh-CN', // default zh-CN
-            baseNavigator: true,
-            async:{
-                loadingComponent: './components/PageLoading/index',
-            }
-        }],
-
     ],
     define: {
         APP_TYPE: process.env.APP_TYPE || '',

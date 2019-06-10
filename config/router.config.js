@@ -16,7 +16,6 @@ export default [
     },
     {
         path: '/exception',
-        component: '../layouts/BlankLayout',
         routes: [
             { path: '/exception/404', component: './Exception/404' },
             { path: '/exception/403', component: './Exception/403' },

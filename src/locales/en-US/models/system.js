@@ -1,0 +1,16 @@
+export default {
+    'Model.system.area.city': 'City',
+    'Model.system.area.province': 'Province',
+    'Model.system.area.country': 'Country',
+    'Model.system.role.name': 'Role name',
+    'Model.system.role.description': 'Role description',
+    'Model.system.user.contact': 'Phone number',
+    'Model.system.user.roleName': 'Role name',
+    'Model.system.user.username': 'Login name',
+    'Model.system.user.realName': 'Real name',
+    'Model.system.logs.servicePlatform.bis': 'Basic Infomation Service',
+    'Model.system.logs.servicePlatform.pbs': 'Payment Business Service',
+    'Model.system.logs.servicePlatform.aps': 'Acquiring Payment Service',
+    'Model.system.logs.servicePlatform.aas': 'Acquiring Accounting Service',
+    'Model.system.logs.servicePlatform.dms': 'Device Management Service',
+};

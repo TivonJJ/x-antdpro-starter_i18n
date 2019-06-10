@@ -1,0 +1,18 @@
+export default {
+    'Component.googleMap.title': '选择地址',
+    'Component.googleMap.pickHere': '选择此处',
+    'Component.googleMap.label.city': '城市',
+    'Component.googleMap.label.street': '街道',
+    'Component.googleMap.label.country': '国家',
+    'Component.googleMap.label.province': '省',
+    'Component.googleMap.label.postalCode': '邮编',
+    'Component.googleMap.currentLocation': '当前位置',
+    'Component.googleMap.pickerButton': 'Google地图定位',
+    'Component.googleMap.search.placeholder': '搜索地址',
+    'Component.googleMap.addressPreviewTitle': '地址预览',
+    'Component.globalHeader.menu.logout': '退出登录',
+    'Component.globalHeader.menu.ChooseLanguage': '语言',
+    'Component.globalHeader.menu.changePassword': '修改密码',
+    'Component.statusIcon.task.emptyText': '暂无任务',
+    'Component.taskBar.noticeTitle': '任务创建成功',
+};

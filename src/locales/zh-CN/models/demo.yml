@@ -1,9 +1,0 @@
-demo:
-  name: 名称
-  amount: 金额
-  date: 订单日期
-  no: 编号
-  status:
-    name: 状态
-    valid: 有效
-    invalid: 关闭

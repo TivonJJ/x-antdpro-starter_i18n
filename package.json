@@ -1,6 +1,6 @@
 {
   "name": "x-antdpro-starter_i18n",
-  "version": "3.1.6",
+  "version": "3.2.0",
   "private": true,
   "scripts": {
     "precommit": "npm run lint-staged",
@@ -98,7 +98,6 @@
     "stylelint-config-prettier": "^4.0.0",
     "stylelint-config-standard": "^18.0.0",
     "umi": "^2.6.1",
-    "umi-plugin-locale-yaml": "^2.0.3",
     "umi-plugin-react": "^1.6.0"
   },
   "lint-staged": {

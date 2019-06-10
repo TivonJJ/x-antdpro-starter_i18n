@@ -1,7 +1,0 @@
-App: !!import/single "en-US/app.yml"
-Route: !!import/single "en-US/route.yml"
-Validator: !!import/single "en-US/validator.yml"
-Common: !!import/single "en-US/common.yml"
-Model: !!import/dirMerge "en-US/models"
-Component: !!import/single "en-US/component.yml"
-Page: !!import/dirMerge "en-US/pages"
