@@ -1,5 +1,8 @@
 # 更新记录 #
 
+### 3.2.1
+    修复AssociativeSearch在labelInValue模式下autoSelectFirst冲突问题
+
 ### 3.2.0
     国际化配置数据改为js配置
     更新一些依赖版本和组件
