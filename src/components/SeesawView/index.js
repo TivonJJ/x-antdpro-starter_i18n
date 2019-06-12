@@ -7,7 +7,7 @@ import withRouter from 'umi/withRouter';
  * 由于标准父子路由会同时显示，这里判断路由来控制父/子界面的显示和隐藏，仅使用display属性来控制，所以会一直存在内存中，状态不会消失。
  * 此方式主要用在回退上一界面需保存上一界面的状态的情况，如详情页回退列表页，可以减少使用store来存储所有状态的逻辑
  */
-const SeesawView = withRouter(class extends React.PureComponent {
+const SeesawViewRouter = withRouter(class extends React.PureComponent {
     static propTypes={
         child: PropsTypes.any.isRequired,
         childProps: PropsTypes.object,
@@ -60,19 +60,19 @@ function createSeesawView(options={},RootComponent) {
                 childProps = childProps(this.props);
             }
             return (
-                <SeesawView child={this.props.children}
-                            childProps={childProps}
-                            forceRender={options.forceRender}
-                            onResume={this.onResume}>
+                <SeesawViewRouter child={this.props.children}
+                                  childProps={childProps}
+                                  forceRender={options.forceRender}
+                                  onResume={this.onResume}>
                     <RootComponent {...this.props} ref={ref=>this.seesawViewRootRef=ref}/>
-                </SeesawView>
+                </SeesawViewRouter>
             )
         }
     }
     return withRouter(SeesawViewWrapper);
 }
 
-export default function(options) {
+export default function SeesawView(options) {
     return function (RootComponent){
         return createSeesawView(options,RootComponent)
     };
