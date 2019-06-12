@@ -13,7 +13,8 @@ export default class extends React.Component{
         trim:PropTypes.bool,
         autoSelectFirst:PropTypes.bool,
         onReady:PropTypes.func,
-        onData: PropTypes.func
+        onData: PropTypes.func,
+        optionProps: PropTypes.oneOfType([PropTypes.object,PropTypes.func])
     };
     static defaultProps={
         valueKey:'value',
@@ -53,7 +54,12 @@ export default class extends React.Component{
         this.setState({data},()=>{
             if(!isFetchOnBottom && this.props.autoSelectFirst){
                 if(data && data[0]){
-                    this.props.onChange(this.getValue(data[0]),data[0]);
+                    let firstItem = data[0];
+                    let value = this.getValue(firstItem);
+                    if(this.props.labelInValue){
+                        value = {key:value,label:this.getLabel(firstItem)};
+                    }
+                    this.props.onChange(value,data[0]);
                 }
             }
             if(!isFetchOnBottom){
@@ -102,7 +108,7 @@ export default class extends React.Component{
     }
     handleFetchResult=(rs,isFetchOnBottom)=>{
         return new Promise((resolve, reject) => {
-            if(rs===null)return reject();
+            if(rs===null)return resolve([]);
             if(isPromise(rs)){
                 this.setState({fetching:true});
                 rs.then(data=>{
@@ -141,16 +147,19 @@ export default class extends React.Component{
     };
     getValue(item){
         const {valueKey} = this.props;
-        if(typeof valueKey === 'function')return valueKey(item);
-        return item[valueKey];
+        let value = item[valueKey];
+        if(typeof valueKey === 'function'){
+            value = valueKey(item);
+        }
+        return value;
     }
     getKey(item,index){
         const {itemKey,valueKey} = this.props;
         if(itemKey){
-            if(typeof itemKey==='string')return itemKey;
-            if(typeof itemKey==='function'){
-                return itemKey(item,index);
-            }
+           if(typeof itemKey==='string')return itemKey;
+           if(typeof itemKey==='function'){
+               return itemKey(item,index);
+           }
         }
         return valueKey;
     }
@@ -158,13 +167,27 @@ export default class extends React.Component{
         const {showSearch=true,filterOption=false,placeholder,
             value=undefined,
             allowClear = true,
+            optionProps,
             ...restProps
         } = this.props;
         let {fetching,data} = this.state;
         const hasPage = !!this.props.onScrollBottom;
-        const options = data.map((item,index) => (
-            <Select.Option key={this.getKey(item,index)} value={this.getValue(item)}>{this.getLabel(item)}</Select.Option>
-        ));
+        const options = data.map((item,index) => {
+            let extProps = {};
+            if(optionProps){
+                if(typeof optionProps === 'function'){
+                    extProps = optionProps(item,index);
+                }else if(typeof optionProps==='object'){
+                    extProps = optionProps;
+                }
+            }
+            return <Select.Option key={this.getKey(item,index)}
+                                  value={this.getValue(item)}
+                                  {...extProps}
+            >
+                {this.getLabel(item)}
+            </Select.Option>
+        });
         const loading = fetching?
             <Select.Option key={'$loading'} disabled><Spin size={'small'}/></Select.Option>:null;
         if(hasPage && loading){
