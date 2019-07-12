@@ -39,7 +39,7 @@ export default class extends React.Component{
     }
     static getDerivedStateFromProps(props, state) {
         const { data } = state;
-        if (props.data !== data) {
+        if ('data' in props && props.data !== data) {
             return {
                 data: props.data,
             };
