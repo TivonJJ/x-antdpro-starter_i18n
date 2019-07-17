@@ -4,28 +4,29 @@ import { FormattedMessage } from 'umi/locale';
 import { ServicePlatform } from '@/constants/logs';
 import style from './style.less';
 import EasyTable from '@/components/EasyTable';
+
 const { Item } = Form;
 const { RangePicker } = DatePicker;
 
-@EasyTable.connect(({logsDataTable})=>({
-    logsDataTable
+@EasyTable.connect(({ logsDataTable }) => ({
+    logsDataTable,
 }))
 @Form.create()
-export default class LogFilterForm extends React.Component {
-    handleSubmit = (e) =>{
+class LogFilterForm extends React.Component {
+    handleSubmit = (e) => {
         e.preventDefault();
-        this.props.form.validateFields((errors,values)=>{
-            if(errors)return;
+        this.props.form.validateFields((errors, values) => {
+            if (errors) return;
             this.props.logsDataTable.fetch(values);
-        })
+        });
     };
 
 
-    render(){
+    render() {
         const { getFieldDecorator } = this.props.form;
         const layout = {
-            wrapperCol : { span : 14 },
-            labelCol : { span : 10 },
+            wrapperCol: { span: 14 },
+            labelCol: { span: 10 },
         };
         return (
             <Card bordered={false}>
@@ -33,25 +34,34 @@ export default class LogFilterForm extends React.Component {
                     <Row gutter={12}>
                         <Col lg={22}>
                             <Col md={12} lg={8}>
-                                <Item {...layout}
-                                      label={<FormattedMessage id={'Page.system.logs.label.operationTime'}/>}>
+                                <Item
+                                    {...layout}
+                                    label={<FormattedMessage id={'Page.system.logs.label.operationTime'} />}
+                                >
                                     {
-                                        getFieldDecorator('create_time', /*{ initialValue : DEFAULT_OP_TIME }*/)(
-                                            <RangePicker allowClear={false}/>)
+                                        getFieldDecorator('create_time' /* { initialValue : DEFAULT_OP_TIME } */)(
+                                            <RangePicker allowClear={false} />,
+                                        )
                                     }
                                 </Item>
                             </Col>
                             <Col md={12} lg={8}>
-                                <Item {...layout}
-                                      label={<FormattedMessage id={'Page.system.logs.label.platform'}/>}>
+                                <Item
+                                    {...layout}
+                                    label={<FormattedMessage id={'Page.system.logs.label.platform'}/>}
+                                >
                                     {
                                         getFieldDecorator('platform')(
                                             <Select allowClear>
                                                 {
-                                                    Object.keys(ServicePlatform).map(item =>{
-                                                        return <Select.Option key={item} value={item}> <FormattedMessage
-                                                            id={ServicePlatform[item]}/> </Select.Option>;
-                                                    })
+                                                    Object.keys(ServicePlatform).map(item => (
+                                                            <Select.Option key={item} value={item}>
+                                                                <FormattedMessage
+                                                                    id={ServicePlatform[item]}
+                                                                />
+                                                            </Select.Option>
+                                                        ),
+                                                    )
                                                 }
                                             </Select>,
                                         )
@@ -59,7 +69,7 @@ export default class LogFilterForm extends React.Component {
                                 </Item>
                             </Col>
                             <Col md={12} lg={8}>
-                                <Item {...layout} label={<FormattedMessage id={'Page.system.logs.label.keywords'}/>}>
+                                <Item {...layout} label={<FormattedMessage id={'Page.system.logs.label.keywords'} />}>
                                     {
                                         getFieldDecorator('keywords')(<Input/>)
                                     }
@@ -67,8 +77,11 @@ export default class LogFilterForm extends React.Component {
                             </Col>
                         </Col>
                         <Col lg={2}>
-                            <Item><Button htmlType={'submit'} type={'primary'}><FormattedMessage
-                                id={'Common.message.search'}/></Button></Item>
+                            <Item>
+                                <Button htmlType={'submit'} type={'primary'}>
+                                    <FormattedMessage id={'Common.message.search'}/>
+                                </Button>
+                            </Item>
                         </Col>
                     </Row>
                 </Form>
@@ -77,5 +90,4 @@ export default class LogFilterForm extends React.Component {
     }
 }
 
-
-
+export default LogFilterForm;

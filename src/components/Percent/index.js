@@ -1,4 +1,4 @@
-'use strict';
+import decimal from 'decimal.js';
 
 export default ({value,defaultValue=0,div=false,unit='%'})=>{
     if(unit===false)unit = '';

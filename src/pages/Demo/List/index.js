@@ -10,10 +10,10 @@ class Demo extends Component {
         return (
             <div className={'card-group'}>
                 <Card bordered={false}>
-                    <Filter/>
+                    <Filter />
                 </Card>
                 <Card bordered={false}>
-                    <Table/>
+                    <Table />
                 </Card>
             </div>
         );

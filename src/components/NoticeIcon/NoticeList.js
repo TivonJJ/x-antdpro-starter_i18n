@@ -10,12 +10,13 @@ export default class NoticeList extends React.Component{
         emptyText:'暂无数据',
         emptyImage:'https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg',
     };
+
     render(){
         const {data,emptyText,emptyImage,onItemClick} = this.props;
         if (data.length === 0) {
             return (
                 <div className={styles.notFound}>
-                    {emptyImage ? <img src={emptyImage} alt="not found" /> : null}
+                    {emptyImage ? <img src={emptyImage} alt={"not found"} /> : null}
                     <div>{emptyText}</div>
                 </div>
             );
@@ -56,6 +57,6 @@ export default class NoticeList extends React.Component{
                     );
                 })}
             </List>
-        </div>
+               </div>
     }
 }

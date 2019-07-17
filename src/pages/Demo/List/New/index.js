@@ -27,10 +27,12 @@ class New extends Component {
             },err=>{
                 Modal.error({
                     title:err.message
-                })
+                });
+                err.preventDefault();
             })
         })
     };
+
     render() {
         const {getFieldDecorator} = this.props.form;
         const labels = {

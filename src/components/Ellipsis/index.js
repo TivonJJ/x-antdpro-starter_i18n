@@ -3,9 +3,6 @@ import { Tooltip } from 'antd';
 import classNames from 'classnames';
 import styles from './index.less';
 
-/* eslint react/no-did-mount-set-state: 0 */
-/* eslint no-param-reassign: 0 */
-
 const isSupportLineClamp = document.body.style.webkitLineClamp !== undefined;
 
 const EllipsisText = ({ text, length, tooltip, ...other }) => {
@@ -104,12 +101,12 @@ export default class Ellipsis extends Component {
       sh = shadowNode.offsetHeight;
       if (sh > th) {
         return mid;
-      } else {
+      } 
         begin = mid;
         mid = Math.floor((end - begin) / 2) + begin;
         return this.bisection(th, mid, begin, end, text, shadowNode);
-      }
-    } else {
+      
+    } 
       if (mid - 1 < 0) {
         return mid;
       }
@@ -117,12 +114,12 @@ export default class Ellipsis extends Component {
       sh = shadowNode.offsetHeight;
       if (sh <= th) {
         return mid - 1;
-      } else {
+      } 
         end = mid;
         mid = Math.floor((end - begin) / 2) + begin;
         return this.bisection(th, mid, begin, end, text, shadowNode);
-      }
-    }
+      
+    
   };
 
   handleRoot = n => {

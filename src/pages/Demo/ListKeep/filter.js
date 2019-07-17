@@ -9,9 +9,9 @@ import {formatMessage,FormattedMessage} from 'umi/locale';
 }))
 @Form.create({
     mapPropsToFields(props){// 和Redux中存储的筛选条件数据进行表单双向绑定
-        let map = {};
+        const map = {};
         if(props.demoKeepTable && props.demoKeepTable.params){
-            Object.keys(props.demoKeepTable.params).map(key=>{
+            Object.keys(props.demoKeepTable.params).forEach(key=>{
                 map[key] = Form.createFormField({value:props.demoKeepTable.params[key]})
             })
         }
@@ -32,6 +32,7 @@ class Filter extends Component {
             this.props.demoKeepTable.fetch(removeEmptyProperty(values))
         })
     };
+
     render() {
         const {getFieldDecorator} = this.props.form;
         const formItemLayout = {
@@ -43,41 +44,41 @@ class Filter extends Component {
             <Form onSubmit={this.handleSubmit}>
                 <Row>
                     <Col {...collItemLayout}>
-                        <Form.Item label={<FormattedMessage id={'Model.demo.no'}/>} {...formItemLayout}>
+                        <Form.Item label={<FormattedMessage id={'Model.demo.no'} />} {...formItemLayout}>
                             {getFieldDecorator('no',{
                             })(
-                                <Input placeholder={formatMessage({id:'Page.demo.search.numberPlaceholder'})}/>
+                                <Input placeholder={formatMessage({id:'Page.demo.search.numberPlaceholder'})} />
                             )}
                         </Form.Item>
                     </Col>
                     <Col {...collItemLayout}>
-                        <Form.Item label={<FormattedMessage id={'Model.demo.name'}/>} {...formItemLayout}>
+                        <Form.Item label={<FormattedMessage id={'Model.demo.name'} />} {...formItemLayout}>
                             {getFieldDecorator('name',{
                             })(
-                                <Input placeholder={formatMessage({id:'Page.demo.search.namePlaceholder'})}/>
+                                <Input placeholder={formatMessage({id:'Page.demo.search.namePlaceholder'})} />
                             )}
                         </Form.Item>
                     </Col>
                     <Col {...collItemLayout}>
-                        <Form.Item label={<FormattedMessage id={'Model.demo.amount'}/>} {...formItemLayout}>
+                        <Form.Item label={<FormattedMessage id={'Model.demo.amount'} />} {...formItemLayout}>
                             {getFieldDecorator('amount',{
                             })(
-                                <InputNumber min={0} style={{width:'100%'}}/>
+                                <InputNumber min={0} style={{width:'100%'}} />
                             )}
                         </Form.Item>
                     </Col>
                     <Col {...collItemLayout}>
-                        <Form.Item label={<FormattedMessage id={'Model.demo.date'}/>} {...formItemLayout}>
+                        <Form.Item label={<FormattedMessage id={'Model.demo.date'} />} {...formItemLayout}>
                             {getFieldDecorator('date',{
                             })(
-                                <DatePicker.RangePicker/>
+                                <DatePicker.RangePicker />
                             )}
                         </Form.Item>
                     </Col>
                 </Row>
                 <div className={'text-right'}>
                     <Form.Item>
-                        <Button type={'primary'} htmlType={'submit'}><FormattedMessage id={'Common.message.search'}/></Button>
+                        <Button type={'primary'} htmlType={'submit'}><FormattedMessage id={'Common.message.search'} /></Button>
                     </Form.Item>
                 </div>
             </Form>

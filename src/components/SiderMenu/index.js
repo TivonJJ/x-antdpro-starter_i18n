@@ -8,7 +8,7 @@ const SiderMenuWrapper = props => {
   return isMobile ? (
     <Drawer
       visible={!collapsed}
-      placement="left"
+      placement={"left"}
       onClose={() => {
         props.onCollapse(true);
       }}

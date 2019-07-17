@@ -1,4 +1,3 @@
-"use strict";
 import {getPermissions, savePermissions} from "@/services/system";
 import {PermissionsUtil} from '@/utils';
 import {
@@ -26,7 +25,7 @@ export default {
                 },
             });
         },
-        * savePermissions({payload}, {put, call}) {
+        * savePermissions({payload}, {call}) {
             const list = PermissionsUtil.toTile(payload.permissions);
             yield call(savePermissions, {res_list: list});
         }
@@ -60,7 +59,7 @@ export default {
             }
             return {
                 ...state,
-                selectedPermission: selectedPermission
+                selectedPermission
             }
         },
         sortPermissions(state, {payload}) {
@@ -88,7 +87,7 @@ export default {
                 selectedPermission: newItem
             }
         },
-        reset(state) {
+        reset() {
             return {
                 permissions: [],
                 existsPermissionsID: [],

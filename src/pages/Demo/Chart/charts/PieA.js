@@ -6,7 +6,6 @@ import {
     Tooltip,
     Coord,
     Label,
-    Legend,
     Guide,
 } from "bizcharts";
 import DataSet from "@antv/data-set";
@@ -47,7 +46,7 @@ class Donut extends React.Component {
         const cols = {
             percent: {
                 formatter: val => {
-                    val = val * 100 + "%";
+                    val = `${val * 100  }%`;
                     return val;
                 }
             }
@@ -62,27 +61,24 @@ class Donut extends React.Component {
                     forceFit
                 >
                     <Coord type={"theta"} radius={0.75} innerRadius={0.6} />
-                    <Axis name="percent" />
-                    <Tooltip
-                        showTitle={false}
-                        itemTpl="<li><span style=&quot;background-color:{color};&quot; class=&quot;g2-tooltip-marker&quot;></span>{name}: {value}</li>"
-                    />
+                    <Axis name={"percent"} />
+                    <Tooltip showTitle={false} />
                     <Guide>
                         <Html
                             position={["50%", "50%"]}
-                            html="<div style=&quot;color:#8c8c8c;font-size:1.16em;text-align: center;width: 10em;&quot;>主机<br><span style=&quot;color:#262626;font-size:2.5em&quot;>200</span>台</div>"
-                            alignX="middle"
-                            alignY="middle"
+                            html={"<div class='text-center'>主机<br/>200台</div>"}
+                            alignX={"middle"}
+                            alignY={"middle"}
                         />
                     </Guide>
                     <Geom
-                        type="intervalStack"
-                        position="percent"
-                        color="item"
+                        type={"intervalStack"}
+                        position={"percent"}
+                        color={"item"}
                         tooltip={[
                             "item*percent",
                             (item, percent) => {
-                                percent = percent * 100 + "%";
+                                percent = `${percent * 100  }%`;
                                 return {
                                     name: item,
                                     value: percent
@@ -95,10 +91,8 @@ class Donut extends React.Component {
                         }}
                     >
                         <Label
-                            content="percent"
-                            formatter={(val, item) => {
-                                return item.point.item + ": " + val;
-                            }}
+                            content={"percent"}
+                            formatter={(val, item) => `${item.point.item  }: ${  val}`}
                         />
                     </Geom>
                 </Chart>

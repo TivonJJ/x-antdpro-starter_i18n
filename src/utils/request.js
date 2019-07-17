@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { joinPath } from '@/utils/index';
 import {getLocale} from 'umi/locale';
+
 const baseURL = '/api';
 
 function createDefaultRequest() {
@@ -16,7 +17,8 @@ function createDefaultRequest() {
         const data = response.data;
         
         if(data && data.code != 0){
-            if(data.code === 'SYS010'){//未登录或登录超时
+            if(data.code === 'SYS010'){// 未登录或登录超时
+                // eslint-disable-next-line no-underscore-dangle
                 window.g_app._store.dispatch({
                     type: 'user/logout',
                     payload:{
@@ -35,11 +37,12 @@ function createDefaultRequest() {
         return data;
     },(r)=>{
         if(r instanceof Error){
-            return Promise.reject({
+            const err = {
                 code:r.code,
                 message:r.message,
                 type:'NetError'
-            });
+            };
+            return Promise.reject(err);
         }
         const response = r.response;
         const status = response.status;

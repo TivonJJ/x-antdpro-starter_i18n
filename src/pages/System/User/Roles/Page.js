@@ -1,6 +1,5 @@
-'use strict';
 import React from 'react';
-import {Alert, notification, Card, Col, Icon, message, Modal, Radio, Row, Spin, Switch, Drawer} from 'antd';
+import {Alert, notification, Card, Col, Icon, message, Modal, Radio, Row, Spin, Switch} from 'antd';
 import EditForm from './EditForm';
 import AssignForm from './AssignForm';
 import Authorized from '@/components/Authorized';
@@ -10,8 +9,7 @@ import {
     SYSTEM_ROLE_DISTRIBUTION,
     SYSTEM_ROLE_ADD
 } from '@/components/Authorized/AuthMap';
-
-import {getPermissionsByRoleId, setUserToRole} from '@/services/system';
+import {setUserToRole} from '@/services/system';
 import style from '../nav-form.less'
 import roleStyle from './style.less'
 import {FormattedMessage,formatMessage} from "umi/locale";
@@ -26,7 +24,6 @@ export default class extends React.Component {
         assignVisible: false,
         assignChanged: false,
         currentRole: null,
-        status: undefined,
     };
 
     componentDidMount() {
@@ -34,12 +31,12 @@ export default class extends React.Component {
     }
 
     dispatch=(opts)=>{
-        opts.type = 'role/' + opts.type;
+        opts.type = `role/${  opts.type}`;
         console.log('dispatch',opts);
         return this.props.dispatch(opts)
     };
 
-    loadRoles(status) {
+    loadRoles=(status)=> {
         this.dispatch({
             type: 'fetch',
             payload: {
@@ -50,17 +47,17 @@ export default class extends React.Component {
                 error: e.message
             });
         });
-    }
+    };
 
 
-    toggleStatus(role, checked) {
+    toggleStatus=(role, checked)=> {
         Modal.confirm({
-            content: formatMessage({id: 'Page.system.roles.status.confirm'}, {
-                status:checked?formatMessage({id:'Common.message.open'}):formatMessage({id:'Common.message.close'}),
-                name: role.role_name
+            content: formatMessage({ id: 'Page.system.roles.status.confirm' }, {
+                status: checked ? formatMessage({ id: 'Common.message.open' }) : formatMessage({ id: 'Common.message.close' }),
+                name: role.role_name,
             }),
-            onOk: () => {
-                return this.dispatch({
+            onOk: () => (
+                this.dispatch({
                     type: 'setStatus',
                     payload: {
                         role_id: role.role_id,
@@ -71,17 +68,17 @@ export default class extends React.Component {
                         message: formatMessage({id:'Common.message.error'}),
                         description: e.message
                     })
-                });
-            },
+                })
+            ),
         });
-    }
+    };
 
-    delRole(role) {
+    delRole=(role)=> {
         Modal.confirm({
             title: formatMessage({id:'Common.message.confirm'}),
             content: formatMessage({id:'Page.system.roles.delete.confirm'},{name:role.role_name}),
-            onOk: () => {
-                return this.dispatch({
+            onOk: () => (
+                this.dispatch({
                     type: 'deleteRole',
                     payload: {
                         role_id: role.role_id
@@ -92,14 +89,14 @@ export default class extends React.Component {
                         description: e.message
                     })
                 })
-            },
+            ),
         });
-    }
+    };
 
-    showRoleEditModal(role) {
+    showRoleEditModal=(role)=> {
         this.setState({editFormVisible: true, currentRole: role, editFormChanged: false},()=>{
             this.dispatch({type: 'fetchPermissions'}).then(() => {
-                if (!role) return
+                if (!role) return;
                 this.dispatch({
                         type: 'fetchPermissionsByRoleId',
                         payload: role.role_id,
@@ -123,7 +120,7 @@ export default class extends React.Component {
                 })
             });
         });
-    }
+    };
 
     unCompriseParentTree = list => {
         const newList = [];
@@ -147,31 +144,32 @@ export default class extends React.Component {
         });
         return newList;
     };
+
     compriseParentTree = list => {
         const newList = [];
         if (!list || !list.length) return newList;
         const idMap = this.props.role.permissionsIDMap;
         const dnaMap = this.props.role.permissionsDNAMap;
-        list.map(id => {
+        list.forEach(id => {
             id = String(id);
             const permission = idMap[id];
             if (newList.indexOf(id) === -1) newList.push(id);
             if (permission.$dna.length > 1) {
-                //DNA链大于1则说明有父节点
+                // DNA链大于1则说明有父节点
                 const chain = [...permission.$dna];
                 while (chain.length > 1) {
                     chain.pop();
                     const dna = chain.join('-');
-                    const permission = dnaMap[dna];
-                    const id = String(permission.res_id);
-                    if (newList.indexOf(id) === -1) newList.push(id);
+                    const dnaPermission = dnaMap[dna];
+                    const findId = String(dnaPermission.res_id);
+                    if (newList.indexOf(findId) === -1) newList.push(findId);
                 }
             }
         });
         return newList;
     };
 
-    editRoleDone() {
+    editRoleDone=()=> {
         this.editForm.validateFields((err, values) => {
             if (err) return;
             values.res_list = this.compriseParentTree(values.res_list);
@@ -185,38 +183,38 @@ export default class extends React.Component {
                 })
             });
         });
-    }
+    };
 
-    closeRoleEditModal() {
+    closeRoleEditModal=()=> {
         this.setState({editFormVisible: false, currentRole: null, editFormChanged: false});
         // this.editForm.resetFields();
-    }
+    };
 
-    updateInsertRole(role) {
+    updateInsertRole=(role)=> {
         if (typeof role.status !== 'undefined') {
             role.status = role.status ? 1 : 0;
         }
 
-        let type = role.role_id ? 'updateRole' : 'addRole';
+        const type = role.role_id ? 'updateRole' : 'addRole';
         return this.dispatch({type, payload: role});
-    }
+    };
 
-    showAssignUserModal(role) {
+    showAssignUserModal=(role)=> {
         this.setState({assignVisible: true, currentRole: role, assignChanged: false});
-    }
+    };
 
-    closeAssignUserModal() {
+    closeAssignUserModal=()=> {
         this.setState({assignVisible: false, currentRole: null, assignChanged: false});
-    }
+    };
 
-    assignOk() {
+    assignOk=()=> {
         const role = this.state.currentRole;
         const {targetKeys} = this.assignForm.state;
         const data = {
             role_id: role.role_id,
             already_alloc_userlist: [],
         };
-        targetKeys.map(key => {
+        targetKeys.forEach(key => {
             data.already_alloc_userlist.push({
                 user_id: key,
             });
@@ -233,128 +231,153 @@ export default class extends React.Component {
                 });
             }
         );
-    }
-    renderFooter(role){
-        if(role.is_preset==1)return <div className={'text-muted footer'}>{formatMessage({id:"Page.system.roles.isPreset"})}</div>;
-        return <Row className="footer">
-            <Col span={6}>
-                <Authorized route={SYSTEM_ROLE_UPDATE}>
-                    <Switch
-                        onChange={status => this.toggleStatus(role, status)}
-                        checked={role.status == 1}
-                    />
-                </Authorized>
-            </Col>
-            <Col span={18} className="text-right">
-                <div className="link-group_dark">
-                    <Authorized route={SYSTEM_ROLE_UPDATE}>
-                        <a onClick={() => this.showRoleEditModal(role)}>
-                            <FormattedMessage id={'Common.message.edit'}/>
-                        </a>
-                    </Authorized>
-                    <Authorized route={SYSTEM_ROLE_DISTRIBUTION}>
-                        <a onClick={() => this.showAssignUserModal(role)}>
-                            <FormattedMessage id={'Page.system.roles.button.assign'}/>
-                        </a>
-                    </Authorized>
-                    <Authorized route={SYSTEM_ROLE_DELETE}>
-                        <a onClick={() => this.delRole(role)}>
-                            <FormattedMessage id={'Common.message.delete'}/>
-                        </a>
-                    </Authorized>
+    };
+
+    renderFooter=(role)=>{
+        if(role.is_preset==1){
+            return (
+                <div className={'text-muted footer'}>
+                    {formatMessage({id:"Page.system.roles.isPreset"})}
                 </div>
-            </Col>
-        </Row>
-    }
+            );
+        }
+        return (
+            <Row className={"footer"}>
+                <Col span={6}>
+                    <Authorized route={SYSTEM_ROLE_UPDATE}>
+                        <Switch
+                            onChange={status => this.toggleStatus(role, status)}
+                            checked={role.status == 1}
+                        />
+                    </Authorized>
+                </Col>
+                <Col span={18} className={"text-right"}>
+                    <div className={"link-group_dark"}>
+                        <Authorized route={SYSTEM_ROLE_UPDATE}>
+                            <a onClick={() => this.showRoleEditModal(role)}>
+                                <FormattedMessage id={'Common.message.edit'}/>
+                            </a>
+                        </Authorized>
+                        <Authorized route={SYSTEM_ROLE_DISTRIBUTION}>
+                            <a onClick={() => this.showAssignUserModal(role)}>
+                                <FormattedMessage id={'Page.system.roles.button.assign'}/>
+                            </a>
+                        </Authorized>
+                        <Authorized route={SYSTEM_ROLE_DELETE}>
+                            <a onClick={() => this.delRole(role)}>
+                                <FormattedMessage id={'Common.message.delete'}/>
+                            </a>
+                        </Authorized>
+                    </div>
+                </Col>
+            </Row>
+        )
+    };
+
     render() {
         const {error, editFormVisible, currentRole, assignVisible} = this.state;
-        if (error) return <Alert message={<FormattedMessage id={'Common.message.error'}/>} description={error}
-                                 type="error" showIcon/>;
+        if (error){
+            return (
+                <Alert
+                    message={<FormattedMessage id={'Common.message.error'}/>}
+                    description={error}
+                    type={"error"}
+                    showIcon
+                />
+            )
+        }
         const {updating,fetching,role} = this.props;
         const {roles, status} = role;
-        return <div>
-            <div className={style.navForm}>
-                <FormattedMessage id={'Common.message.status'}/>：
-                <Radio.Group value={status} onChange={evt => this.loadRoles(evt.target.value)}>
-                    <Radio.Button value={undefined}>(<FormattedMessage
-                        id={"Common.message.all"}/>)</Radio.Button>
-                    {Object.keys(Status).map(key => (
-                        <Radio.Button key={key} value={key}><FormattedMessage
-                            id={Status[key]}/></Radio.Button>
-                    ))}
-                </Radio.Group>
-            </div>
-            <Spin spinning={fetching}>
-                <div className={roleStyle.roles}>
-                    <div className="nav-bar"><FormattedMessage id={'Common.pagination.total'}
-                                                               values={{total: roles.length}}/></div>
-                    <Row gutter={16} className="grids">
-                        {roles.map(role => {
-                            return (
-                                <Col span={8} key={role.role_id}>
+        return (
+            <div>
+                <div className={style.navForm}>
+                    <FormattedMessage id={'Common.message.status'}/>：
+                    <Radio.Group value={status} onChange={evt => this.loadRoles(evt.target.value)}>
+                        <Radio.Button value={undefined}>(<FormattedMessage
+                            id={"Common.message.all"}
+                        />)
+                        </Radio.Button>
+                        {Object.keys(Status).map(key => (
+                            <Radio.Button key={key} value={key}><FormattedMessage
+                                id={Status[key]}
+                            />
+                            </Radio.Button>
+                        ))}
+                    </Radio.Group>
+                </div>
+                <Spin spinning={fetching}>
+                    <div className={roleStyle.roles}>
+                        <div className={"nav-bar"}><FormattedMessage
+                            id={'Common.pagination.total'}
+                            values={{total: roles.length}}
+                        />
+                        </div>
+                        <Row gutter={16} className={"grids"}>
+                            {roles.map(item => (
+                                <Col span={8} key={item.role_id}>
                                     <Card
-                                        title={role.role_name}
+                                        title={item.role_name}
                                         extra={
-                                            <div className="text-muted">
-                                                <span className="count">{role.role_user_count}</span>
-                                                <i className="fa fa-users users-icon"/>
+                                            <div className={"text-muted"}>
+                                                <span className={"count"}>{item.role_user_count}</span>
+                                                <i className={"fa fa-users users-icon"}/>
                                             </div>
                                         }
                                     >
-                                        <div className="body">
-                                                    <span className="text-muted">
-                                                        {/*<FormattedMessage id={'Common.message.description'}/>：*/}{role.description}
+                                        <div className={"body"}>
+                                                    <span className={"text-muted"}>
+                                                        {/* <FormattedMessage id={'Common.message.description'}/>： */}{item.description}
                                                     </span>
                                         </div>
-                                        {this.renderFooter(role)}
+                                        {this.renderFooter(item)}
                                     </Card>
                                 </Col>
-                            );
-                        })}
-                        <Col span={8}>
-                            <Authorized route={SYSTEM_ROLE_ADD}>
-                                <Card className="card-add" onClick={() => this.showRoleEditModal()}>
-                                    <Icon type="plus" className="icon-add"/>
-                                </Card>
-                            </Authorized>
-                        </Col>
-                    </Row>
-                </div>
-            </Spin>
-            <DrawerConfirm
-                width={500}
-                destroyOnClose
-                title={<FormattedMessage id={'Page.system.roles.edit.formTitle'}/>}
-                visible={editFormVisible}
-                onCancel={() => this.closeRoleEditModal()}
-                onOk={() => this.editRoleDone()}
-                confirmLoading={updating}
-                okButtonProps={{disabled: !this.state.editFormChanged}}
-            >
-                <Spin spinning={fetching}>
-                    <EditForm
-                        ref={ref => (this.editForm = ref)}
-                        role={currentRole}
-                        permissions={role.permissions}
-                        onChange={() => this.setState({editFormChanged: true})}
-                    />
+                            ))}
+                            <Col span={8}>
+                                <Authorized route={SYSTEM_ROLE_ADD}>
+                                    <Card className={"card-add"} onClick={() => this.showRoleEditModal()}>
+                                        <Icon type={"plus"} className={"icon-add"}/>
+                                    </Card>
+                                </Authorized>
+                            </Col>
+                        </Row>
+                    </div>
                 </Spin>
-            </DrawerConfirm>
-            <Modal
-                width={600}
-                destroyOnClose
-                title={<FormattedMessage id={'Page.system.roles.label.assignment'}/>}
-                visible={assignVisible}
-                onCancel={() => this.closeAssignUserModal()}
-                onOk={()=>this.assignOk()}
-                okButtonProps={{disabled:!this.state.assignChanged}}
-            >
-                <AssignForm
-                    ref={ref => (this.assignForm = ref)}
-                    role={currentRole}
-                    onChange={() => this.setState({assignChanged: true})}
-                />
-            </Modal>
-        </div>
+                <DrawerConfirm
+                    width={500}
+                    destroyOnClose
+                    title={<FormattedMessage id={'Page.system.roles.edit.formTitle'}/>}
+                    visible={editFormVisible}
+                    onCancel={() => this.closeRoleEditModal()}
+                    onOk={() => this.editRoleDone()}
+                    confirmLoading={updating}
+                    okButtonProps={{disabled: !this.state.editFormChanged}}
+                >
+                    <Spin spinning={fetching}>
+                        <EditForm
+                            ref={ref => {this.editForm = ref}}
+                            role={currentRole}
+                            permissions={role.permissions}
+                            onChange={() => this.setState({editFormChanged: true})}
+                        />
+                    </Spin>
+                </DrawerConfirm>
+                <Modal
+                    width={600}
+                    destroyOnClose
+                    title={<FormattedMessage id={'Page.system.roles.label.assignment'}/>}
+                    visible={assignVisible}
+                    onCancel={() => this.closeAssignUserModal()}
+                    onOk={()=>this.assignOk()}
+                    okButtonProps={{disabled:!this.state.assignChanged}}
+                >
+                    <AssignForm
+                        ref={ref => {this.assignForm = ref}}
+                        role={currentRole}
+                        onChange={() => this.setState({assignChanged: true})}
+                    />
+                </Modal>
+            </div>
+        )
     }
 }

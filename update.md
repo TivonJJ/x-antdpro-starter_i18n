@@ -1,5 +1,9 @@
 # 更新记录 #
 
+### 3.3.0
+    更新升级部分第三方依赖的版本
+    开启ESLINT代码检测功能，并基于标准进行了重构
+
 ### 3.2.1
     修复AssociativeSearch在labelInValue模式下autoSelectFirst冲突问题
 

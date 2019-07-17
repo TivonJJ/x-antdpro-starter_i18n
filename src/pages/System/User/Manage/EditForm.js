@@ -1,4 +1,3 @@
-"use strict";
 import React from 'react';
 import {Form, Input, Modal, Select, Spin} from 'antd';
 import {FormattedMessage,formatMessage} from "umi/locale";
@@ -9,12 +8,29 @@ import {connect} from "dva";
     loadingRoles: loading.effects['userManage/fetchRoles']
 }))
 @Form.create()
-export default class EditForm extends React.Component{
+class EditForm extends React.Component{
     componentDidMount() {
         this.fetchRoles();
     }
 
-    fetchRoles(){
+    setValues=(values)=>{
+        this.props.form.setFieldsValue(values);
+    };
+
+    getValues=()=>{
+        const {form} = this.props;
+        return new Promise((resolve,reject)=>{
+            form.validateFields((errors, values) => {
+                if(errors){
+                    reject(errors);
+                    return;
+                }
+                resolve(values)
+            })
+        })
+    };
+
+    fetchRoles=()=>{
         this.props.dispatch({
             type:'userManage/fetchRoles',
             payload:{}
@@ -24,21 +40,12 @@ export default class EditForm extends React.Component{
                 content:e.message
             })
         })
-    }
-    setValues(values){
-        this.props.form.setFieldsValue(values);
-    }
-    getValues(){
-        return new Promise((resolve,reject)=>{
-            this.props.form.validateFields((errors, values) => {
-                if(errors)return reject(errors);
-                resolve(values)
-            })
-        })
-    }
+    };
+
     reset(){
         this.props.form.resetFields()
     }
+
     render(){
         const {getFieldDecorator} = this.props.form;
         const {userManage:{roles},loadingRoles=false} = this.props;
@@ -55,7 +62,7 @@ export default class EditForm extends React.Component{
         return <Form>
             {getFieldDecorator('user_id', {
             })(
-                <Input type="hidden"/>
+                <Input type={"hidden"}/>
             )}
             <Form.Item {...formItemLayout} label={labels.username}>
                 {getFieldDecorator('username', {
@@ -87,13 +94,21 @@ export default class EditForm extends React.Component{
                         rules: [{required:true, message: <FormattedMessage id={'Validator.phone'} values={{name:labels.roleName}}/>}]
                     })(
                         <Select>
-                            {roles.map(role=>{
-                                return <Select.Option key={role.role_id} value={role.role_id}>{role.role_name}</Select.Option>
-                            })}
+                            {roles.map(role => (
+                                    <Select.Option
+                                        key={role.role_id}
+                                        value={role.role_id}
+                                    >
+                                        {role.role_name}
+                                    </Select.Option>
+                                )
+                            )}
                         </Select>
                     )}
                 </Form.Item>
             </Spin>
-        </Form>
+               </Form>
     }
 }
+
+export default EditForm;

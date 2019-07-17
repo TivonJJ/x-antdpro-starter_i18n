@@ -15,8 +15,12 @@ class Table extends Component {
             title:formatMessage({id:'Model.demo.no'}),
             dataIndex:'no',
             render(no,item){
-                return <Badge status={item.status == 1 ? 'success' : 'default'}
-                              text={<Link to={`/demo/list/${no}`}>{no}</Link>}/>
+                return (
+                    <Badge
+                        status={item.status == 1 ? 'success' : 'default'}
+                        text={<Link to={`/demo/list/${no}`}>{no}</Link>}
+                    />
+                )
             }
         },
         {
@@ -27,16 +31,19 @@ class Table extends Component {
             title:formatMessage({id:'Model.demo.amount'}),
             dataIndex: 'amount',
             render(amount){
-                return <Amount value={amount}/>
+                return <Amount value={amount} />
             }
         }
     ];
+
     update=(num)=>{
-        this.props.demoTable.update(data=>{
-            data[num].name = '我的名字变化了' + Date.now();
+        const {demoTable} = this.props;
+        demoTable.update(data=>{
+            data[num].name = `我的名字变化了${  Date.now()}`;
             return data;
         });
     };
+
     render() {
         return (
             <EasyTable
@@ -49,10 +56,11 @@ class Table extends Component {
                     <Link to={'/demo/list/new'}>
                         <Button type={'primary'}>{formatMessage({ id: 'Common.message.add' })}</Button>
                     </Link>
-                </div>}
+                       </div>}
                 source={getList}
                 rowKey={'no'}
-                columns={this.columns}/>
+                columns={this.columns}
+            />
         );
     }
 }

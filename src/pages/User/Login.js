@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
 import { Checkbox, Alert, Modal, Form, Input, Icon, Spin, Button } from 'antd';
-import styles from './Login.less';
 import {FormattedMessage,formatMessage,getLocale,setLocale} from "umi/locale";
-import TrimInput from '@/components/TrimInput';
 import { isUrl } from '@/utils';
 import router from 'umi/router';
+import TrimInput from '@/components/TrimInput';
+import styles from './Login.less';
 
 export default
 @Form.create()
@@ -30,10 +30,13 @@ class LoginPage extends Component {
         this.login();
     };
 
-    login=()=>{
-        return new Promise((resolve, reject) => {
+    login=()=>(
+        new Promise((resolve, reject) => {
             this.props.form.validateFields((err,values)=>{
-                if(err)return reject(err);
+                if(err){
+                    reject(err);
+                    return;
+                }
                 this.props.dispatch({
                     type: 'user/login',
                     payload: values
@@ -55,17 +58,17 @@ class LoginPage extends Component {
                 });
             })
         })
-    };
+    );
 
-    goHome(){
-        let {query:{r:redirect}} = this.props.location;
+    goHome=()=>{
+        const {query:{r:redirect}} = this.props.location;
         if(isUrl(redirect)){
             console.log('redirect to',redirect);
             window.location.href = redirect;
         }else {
             router.push('/');
         }
-    }
+    };
 
     changeSaveUsername = e => {
         this.setState({
@@ -73,61 +76,73 @@ class LoginPage extends Component {
         });
     };
 
-    renderMessage = content => {
-        return <Alert style={{marginBottom: 24}} message={content} type="error" showIcon/>;
-    };
+    renderMessage = content => (
+        <Alert style={{marginBottom: 24}} message={content} type={"error"} showIcon/>
+    );
 
     forgotPassword = ()=>{
         Modal.info({
             title:'Coming soon !',
         })
     };
+
     render() {
         const {submitting=false} = this.props;
         const {error,lastUsername} = this.state;
         const { getFieldDecorator } = this.props.form;
-        return <div className={styles.login}>
-            <Spin spinning={submitting}>
-                <Form onSubmit={this.handleSubmit}>
-                    {error && !submitting && this.renderMessage(error)}
-                    <Form.Item>
-                        {getFieldDecorator('username', {
-                            initialValue:lastUsername||'',
-                            rules: [
-                                {required: true, message: formatMessage({id:'Page.login.username.validate.required'})}
-                            ]
-                        })(
-                            <TrimInput prefix={<Icon type={'user'}/>} size={'large'}
-                                       placeholder={formatMessage({id:'Page.login.username.placeholder'})}/>
-                        )}
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('password', {
-                            rules: [
-                                {required: true, message: formatMessage({id:'Page.login.password.validate.required'})}
-                            ]
-                        })(
-                            <Input prefix={<Icon type={'lock'}/>} type={'password'} size={'large'}
-                                   placeholder={formatMessage({id:'Page.login.password.placeholder'})}/>
-                        )}
-                    </Form.Item>
-                    <div>
-                        <Checkbox checked={this.state.saveUsername} onChange={this.changeSaveUsername}>
-                            <FormattedMessage id={'Page.login.rememberAccount'}/>
-                        </Checkbox>
-                        <a style={{float: 'right'}} onClick={this.forgotPassword}>
-                            <FormattedMessage id={'Page.login.resetPassword'}/>
-                        </a>
-                    </div>
-                    <Button type={'primary'}
+        return (
+            <div className={styles.login}>
+                <Spin spinning={submitting}>
+                    <Form onSubmit={this.handleSubmit}>
+                        {error && !submitting && this.renderMessage(error)}
+                        <Form.Item>
+                            {getFieldDecorator('username', {
+                                initialValue:lastUsername||'',
+                                rules: [
+                                    {required: true, message: formatMessage({id:'Page.login.username.validate.required'})}
+                                ]
+                            })(
+                                <TrimInput
+                                    prefix={<Icon type={'user'}/>}
+                                    size={'large'}
+                                    placeholder={formatMessage({id:'Page.login.username.placeholder'})}
+                                />
+                            )}
+                        </Form.Item>
+                        <Form.Item>
+                            {getFieldDecorator('password', {
+                                rules: [
+                                    {required: true, message: formatMessage({id:'Page.login.password.validate.required'})}
+                                ]
+                            })(
+                                <Input
+                                    prefix={<Icon type={'lock'}/>}
+                                    type={'password'}
+                                    size={'large'}
+                                    placeholder={formatMessage({id:'Page.login.password.placeholder'})}
+                                />
+                            )}
+                        </Form.Item>
+                        <div>
+                            <Checkbox checked={this.state.saveUsername} onChange={this.changeSaveUsername}>
+                                <FormattedMessage id={'Page.login.rememberAccount'}/>
+                            </Checkbox>
+                            <a style={{float: 'right'}} onClick={this.forgotPassword}>
+                                <FormattedMessage id={'Page.login.resetPassword'}/>
+                            </a>
+                        </div>
+                        <Button
+                            type={'primary'}
                             size={'large'}
                             htmlType={'submit'}
-                            className={styles.submit}>
-                      {formatMessage({id:'Common.button.ok'})}
-                    </Button>
-                </Form>
-            </Spin>
-        </div>
+                            className={styles.submit}
+                        >
+                            {formatMessage({id:'Common.button.ok'})}
+                        </Button>
+                    </Form>
+                </Spin>
+            </div>
+        )
     }
 }
 

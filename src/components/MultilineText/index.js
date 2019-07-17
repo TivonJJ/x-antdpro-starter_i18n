@@ -7,8 +7,8 @@ class MultilineText extends Component {
         const lines = text.split(/\n/);
         return (
             <div className={className} style={style}>
-                {lines.map((text,index)=>(
-                    <div key={index}>{text}</div>
+                {lines.map((txt,index)=>(
+                    <div key={index}>{txt}</div>
                 ))}
             </div>
         );

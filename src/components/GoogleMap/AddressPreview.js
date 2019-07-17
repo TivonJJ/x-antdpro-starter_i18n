@@ -1,28 +1,32 @@
-'use strict';
 import React from 'react';
-import GoogleMap from './index';
 import Marker from 'react-google-maps/lib/components/Marker';
 import PropTypes from 'prop-types';
-import { Spin } from 'antd';
+import { Alert, Spin } from 'antd';
+import GoogleMap from './index';
 
+export default
 @GoogleMap.create({
     height:window.innerHeight/2
 })
-export default class extends React.Component{
+class extends React.Component{
     static propTypes={
         address: PropTypes.oneOfType([PropTypes.string,PropTypes.object]).isRequired,
     };
+
     state={
         marker:null,
         loading:false,
         error:null
     };
+
     componentDidMount(){
         this.positionAddress(this.props);
     }
+
     componentWillReceiveProps(nextProps){
         if(this.props.address !== nextProps.address)this.positionAddress(nextProps);
     }
+
     positionAddress({address}){
         if(typeof address === 'object'){
             this.setState({marker:address})
@@ -37,17 +41,26 @@ export default class extends React.Component{
             });
         }
     }
+
     render(){
         const {onMapMounted,...restProps} = this.props;
-        const {marker,loading} = this.state;
-        console.log(marker)
+        const {marker,loading,error} = this.state;
         if(loading)return <Spin/>;
-        return <GoogleMap {...restProps} center={marker} ref={onMapMounted}
-                          onRightClick={this.onRightClick}
-                          onDragStart={this.hideContextMenu}>
-            {marker&&<div>
-                <Marker position={marker}/>
-            </div>}
-        </GoogleMap>
+        if(error)return <Alert type={'error'} message={error}/>;
+        return (
+            <GoogleMap
+                {...restProps}
+                center={marker}
+                ref={onMapMounted}
+                onRightClick={this.onRightClick}
+                onDragStart={this.hideContextMenu}
+            >
+                {marker&&(
+                    <div>
+                        <Marker position={marker}/>
+                    </div>
+                )}
+            </GoogleMap>
+        )
     }
 }

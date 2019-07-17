@@ -9,8 +9,16 @@ class Group extends Component {
         title: PropsTypes.any,
         extra: PropsTypes.any
     };
+
+    static defaultProps = {
+        icon:null,
+        title:null,
+        extra:null
+    };
+
     render() {
-        let {icon,title,children,extra,className,style} = this.props;
+        const {title,children,extra,className,style} = this.props;
+        let {icon} = this.props;
         if(typeof icon === 'string'){
             icon = <Icon type={icon}/>
         }

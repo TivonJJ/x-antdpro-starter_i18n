@@ -112,7 +112,7 @@ class TagSelect extends Component {
     return (
       <div className={cls} style={style}>
         {hideCheckAll ? null : (
-          <CheckableTag checked={checkedAll} key="tag-select-__all__" onChange={this.onSelectAll}>
+          <CheckableTag checked={checkedAll} key={"tag-select-__all__"} onChange={this.onSelectAll}>
             {selectAllText}
           </CheckableTag>
         )}

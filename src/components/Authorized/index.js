@@ -39,6 +39,7 @@ class Authorized extends React.Component {
         children:PropTypes.any,
         noMatch:PropTypes.any
     };
+
     render() {
         const {children, noMatch = null, route, onlyCheckSign} = this.props;
         const childrenRender = typeof children === 'undefined' ? null : children;

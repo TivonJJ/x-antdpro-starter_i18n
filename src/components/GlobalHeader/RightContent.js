@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { FormattedMessage, setLocale, getLocale } from 'umi/locale';
+import { FormattedMessage } from 'umi/locale';
 import { Menu, Icon, Dropdown, Avatar } from 'antd';
-import styles from './index.less';
 import router from 'umi/router';
+import styles from './index.less';
 
 export default class GlobalHeaderRight extends PureComponent {
     handleUserMenuClick = ({key}) => {
@@ -15,8 +15,11 @@ export default class GlobalHeaderRight extends PureComponent {
             case 'modifyPassword':
                 router.push('/user/changePassword');
                 break;
+            default:
+                break;
         }
     };
+
     render() {
         const {
             currentUser,
@@ -29,11 +32,11 @@ export default class GlobalHeaderRight extends PureComponent {
         if (!currentUser) return null;
         const menu = (
             <Menu theme={theme} className={styles.menu} selectedKeys={[]} onClick={this.handleUserMenuClick}>
-                <Menu.Item key='modifyPassword'>
-                    <Icon type="setting"/> <FormattedMessage id={'Component.globalHeader.menu.changePassword'}/>
+                <Menu.Item key={"modifyPassword"}>
+                    <Icon type={"setting"}/> <FormattedMessage id={'Component.globalHeader.menu.changePassword'}/>
                 </Menu.Item>
-                <Menu.Item key="logout">
-                    <Icon type="logout"/> <FormattedMessage id={'Component.globalHeader.menu.logout'}/>
+                <Menu.Item key={"logout"}>
+                    <Icon type={"logout"}/> <FormattedMessage id={'Component.globalHeader.menu.logout'}/>
                 </Menu.Item>
             </Menu>
         );
@@ -42,10 +45,10 @@ export default class GlobalHeaderRight extends PureComponent {
                 <Dropdown overlay={menu}>
                     <div className={`${styles.action} ${styles.account}`}>
                       <Avatar
-                          size="small"
+                          size={"small"}
                           className={styles.avatar}
                           src={currentUser.avatar}
-                          alt="avatar"
+                          alt={"avatar"}
                       />
                       <span className={styles.name}>{currentUser.real_name}</span>
                     </div>

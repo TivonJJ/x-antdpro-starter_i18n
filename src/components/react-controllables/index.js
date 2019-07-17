@@ -4,23 +4,23 @@ import _ from 'lodash';
 const mkFirstFunc = method => str => str.slice(0, 1)[method]() + str.slice(1);
 const lowerFirst = mkFirstFunc('toLowerCase');
 const capFirst = mkFirstFunc('toUpperCase');
-const toCallbackName = prop => `on${ prop === 'value' ? '' : capFirst(prop) }Change`;
+const toCallbackName = prop => `on${prop === 'value' ? '' : capFirst(prop)}Change`;
 const fromDefaultName = prop => lowerFirst(prop.slice(7));
 const mapKeys = (obj, mapper) => {
-    let newObj = {};
-    for (let k in obj) {
-        if (obj.hasOwnProperty(k)) {
+    const newObj = {};
+    for (const k in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, k)) {
             newObj[mapper(k)] = obj[k];
         }
     }
     return newObj;
 };
 const merge = (...sources) => {
-    let target = {};
+    const target = {};
     sources.forEach(source => {
-        for (let k in source) {
-            if (!source.hasOwnProperty(k)) continue;
-            let val = source[k];
+        for (const k in source) {
+            if (!Object.prototype.hasOwnProperty.call(source, k)) continue;
+            const val = source[k];
 
             // Treat `undefined` the same as a missing key. React also does this for
             // `null`, but that only works because their controlled components can use
@@ -38,41 +38,53 @@ const merge = (...sources) => {
 const isDefault = (value, key) => /^default/.test(key);
 const omitDefaults = props => _.omit(props, isDefault);
 const pickDefaults = props => _.pick(props, isDefault);
-const noOpInitialize = () => {};
+const noOpInitialize = () => {
+};
 
+function createStateManager(propsOrStateManager) {
+    // We've already got them!
+    if (!Array.isArray(propsOrStateManager)) return propsOrStateManager;
+
+    // Build them from an array of controllable props.
+    return {
+        reducers: propsOrStateManager.reduce((reducers, prop) => {
+            const callbackName = toCallbackName(prop);
+            reducers[callbackName] = (currentState, value) => ({ [prop]: value });
+            return reducers;
+        }, {}),
+    };
+}
 
 export default function controllable(...args) {
     // Support [Python-style decorators](https://github.com/wycats/javascript-decorators)
     if (args.length === 1) return Component => controllable(Component, ...args);
 
     const [Component, propsOrStateManager] = args;
-    let {reducers, initialize = noOpInitialize} = createStateManager(propsOrStateManager);
+    const { reducers, initialize = noOpInitialize } = createStateManager(propsOrStateManager);
 
     // Create action creators from the reducers.
-    const actionCreators = _.mapValues(reducers, reducer => {
-        return function(...args) {
-            // Calculate the new state.
-            const currentProps = merge(this.state, omitDefaults(this.props), this.boundActionCreators);
-            const newState = reducer(currentProps, ...args);
+    const actionCreators = _.mapValues(reducers, reducer => (...args1) => {
+        // Calculate the new state.
+        const currentProps = merge(this.state, omitDefaults(this.props), this.boundActionCreators);
+        const newState = reducer(currentProps, ...args1);
 
-            // Update the state.
-            this.setState(newState);
+        // Update the state.
+        this.setState(newState);
 
-            // If there are callbacks for the changed values, invoke them.
-            Object.keys(newState).forEach(prop => {
-                const newValue = newState[prop];
-                const callbackName = toCallbackName(prop);
-                const cb = this.props[callbackName];
-                const _args = [...args];
-                _args.shift();
-                if (cb) cb(newValue,..._args);
-            });
-        };
+        // If there are callbacks for the changed values, invoke them.
+        Object.keys(newState).forEach(prop => {
+            const newValue = newState[prop];
+            const callbackName = toCallbackName(prop);
+            const cb = this.props[callbackName];
+            const _args = [...args1];
+            _args.shift();
+            if (cb) cb(newValue, ..._args);
+        });
     });
 
     return class ControllableWrapper extends React.Component {
-        constructor(...args) {
-            super(...args);
+        constructor(...args1) {
+            super(...args1);
 
             // Get the initial state from the `default*` props.
             const instanceInitialState = mapKeys(pickDefaults(this.props), fromDefaultName);
@@ -87,19 +99,5 @@ export default function controllable(...args) {
             const props = merge(this.state, omitDefaults(this.props), this.boundActionCreators);
             return <Component {...props} />;
         }
-    };
-}
-
-function createStateManager(propsOrStateManager) {
-    // We've already got them!
-    if (!Array.isArray(propsOrStateManager)) return propsOrStateManager;
-
-    // Build them from an array of controllable props.
-    return {
-        reducers: propsOrStateManager.reduce((reducers, prop) => {
-            const callbackName = toCallbackName(prop);
-            reducers[callbackName] = (currentState, value) => ({[prop]: value});
-            return reducers;
-        }, {}),
     };
 }

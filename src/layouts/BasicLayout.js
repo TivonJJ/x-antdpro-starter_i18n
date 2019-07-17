@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Layout} from 'antd';
+import router from 'umi/router';
 import DocumentTitle from 'react-document-title';
 import {connect} from 'dva';
 import {ContainerQuery} from 'react-container-query';
@@ -11,7 +12,7 @@ import SiderMenu from '../components/SiderMenu';
 import { urlToList } from '../utils';
 import BaseLayout from './BaseLayout';
 import Header from './Header';
-import router from 'umi/router';
+
 const {Content, Footer} = Layout;
 const query = {
     'screen-xs': {
@@ -34,9 +35,9 @@ const query = {
     },
 };
 
-let isMobile;
+let guessIsMobile;
 enquireScreen(b => {
-    isMobile = b;
+    guessIsMobile = b;
 });
 
 @connect(({user, global,setting}) => ({
@@ -44,13 +45,14 @@ enquireScreen(b => {
     collapsed: global.collapsed,
     ...setting
 }))
-export default class BasicLayout extends BaseLayout {
+class BasicLayout extends BaseLayout {
     static childContextTypes = {
         location: PropTypes.object,
         breadcrumbNameMap: PropTypes.object,
     };
+
     state = {
-        isMobile,
+        isMobile:guessIsMobile,
         currentSys:'',
         redirectData:[]
     };
@@ -85,23 +87,12 @@ export default class BasicLayout extends BaseLayout {
      * 根据菜单取配置获得第一个有效的路由配置并进入.
      */
     autoRedirectToFirstRoute(){
-        if(!this.props.currentUser)return null;
+        if(!this.props.currentUser)return;
         const {menus,routeMap} = this.props.currentUser;
-        if(!menus)return null;
+        if(!menus)return;
         const {location: {pathname}} = this.props;
         const paths = pathname.split('/').filter(item=>!!item);
-        if(menus.length>0){
-            if(paths.length===0){
-                const firstSys = menus.find(({status})=>status==1);
-                if(firstSys){
-                    router.replace(firstSys.route);
-                }
-            }else if(paths.length===1){
-                const menus = routeMap[this.state.currentSys];
-                const firstRoute = findFirstChild(menus.children);
-                if(firstRoute)router.replace(firstRoute.route);
-            }
-        }
+
         function findFirstChild(list) {
             if(!list)return null;
             for(let i=0;i<list.length;i++){
@@ -112,6 +103,19 @@ export default class BasicLayout extends BaseLayout {
                 }
             }
             return null;
+        }
+
+        if(menus.length>0){
+            if(paths.length===0){
+                const firstSys = menus.find(({status})=>status==1);
+                if(firstSys){
+                    router.replace(firstSys.route);
+                }
+            }else if(paths.length===1){
+                const routeMenus = routeMap[this.state.currentSys];
+                const firstRoute = findFirstChild(routeMenus.children);
+                if(firstRoute)router.replace(firstRoute.route);
+            }
         }
     };
 
@@ -131,14 +135,18 @@ export default class BasicLayout extends BaseLayout {
         if(!currentSys || !currentUser || !currentUser.routeMap || !currentUser.routeMap[currentSys])return null;
         return currentUser.routeMap[currentSys].children;
     };
+
     handleMenuCollapse = collapsed => {
         this.props.dispatch({
             type: 'global/changeLayoutCollapsed',
             payload: collapsed,
         });
     };
+
     getLayoutStyle = () => {
+        // eslint-disable-next-line react/no-this-in-sfc
         const { isMobile } = this.state;
+        // eslint-disable-next-line react/no-this-in-sfc
         const { fixSiderbar, collapsed, layout } = this.props;
         if (fixSiderbar && layout !== 'topmenu' && !isMobile) {
             return {
@@ -147,6 +155,7 @@ export default class BasicLayout extends BaseLayout {
         }
         return null;
     };
+
     getContentStyle = () => {
         const { fixedHeader } = this.props;
         return {
@@ -154,6 +163,7 @@ export default class BasicLayout extends BaseLayout {
             paddingTop: fixedHeader ? 64 : 0,
         };
     };
+
     render() {
         const {
             collapsed,
@@ -162,6 +172,7 @@ export default class BasicLayout extends BaseLayout {
             navTheme,
             headerTheme
         } = this.props;
+        const {isMobile} = this.state;
         const layout = (
             <Layout>
                 <SiderMenu
@@ -173,10 +184,13 @@ export default class BasicLayout extends BaseLayout {
                     theme={navTheme}
                     {...this.props}
                 />
-                <Layout className={'layout-body'} style={{
-                    ...this.getLayoutStyle(),
-                    minHeight: '100vh',
-                }}>
+                <Layout
+                    className={"layout-body"}
+                    style={{
+                        ...this.getLayoutStyle(),
+                        minHeight: '100vh',
+                    }}
+                >
                     <Header
                         handleMenuCollapse={this.handleMenuCollapse}
                         isMobile={isMobile}
@@ -186,8 +200,8 @@ export default class BasicLayout extends BaseLayout {
                     <Content style={this.getContentStyle()}>
                         {children}
                     </Content>
-                    <Footer style={{padding: 0}}>
-                        <GlobalFooter/>
+                    <Footer style={{ padding: 0 }}>
+                        <GlobalFooter />
                     </Footer>
                 </Layout>
             </Layout>
@@ -202,3 +216,5 @@ export default class BasicLayout extends BaseLayout {
         );
     }
 }
+
+export default BasicLayout;

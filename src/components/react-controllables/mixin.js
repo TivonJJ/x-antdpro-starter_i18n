@@ -12,10 +12,10 @@ export default {
       !!this.controllables,
       'Components that use ControllablesMixin must define a controllables array'
     );
-    let state = {};
+    const state = {};
     for (let i = 0; i < this.controllables.length; i++) {
-      let name = this.controllables[i];
-      let defaultValue = this.props[`default${ capFirst(name) }`];
+      const name = this.controllables[i];
+      const defaultValue = this.props[`default${ capFirst(name) }`];
       if (defaultValue != null) state[name] = defaultValue;
     }
     return state;
@@ -27,11 +27,11 @@ export default {
 
   componentDidUpdate(prevProps, prevState) {
     for (let i = 0; i < this.controllables.length; i++) {
-      let name = this.controllables[i];
-      let newValue = this.state[name];
+      const name = this.controllables[i];
+      const newValue = this.state[name];
       if (newValue === prevState[name]) continue;
-      let oldValue = getControllableValue(name, prevState, prevProps);
-      let cb = this.props[callbackName(name)];
+      const oldValue = getControllableValue(name, prevState, prevProps);
+      const cb = this.props[callbackName(name)];
       if (cb) cb(newValue, oldValue);
     }
   },

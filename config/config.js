@@ -1,12 +1,33 @@
 // https://umijs.org/config/
 import os from 'os';
+import slash from 'slash2';
 import pageRoutes from './router.config';
 import webpackplugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
-import slash from 'slash2';
+
+function getGlobalParams() {
+    const BUILD_ENV = process.env.BUILD_ENV || process.env.NODE_ENV;
+    const startParams = process.argv
+        .slice(2)
+        .map(arg => arg.split('='))
+        .reduce((args, [value, key]) => {
+            const theArgs = args;
+            if (/^--/.test(value)) {
+                theArgs[value.replace(/^--/, '')] = key;
+            }
+            return theArgs;
+        }, {});
+    const PUBLIC_PATH = startParams.basePath || '/';
+    return {
+        env: BUILD_ENV,
+        baseUrl: PUBLIC_PATH,
+        buildVersion: startParams.bv,
+        StartParams: startParams,
+    };
+}
 
 const APP_METADATA = getGlobalParams();
-global['APP_METADATA'] = APP_METADATA;
+global.APP_METADATA = APP_METADATA;
 
 export default {
     proxy: {
@@ -34,14 +55,6 @@ export default {
                 dynamicImport: {
                     loadingComponent: './components/PageLoading/index',
                 },
-                pwa: defaultSettings.pwa
-                    ? {
-                        workboxPluginMode: 'InjectManifest',
-                        workboxOptions: {
-                            importWorkboxFrom: 'local',
-                        },
-                    }
-                    : {},
                 ...(!process.env.TEST && os.platform() === 'darwin'
                     ? {
                         dll: {
@@ -104,24 +117,3 @@ export default {
         mergeRules: false,
     },
 };
-
-function getGlobalParams() {
-    const BUILD_ENV = process.env.BUILD_ENV || process.env.NODE_ENV;
-    const startParams = process.argv
-        .slice(2)
-        .map(arg => arg.split('='))
-        .reduce((args, [value, key]) => {
-            if (/^--/.test(value)) {
-                args[value.replace(/^--/, '')] = key;
-            }
-            return args;
-        }, {});
-    const PUBLIC_PATH = startParams.basePath || '/';
-    console.log('Base Path', PUBLIC_PATH);
-    return {
-        env: BUILD_ENV,
-        baseUrl: PUBLIC_PATH,
-        buildVersion: startParams['bv'],
-        StartParams: startParams,
-    };
-}

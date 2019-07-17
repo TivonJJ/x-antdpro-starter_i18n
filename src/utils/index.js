@@ -1,10 +1,9 @@
-'use strict';
 import { matchRoutes } from 'react-router-config';
+import moment from 'moment-timezone';
+import pathJoin from 'join-path';
 
 const cloneDeep = require('safe-clone-deep');
 const crypto = require('crypto');
-import moment from 'moment-timezone';
-import pathJoin from 'join-path';
 
 // 常用正则验证规则
 export const ValidateRegex = {
@@ -21,8 +20,8 @@ export function isUrl(path) {
 
 
 export function unique(arr) {
-    arr.sort(); //先排序
-    let res = [arr[0]];
+    arr.sort(); // 先排序
+    const res = [arr[0]];
     for (let i = 1; i < arr.length; i++) {
         if (arr[i] !== res[res.length - 1]) {
             res.push(arr[i]);
@@ -45,13 +44,13 @@ export function getRouteByLink(routes, routeLink) {
  * @returns {*}
  */
 export const removeEmptyProperty = (obj, options = {}) => {
-    for (let key in obj) {
+    for (const key in obj) {
         let val = obj[key];
         if (options.ignores && options.ignores.indexOf(key) !== -1) continue;
         if (options.trim !==false && typeof val==='string'){
             val = val.trim();
         }
-        if (null == val || '' === val) delete obj[key];
+        if (val == null || val === '') delete obj[key];
     }
     return obj;
 };
@@ -279,6 +278,6 @@ export function toUTC0Date(date, opts) {
 }
 // 补零
 export function zeroize(str,n){
-    if(null==str)return null;
+    if(str==null)return null;
     return (Array(n).join(0) + str).slice(-n);
 }

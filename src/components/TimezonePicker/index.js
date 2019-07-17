@@ -14,19 +14,21 @@ class TimezonePicker extends React.Component {
         className: PropTypes.string,
         style: PropTypes.shape({}),
     };
+
     static defaultProps = {
         offset: 'UTC',
         value: undefined
     };
-    state={
-        timezones,
-    };
 
-    static stringifyZone(zone, offset) {
+    static stringifyZone(zone, /*offset*/) {
         return zone.name;
         // const ensure2Digits = num => (num > 9 ? `${num}` : `0${num}`);
         // return `(${offset}${zone.offset < 0 ? '-' : '+'}${ensure2Digits(Math.floor(Math.abs(zone.offset)))}:${ensure2Digits(Math.abs((zone.offset % 1) * 60))}) ${zone.label}`;
     }
+
+    state={
+        timezones,
+    };
 
     handleZoneChange = (zone) => {
         if(this.props.onChange)this.props.onChange(zone);
@@ -45,18 +47,25 @@ class TimezonePicker extends React.Component {
     };
 
     render() {
-        const {timezones,} = this.state;
+        const {timezones:stateTimezones} = this.state;
         const { offset,className,style,allowClear,showSearch=true,value } = this.props;
-        return <Select onChange={this.handleZoneChange} className={classnames('comp-timezone_picker',className)}
-                       style={style} allowClear={allowClear} showSearch={showSearch}
-                       value={value}
-                       onSearch={this.handleSearch}>
-            {timezones.map((zone) => (
-                <Select.Option key={zone.name}>
-                    {TimezonePicker.stringifyZone(zone, offset)}
-                </Select.Option>
-            ))}
-        </Select>
+        return (
+            <Select
+                onChange={this.handleZoneChange}
+                className={classnames('comp-timezone_picker',className)}
+                style={style}
+                allowClear={allowClear}
+                showSearch={showSearch}
+                value={value}
+                onSearch={this.handleSearch}
+            >
+                {stateTimezones.map((zone) => (
+                    <Select.Option key={zone.name}>
+                        {TimezonePicker.stringifyZone(zone, offset)}
+                    </Select.Option>
+                ))}
+            </Select>
+        )
     }
 }
 

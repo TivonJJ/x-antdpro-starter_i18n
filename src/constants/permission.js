@@ -1,4 +1,3 @@
-
 export const ResTypes = [
     { label: 'Model.permissions.types.folder', value: 'Folder'},
     { label: 'Model.permissions.types.menu', value: 'Menu' },

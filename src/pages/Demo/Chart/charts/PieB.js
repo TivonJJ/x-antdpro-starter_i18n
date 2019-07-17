@@ -75,15 +75,14 @@ class Sunburst extends React.Component {
                     padding={'auto'}
                     forceFit
                 >
-                    <Coord type="theta" radius={0.5} />
+                    <Coord type={"theta"} radius={0.5} />
                     <Tooltip
                         showTitle={false}
-                        itemTpl="<li><span style=&quot;background-color:{color};&quot; class=&quot;g2-tooltip-marker&quot;></span>{name}: {value}</li>"
                     />
                     <Geom
-                        type="intervalStack"
-                        position="percent"
-                        color="type"
+                        type={"intervalStack"}
+                        position={"percent"}
+                        color={"type"}
                         tooltip={[
                             'type*percent',
                             (item, percent) => {
@@ -100,13 +99,13 @@ class Sunburst extends React.Component {
                         }}
                         select={false}
                     >
-                        <Label content="type" offset={-10} />
+                        <Label content={"type"} offset={-10} />
                     </Geom>
                     <View data={dv1} scale={cols}>
-                        <Coord type="theta" radius={0.75} innerRadius={0.5 / 0.75} />
+                        <Coord type={"theta"} radius={0.75} innerRadius={0.5 / 0.75} />
                         <Geom
-                            type="intervalStack"
-                            position="percent"
+                            type={"intervalStack"}
+                            position={"percent"}
                             color={[
                                 'name',
                                 [
@@ -134,7 +133,7 @@ class Sunburst extends React.Component {
                             }}
                             select={false}
                         >
-                            <Label content="name" />
+                            <Label content={"name"} />
                         </Geom>
                     </View>
                 </Chart>

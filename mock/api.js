@@ -19,12 +19,12 @@ for(let i=0;i<300;i++){
 export default {
     'POST /api/demo/list': (req,res)=>{
         const {page_size,page_num} = req.body;
-        let total = demoList.length,
-            start = (page_num-1)*page_size,
+        const total = demoList.length,
+            start = (page_num - 1) * page_size,
             end = start + page_size;
         res.send({
             code: 0,
-            total: total,
+            total,
             data: demoList.slice(start,end),
         })
     },
@@ -38,11 +38,14 @@ export default {
         });
     },
     'POST /api/demo/insert': (req, res) => {
-        if(!req.body)return res.send({
-            code:'100',
-            data:[],
-            msg:'参数不能为空'
-        });
+        if(!req.body){
+            res.send({
+                code:'100',
+                data:[],
+                msg:'参数不能为空'
+            });
+            return;
+        }
         demoList.push({
             name:req.body.name,
             amount: req.body.amount,
@@ -56,11 +59,14 @@ export default {
     },
     'POST /api/demo/update':(req,res)=>{
         const found = demoList.find(item => req.body.no == item.no);
-        if(!found)return res.send({
-            code:'101',
-            data:[],
-            msg:'数据不存在'
-        });
+        if(!found){
+            res.send({
+                code:'101',
+                data:[],
+                msg:'数据不存在'
+            });
+            return;
+        }
         Object.assign(found,req.body);
         res.send({
             code:'0',

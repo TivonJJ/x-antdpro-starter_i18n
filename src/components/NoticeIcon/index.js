@@ -9,11 +9,14 @@ export default class NoticeIcon extends PureComponent {
   static defaultProps = {
     onPopupVisibleChange: () => {},
   };
+
   static List = NoticeList;
+
   constructor(props) {
     super(props);
     this.state = {};
   }
+
   render() {
     const { className, count,dot, popupAlign, onPopupVisibleChange,children,trigger='click',icon='bell' } = this.props;
     const noticeButtonClass = classNames(className, styles.noticeButton);
@@ -34,7 +37,7 @@ export default class NoticeIcon extends PureComponent {
     }
     return (
       <Popover
-        placement="bottomRight"
+        placement={"bottomRight"}
         content={notificationBox}
         popupClassName={styles.popover}
         trigger={trigger}

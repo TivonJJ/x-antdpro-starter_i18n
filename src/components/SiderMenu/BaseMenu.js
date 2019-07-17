@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Menu, Icon } from 'antd';
 import Link from 'umi/link';
-import { formatMessage, FormattedMessage,getLocale } from 'umi/locale';
+import { getLocale } from 'umi/locale';
 import pathToRegexp from 'path-to-regexp';
 import { urlToList } from '@/utils';
 import styles from './index.less';
@@ -11,7 +11,7 @@ const { SubMenu } = Menu;
 const getIcon = icon => {
     if (!icon) return null;
     if (typeof icon === 'string' && icon.indexOf('http') === 0) {
-        return <img src={icon} alt="icon" className={`${styles.icon} sider-menu-item-img`}/>;
+        return <img src={icon} alt={'icon'} className={`${styles.icon} sider-menu-item-img`}/>;
     }
     if (typeof icon === 'string') {
         return <Icon type={icon}/>;
@@ -28,7 +28,7 @@ export const getMenuMatches = (flatMenuKeys, path) => flatMenuKeys.filter(item =
  */
 export const getFlatMenuKeys = menuData => {
     let keys = [];
-    if(!menuData)return keys;
+    if (!menuData) return keys;
     menuData.forEach(item => {
         if (item.children) {
             keys = keys.concat(getFlatMenuKeys(item.children));
@@ -39,13 +39,9 @@ export const getFlatMenuKeys = menuData => {
 };
 
 export default class BaseMenu extends PureComponent {
-    constructor(props) {
-        super(props);
-    }
 
-    getLocaleTitle(title={}){
-        return title[getLocale()];
-    }
+    getLocaleTitle = (title = {}) => title[getLocale()];
+
     /**
      * 获得菜单子节点
      * @memberof SiderMenu
@@ -56,9 +52,7 @@ export default class BaseMenu extends PureComponent {
         }
         return menusData
             .filter(item => !item.isAction && item.status == 1)
-            .map(item => {
-                return this.getSubMenuOrItem(item, isRoot);
-            });
+            .map(item => this.getSubMenuOrItem(item, isRoot));
     };
 
     // Get the currently selected menu
@@ -66,9 +60,7 @@ export default class BaseMenu extends PureComponent {
         const {
             location: { pathname },
         } = this.props;
-        return urlToList(pathname).map(itemPath => {
-            return getMenuMatches(this.props.flatMenuKeys, itemPath).pop()
-        });
+        return urlToList(pathname).map(itemPath => getMenuMatches(this.props.flatMenuKeys, itemPath).pop());
     };
 
     /**
@@ -98,10 +90,15 @@ export default class BaseMenu extends PureComponent {
                 );
             }
             return null;
-        } else {
-            return <Menu.Item key={item.route}
-                              className={isRoot ? styles.finalMenu : ''}>{this.getMenuItemPath(item)}</Menu.Item>;
         }
+        return (
+            <Menu.Item
+                key={item.route}
+                className={isRoot ? styles.finalMenu : ''}
+            >{this.getMenuItemPath(item)}
+            </Menu.Item>
+        );
+
     };
 
     /**
@@ -146,9 +143,9 @@ export default class BaseMenu extends PureComponent {
     conversionPath = path => {
         if (path && path.indexOf('http') === 0) {
             return path;
-        } else {
-            return `/${path || ''}`.replace(/\/+/g, '/');
         }
+        return `/${path || ''}`.replace(/\/+/g, '/');
+
     };
 
     render() {
@@ -168,7 +165,7 @@ export default class BaseMenu extends PureComponent {
         const { handleOpenChange, style, menuData } = this.props;
         return (
             <Menu
-                key="Menu"
+                key={'Menu'}
                 mode={mode}
                 theme={theme}
                 onOpenChange={handleOpenChange}

@@ -1,35 +1,12 @@
 import {connect} from "dva";
 import React from 'react';
 
-export default function (getProps,options={}) {
-    return function (Component) {
-        return createWrapperComponent(getProps,options,Component);
-    }
-}
-
-function createWrapperComponent(getProps,options,Component) {
-    @connect(({easyTableProvider})=>({
-        easyTableProvider
-    }))
-    class WrapperComponent extends React.PureComponent {
-        render() {
-            const extProps = mapProviderProps(this.props, getProps);
-            if(options.ensureProvider && Object.keys(extProps).some(key=>!extProps[key]))return null;
-            return React.createElement(Component, {
-                ...this.props,
-                ...extProps
-            })
-        }
-    }
-    return WrapperComponent;
-}
-
 function mapProviderProps(props,getProps) {
     const args = {
         easyTableProvider:props.easyTableProvider
     };
     if(!getProps)return args;
-    Object.keys(props.easyTableProvider.page).map(name=>{
+    Object.keys(props.easyTableProvider.page).forEach(name=>{
         args[name] = {
             page:props.easyTableProvider.page[name],
             loading:props.easyTableProvider.loading[name],
@@ -95,4 +72,27 @@ function mapProviderProps(props,getProps) {
         }
     });
     return getProps(args);
+}
+
+function createWrapperComponent(getProps,options,Component) {
+    @connect(({easyTableProvider})=>({
+        easyTableProvider
+    }))
+    class WrapperComponent extends React.PureComponent {
+        render() {
+            const extProps = mapProviderProps(this.props, getProps);
+            if(options.ensureProvider && Object.keys(extProps).some(key=>!extProps[key]))return null;
+            return React.createElement(Component, {
+                ...this.props,
+                ...extProps
+            })
+        }
+    }
+    return WrapperComponent;
+}
+
+export default function (getProps,options={}) {
+    return function decorate(Component) {
+        return createWrapperComponent(getProps,options,Component);
+    }
 }

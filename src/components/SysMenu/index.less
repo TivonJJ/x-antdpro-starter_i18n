@@ -54,11 +54,16 @@
         display: inline-block;
         transition: all 0.3s;
         height: 100%;
-        :global(.anticon) {
-            font-size: 18px;
-            vertical-align: middle;
-            color: inherit;
-            margin-right: 0;
+        :global {
+            .anticon{
+                font-size: 18px;
+                vertical-align: middle;
+                color: inherit;
+                margin-right: 0;
+            }
+            .ant-badge{
+                color: inherit;
+            }
         }
     }
 }

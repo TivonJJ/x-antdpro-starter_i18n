@@ -1,5 +1,18 @@
-"use strict";
-import {formatMessage} from 'umi/locale';
+function checkIsFullScreen() {
+    return document.fullScreen||document.mozFullScreen||document.webkitIsFullScreen;
+}
+
+function toggleFullScreenMode(el) {
+    const isFullScreen = checkIsFullScreen();
+    if (!isFullScreen) {// 进入全屏
+        const requestFullScreen = el.requestFullscreen || el.mozRequestFullScreen || el.mozRequestFullScreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+        requestFullScreen && requestFullScreen();
+    } else {// 退出全屏
+        const exitFullScreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen;
+        exitFullScreen && exitFullScreen();
+    }
+    return !isFullScreen;
+}
 
 export default {
     namespace: 'global',
@@ -53,21 +66,3 @@ export default {
         }
     }
 };
-
-function checkIsFullScreen() {
-    return document.fullScreen||document.mozFullScreen||document.webkitIsFullScreen;
-}
-
-function toggleFullScreenMode(el) {
-    const isFullScreen = checkIsFullScreen();
-    if (!isFullScreen) {//进入全屏
-        (el.requestFullscreen && el.requestFullscreen()) ||
-        (el.mozRequestFullScreen && el.mozRequestFullScreen()) ||
-        (el.webkitRequestFullscreen && el.webkitRequestFullscreen()) || (el.msRequestFullscreen && el.msRequestFullscreen());
-    } else {	//退出全屏
-        document.exitFullscreen ? document.exitFullscreen() :
-            document.mozCancelFullScreen ? document.mozCancelFullScreen() :
-                document.webkitExitFullscreen ? document.webkitExitFullscreen() : '';
-    }
-    return !isFullScreen;
-}

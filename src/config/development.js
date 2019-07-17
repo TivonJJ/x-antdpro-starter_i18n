@@ -1,5 +1,3 @@
-"use strict";
-
 export default {
     googleMap:{
         url:'https://maps.googleapis.com/maps/api/js',

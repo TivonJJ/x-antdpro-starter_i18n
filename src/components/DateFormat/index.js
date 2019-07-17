@@ -1,4 +1,3 @@
-"use strict";
 import React from 'react';
 import moment from 'moment-timezone';
 import PropTypes from 'prop-types';
@@ -9,8 +8,15 @@ export default class extends React.Component{
         utcOffset:PropTypes.oneOfType([PropTypes.number,PropTypes.bool]),
         format:PropTypes.string
     };
+
+    static defaultProps={
+        date:null,
+        utcOffset:false,
+        format:'lll'
+    };
+
     render(){
-        const {date,format='lll',utcOffset=false,emptyContent='-',tz='locale'} = this.props;
+        const {date,format,utcOffset,emptyContent='-',tz='locale'} = this.props;
         if(!date)return emptyContent;
         if(utcOffset===false)return moment(date).format(format);
         let m = moment.utc(date).utcOffset(utcOffset);

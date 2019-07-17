@@ -1,4 +1,3 @@
-"use strict";
 import { getRoles, updateUserStatus, deleteUser, upsertUser, resetUserPassword } from '@/services/system';
 
 function getInitalState() {
@@ -11,7 +10,7 @@ export default {
     state: getInitalState(),
     effects:{
         *fetchRoles({payload}, {call, put, select}){
-            const state = yield select(state => state.userManage);
+            const state = yield select(allState => allState.userManage);
             const {roles} = state;
             if (roles && roles.length > 0) return roles;
             const response = yield call(getRoles, payload.params);
@@ -20,7 +19,8 @@ export default {
                 payload: {
                     roles: response.data
                 }
-            })
+            });
+            return response.data;
         },
         *resetUserPassword({payload}, {call}){
             return yield call(resetUserPassword,payload.userId);

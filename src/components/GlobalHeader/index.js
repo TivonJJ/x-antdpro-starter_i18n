@@ -6,6 +6,7 @@ import styles from './index.less';
 import RightContent from './RightContent';
 import SysMenu from '../SysMenu';
 import { getPublicPath } from '@/utils';
+
 const logo = getPublicPath('img/app-logo_light.png');
 
 export default class GlobalHeader extends PureComponent {

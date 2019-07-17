@@ -4,6 +4,7 @@ import Animate from 'rc-animate';
 import { connect } from 'dva';
 import GlobalHeader from '@/components/GlobalHeader';
 import styles from './Header.less';
+
 const { Header } = Layout;
 
 class HeaderView extends PureComponent {
@@ -84,7 +85,7 @@ class HeaderView extends PureComponent {
       </Header>
     ) : null;
     return (
-      <Animate component="" transitionName="fade">
+      <Animate component={""} transitionName={"fade"}>
         {HeaderDom}
       </Animate>
     );

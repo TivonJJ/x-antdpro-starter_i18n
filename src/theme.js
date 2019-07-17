@@ -1,4 +1,3 @@
-'use strict';
 // Custom theme
 module.exports = {
     // "primary-color": "#1890FF",

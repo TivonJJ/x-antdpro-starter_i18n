@@ -1,4 +1,3 @@
-"use strict";
 import React from 'react';
 import { Icon, Card, Pagination, Tag, Spin,notification } from 'antd';
 import styles from '../../index.less';
@@ -20,14 +19,16 @@ export const Types = {
     4:{name:<FormattedMessage id={'Common.message.other'}/>,icon:getPublicPath('img/icon-task_other.png')}
 };
 
+export default
 @connect(({task,loading}) => ({
     task,
     fetching:loading.effects['task/fetch']
 }))
-export default class Task extends React.Component{
+class Task extends React.Component{
     static Options={
         noTitleTips:true
     };
+
     fetchTasks=()=>{
         if(this.props.fetching)return;
         this.props.dispatch({
@@ -44,6 +45,7 @@ export default class Task extends React.Component{
             })
         });
     };
+
     handlePageChange=(page,pageSize)=>{
         this.page = {
             current:page,
@@ -51,6 +53,7 @@ export default class Task extends React.Component{
         };
         this.fetchTasks()
     };
+
     handlePopUpChange=(visible)=>{
         if(visible){
             this.fetchTasks();
@@ -63,11 +66,12 @@ export default class Task extends React.Component{
             })
         }
     };
+
     render(){
         const {menu,task,fetching=false,title} = this.props;
         const {tasksPage} = task;
         const noticeList = [];
-        tasksPage.data.map(item=>{
+        tasksPage.data.forEach(item=>{
             const statusTag = Status[item.status];
             if(!statusTag)return;
             const type = Types[item.task_type];
@@ -81,27 +85,34 @@ export default class Task extends React.Component{
                 extra: <Tag color={statusTag.tagColor}>{statusTag.name}</Tag>
             })
         });
-        return <NoticeIcon
-            icon={menu.icon}
-            dot={task.hasUnread}
-            className={styles.action}
-            onPopupVisibleChange={this.handlePopUpChange}>
-            <Card title={title}
-                  className={styles.noticeCard}
-                  extra={<a onClick={this.fetchTasks}><Icon type={'reload'} spin={fetching}/></a>}>
-                <Spin spinning={fetching}>
-                    <NoticeIcon.List
-                        data={noticeList}
-                        emptyText={<FormattedMessage id={'Component.statusIcon.task.emptyText'}/>}>
-                    </NoticeIcon.List>
-                    <div className={styles.footer}>
-                        <Pagination {...tasksPage}
-                                    onChange={this.handlePageChange}
-                                    showTotal={total=><FormattedMessage id={'Common.pagination.total'} values={{total}}/>}
-                        />
-                    </div>
-                </Spin>
-            </Card>
-        </NoticeIcon>;
+        return (
+            <NoticeIcon
+                icon={menu.icon}
+                dot={task.hasUnread}
+                className={styles.action}
+                onPopupVisibleChange={this.handlePopUpChange}
+            >
+                <Card
+                    title={title}
+                    className={styles.noticeCard}
+                    extra={<a onClick={this.fetchTasks}><Icon type={'reload'} spin={fetching}/></a>}
+                >
+                    <Spin spinning={fetching}>
+                        <NoticeIcon.List
+                            data={noticeList}
+                            emptyText={<FormattedMessage id={'Component.statusIcon.task.emptyText'}/>}
+                        >
+                        </NoticeIcon.List>
+                        <div className={styles.footer}>
+                            <Pagination
+                                {...tasksPage}
+                                onChange={this.handlePageChange}
+                                showTotal={total=><FormattedMessage id={'Common.pagination.total'} values={{total}}/>}
+                            />
+                        </div>
+                    </Spin>
+                </Card>
+            </NoticeIcon>
+        );
     }
 }

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import DescriptionList from '@/components/DescriptionList';
-import { connect } from 'dva';
 import { Alert, Button, Card, Spin,Modal,message } from 'antd';
-const {Description} = DescriptionList;
-import {formatMessage,FormattedMessage} from 'umi/locale';
+import { connect } from 'dva';
+import {formatMessage} from 'umi/locale';
 import { Status } from '@/constants/demo';
 import EasyTable from '@/components/EasyTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import DescriptionList from '@/components/DescriptionList';
+
+const {Description} = DescriptionList;
 
 @EasyTable.connect(({demoTable})=>({
     demoTable
@@ -19,10 +20,12 @@ class Detail extends Component {
     state={
         error:null
     };
+
     componentWillMount() {
         this.fetchDetail();
     }
-    fetchDetail(){
+
+    fetchDetail=()=>{
         const {id} = this.props.match.params;
         this.props.dispatch({
             type:'demoDetail/getDetail',
@@ -30,17 +33,20 @@ class Detail extends Component {
         }).catch(e=>{
             this.setState({error:e.message})
         })
-    }
-    refreshParent(){
+    };
+
+    refreshParent=()=>{
         this.props.demoTable.refresh();// 刷新父页面列表数据
-    }
+    };
+
     close=()=>{
+        const {match:{params},dispatch} = this.props;
         Modal.confirm({
             title:formatMessage({id:'Common.message.sure'}),
             content:formatMessage({id:'Page.demo.detail.closeTip'}),
             onOk:()=>{
-                const {id} = this.props.match.params;
-                this.props.dispatch({
+                const {id} = params;
+                dispatch({
                     type:'demoDetail/close',
                     payload:id
                 }).then(()=>{
@@ -53,30 +59,35 @@ class Detail extends Component {
             }
         })
     };
+
     render() {
         const {fetching=false,demoDetail:{detail}} = this.props;
-        if(fetching)return <Spin/>;
-        if(this.state.error)return <Alert type={'error'} message={this.state.error}/>;
+        const {error} = this.state;
+        if(fetching)return <Spin />;
+        if(error)return <Alert type={'error'} message={error} />;
         if(!detail)return null;
         return (
-            <PageHeaderWrapper title={formatMessage({id:'Page.demo.detail.title'})}
-                              content={
-                                  <DescriptionList>
-                                      <Description term={formatMessage({id:'Model.demo.no'})}>{detail.no}</Description>
-                                      <Description term={formatMessage({id:'Model.demo.status.name'})}>
-                                          {formatMessage({id:Status[detail.status]})}
-                                      </Description>
-                                  </DescriptionList>
-                              }
-                              action={
-                                  detail.status==1&&<Button type={'danger'} onClick={this.close}>
-                                      {formatMessage({id:'Common.message.close'})}
-                                  </Button>
-                              }>
-                <Card title={formatMessage({id:'Page.demo.detail.basic'})}>
+            <PageHeaderWrapper
+                title={formatMessage({ id: 'Page.demo.detail.title' })}
+                content={
                     <DescriptionList>
-                        <Description term={formatMessage({id:'Model.demo.no'})}>{detail.no}</Description>
-                        <Description term={formatMessage({id:'Model.demo.name'})}>{detail.name}</Description>
+                        <Description term={formatMessage({ id: 'Model.demo.no' })}>{detail.no}</Description>
+                        <Description term={formatMessage({ id: 'Model.demo.status.name' })}>
+                            {formatMessage({ id: Status[detail.status] })}
+                        </Description>
+                    </DescriptionList>
+                }
+                action={
+                    detail.status == 1 &&
+                    <Button type={'danger'} onClick={this.close}>
+                        {formatMessage({ id: 'Common.message.close' })}
+                    </Button>
+                }
+            >
+                <Card title={formatMessage({ id: 'Page.demo.detail.basic' })}>
+                    <DescriptionList>
+                        <Description term={formatMessage({ id: 'Model.demo.no' })}>{detail.no}</Description>
+                        <Description term={formatMessage({ id: 'Model.demo.name' })}>{detail.name}</Description>
                     </DescriptionList>
                 </Card>
             </PageHeaderWrapper>

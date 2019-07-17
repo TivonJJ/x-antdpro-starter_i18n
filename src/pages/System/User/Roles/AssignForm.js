@@ -1,4 +1,3 @@
-'use strict';
 import React from 'react';
 import {Modal, Transfer} from 'antd';
 import {getUserByRole} from '@/services/system';
@@ -11,33 +10,36 @@ export default class extends React.Component {
         targetKeys: []
     };
 
+    componentDidMount() {
+        this.handleRoleChange(this.props.role);
+    }
+
     componentWillReceiveProps(nextProps) {
         if ('role' in nextProps && this.props.role !== nextProps.role) {
             this.handleRoleChange(nextProps.role);
         }
     }
 
-    componentDidMount() {
-        this.handleRoleChange(this.props.role);
-    }
-
-    handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
+    handleSelectChange=(sourceSelectedKeys, targetSelectedKeys)=> {
         this.setState({selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys]});
-    }
+    };
 
-    handleRoleChange(role) {
-        if (!role) return this.setState({dataSource: [], selectedKeys: [], targetKeys: []});
+    handleRoleChange=(role)=> {
+        if (!role){
+            this.setState({dataSource: [], selectedKeys: [], targetKeys: []});
+            return;
+        }
 
         getUserByRole(role.role_id).then(
             users => {
-                const dataSource = [], targetKeys = [];
-                users.able_alloc_userlist.map(item => {
+                const dataSource = []; const targetKeys = [];
+                users.able_alloc_userlist.forEach(item => {
                     dataSource.push({
                         key: item.user_id.toString(),
                         title: `${item.real_name} (${item.username})`,
                     });
                 });
-                users.already_alloc_userlist.map(item => {
+                users.already_alloc_userlist.forEach(item => {
                     dataSource.push({
                         key: item.user_id.toString(),
                         title: `${item.real_name} (${item.username})`,
@@ -53,7 +55,7 @@ export default class extends React.Component {
                 });
             }
         );
-    }
+    };
 
     handleChange = nextTargetKeys => {
         this.setState({targetKeys: nextTargetKeys});
@@ -62,9 +64,9 @@ export default class extends React.Component {
 
     render() {
         const {dataSource, selectedKeys, targetKeys} = this.state;
-        console.log(targetKeys, 'two')
+        console.log(targetKeys, 'two');
         return (
-            <div className="user-role-transfer">
+            <div className={"user-role-transfer"}>
                 <Transfer
                     dataSource={dataSource}
                     titles={[<FormattedMessage id={'Page.system.roles.label.unassigned'}/>,
@@ -72,7 +74,7 @@ export default class extends React.Component {
                     targetKeys={targetKeys}
                     selectedKeys={selectedKeys}
                     onChange={this.handleChange}
-                    onSelectChange={this.handleSelectChange.bind(this)}
+                    onSelectChange={this.handleSelectChange}
                     render={item => item.title}
                     showSearch
                     listStyle={{

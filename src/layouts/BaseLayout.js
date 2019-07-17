@@ -1,4 +1,3 @@
-'use strict';
 import React from 'react';
 import {formatMessage,getLocale} from 'umi/locale';
 import pathToRegexp from 'path-to-regexp';
@@ -12,10 +11,12 @@ export default class BaseLayout extends React.PureComponent{
         let before = '';
         switch (window.appMeta.env) {
             case 'test':
-                before = formatMessage({id:'App.envTestMark'})+' ';
+                before = `${formatMessage({id:'App.envTestMark'})} `;
                 break;
             case 'uat':
-                before = formatMessage({id:'App.envUATMark'})+' ';
+                before = `${formatMessage({id:'App.envUATMark'})} `;
+                break;
+            default:
                 break;
         }
         const getTitle = ()=>{
@@ -28,22 +29,23 @@ export default class BaseLayout extends React.PureComponent{
             if(routes){
                 const findRoute = ()=>{
                     let route = null;
-                    _find(routes);
-                    return route;
-                    function _find(data=[]){
+                    function find(data=[]){
                         for(let i=0;i<data.length;i++){
-                            const path = data[i].path;
+                            const {path} = data[i];
                             if(path&&pathToRegexp(path).test(pathname)){
                                 route = data[i];
                                 break;
                             }
-                            _find(data[i].routes);
+                            find(data[i].routes);
                         }
                     }
+                    find(routes);
+                    return route;
                 };
                 const router = findRoute();
                 if(router && router.title)return formatMessage({id:router.title});
             }
+            return '';
         };
         const t = getTitle();
         if(t)title = `${t} - ${appName}`;

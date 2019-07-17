@@ -1,9 +1,9 @@
 import React, { createElement } from 'react';
 import classNames from 'classnames';
 import { Button } from 'antd';
+import {FormattedMessage} from "umi/locale";
 import config from './typeConfig';
 import styles from './index.less';
-import {FormattedMessage} from "umi/locale";
 
 export default ({ className, linkElement = 'a', type, title, desc, img, actions, ...rest }) => {
   const pageType = type in config ? type : '404';
@@ -27,7 +27,7 @@ export default ({ className, linkElement = 'a', type, title, desc, img, actions,
                 to: '/',
                 href: '/',
               },
-              <Button type="primary"><FormattedMessage id={'Page.exception.backToHome'}/></Button>
+              <Button type={"primary"}><FormattedMessage id={'Page.exception.backToHome'}/></Button>
             )}
         </div>
       </div>

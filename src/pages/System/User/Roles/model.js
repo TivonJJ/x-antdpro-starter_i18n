@@ -25,8 +25,10 @@ export default {
     effects : {
         * fetch({ payload }, { call, put}){
             const result = yield call(getRoles, payload);
-            let status;
-            if(payload)status = payload.status;
+            let status = null;
+            if(payload){
+                status = payload.status;
+            }
             yield put({type : 'changeRoleState',payload:{roles:result.data,status}});
         },
         * fetchPermissions(_, { call, put }){
@@ -36,7 +38,7 @@ export default {
         * fetchPermissionsByRoleId({ payload }, { call }){
             return yield call(getPermissionsByRoleId,payload);
         },
-        * setStatus({ payload }, { select, put, call }){
+        * setStatus({ payload }, { put, call }){
             yield call(updateRoleStatus, payload);
             yield put({ type : 'fetch'});
         },
@@ -48,13 +50,13 @@ export default {
             yield call(addRole, payload);
             yield put({ type : 'fetch'});
         },
-        * deleteRole({ payload }, { select, call, put }){
+        * deleteRole({ payload }, { call, put }){
             yield call(deleteRole, payload.role_id);
             yield  put({ type : 'fetch' });
         }
     },
     reducers : {
-        changeRoleState : (state, { payload }) =>{
+        changeRoleState(state, { payload }){
             return {
                 ...state,
                 ...payload,

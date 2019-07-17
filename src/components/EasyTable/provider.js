@@ -5,6 +5,69 @@ const NameSpace = 'easyTableProvider';
 let SourceActionMap = {};
 let CallbackMap = {};
 
+function check(name,state) {
+    if(typeof name !== 'string') throw new TypeError(`Argument [name] must be a string,But got a ${name}`);
+    if(!state.page[name])throw new Error(`${name} is not fount,May not be initialized or has been destroyed!`);
+}
+function *loadData(name, page, params, fixedParams, pageProps, dataProp,put, call) {
+    yield put({
+        type:'_update',
+        payload:{
+            name,
+            loading:true,
+            error:undefined,
+        }
+    });
+    const callbacks = CallbackMap[name] || {};
+    try{
+        let fetch = SourceActionMap[name];
+        if(typeof fetch === 'string'){
+            fetch = (arg)=> request.post(fetch,arg);
+        }
+        const result = yield call(fetch,{
+            [pageProps.current]:page.current,
+            [pageProps.pageSize]:page.pageSize,
+            ...fixedParams,
+            ...params
+        });
+        if(pageProps.current in result){
+            page.current = result[pageProps.current];
+        }
+        if(pageProps.pageSize in result){
+            page.pageSize = result[pageProps.pageSize];
+        }
+        page.total = result[pageProps.total];
+        page.data = result[dataProp];
+        if(callbacks.onDataLoaded)callbacks.onDataLoaded(page,params);
+        yield put({
+            type:'_update',
+            payload:{
+                name,
+                page
+            }
+        });
+    }catch (e) {
+        yield put({
+            type:'error',
+            payload:{
+                name,
+                error:e
+            }
+        });
+        if(callbacks.onError)callbacks.onError(e);
+        // throw e;
+    }finally {
+        yield put({
+            type:'loading',
+            payload:{
+                name,
+                isLoading:false
+            }
+        });
+    }
+    return page;
+}
+
 // Redux 数据池
 const model = {
     namespace:NameSpace,
@@ -19,7 +82,7 @@ const model = {
     },
     effects:{
         *fetch({payload:{name,params,pagination}},{put,call,select}){
-            const state = yield select(state=>state[NameSpace]);
+            const state = yield select(states=>states[NameSpace]);
             check(name,state);
             if(undefined === params){
                 params = state.params[name];
@@ -50,7 +113,7 @@ const model = {
                 put, call);
         },
         *search({payload:{name,params}},{put,call,select}){
-            const state = yield select(state=>state[NameSpace]);
+            const state = yield select(states=>states[NameSpace]);
             check(name,state);
             yield put({
                 type:'_update',
@@ -69,7 +132,7 @@ const model = {
                 put, call);
         },
         *paging({payload:{name,pagination}},{put,call,select}){
-            const state = yield select(state=>state[NameSpace]);
+            const state = yield select(states=>states[NameSpace]);
             check(name,state);
             return yield loadData(
                 name, {
@@ -83,7 +146,7 @@ const model = {
                 put, call);
         },
         *refresh({payload:{name,pagination}},{put,call,select}){
-            const state = yield select(state=>state[NameSpace]);
+            const state = yield select(states=>states[NameSpace]);
             check(name,state);
             if(pagination){
                 pagination = {
@@ -145,17 +208,17 @@ const model = {
             }
             if('onDataLoaded' in payload){
                 if(!CallbackMap[name])CallbackMap[name] = {};
-                CallbackMap[name]['onDataLoaded'] = payload.onDataLoaded;
+                CallbackMap[name].onDataLoaded = payload.onDataLoaded;
             }
             if('onError' in payload){
                 if(!CallbackMap[name])CallbackMap[name] = {};
-                CallbackMap[name]['onError'] = payload.onError;
+                CallbackMap[name].onError = payload.onError;
             }
             return {...state};
         },
         // 清空数据池
         clean(state,{payload:{name}}){
-            if(null == name){
+            if(name == null){
                 state.page = {};
                 state.params = {};
                 state.loading = {};
@@ -198,80 +261,4 @@ const model = {
 };
 if(!window.g_app._models.some(({namespace})=>namespace===NameSpace)){
     window.g_app.model(model);
-}
-
-function *loadData(name,
-                   page,
-                   params,
-                   fixedParams,
-                   pageProps={
-                       current: 'page_num',
-                       pageSize: 'page_size',
-                       total: 'total'
-                   },
-                   dataProp='data'
-                   ,put,call) {
-    yield put({
-        type:'_update',
-        payload:{
-            name,
-            loading:true,
-            error:undefined,
-        }
-    });
-    const callbacks = CallbackMap[name] || {};
-    try{
-        let fetch = SourceActionMap[name];
-        if(typeof fetch === 'string'){
-            fetch = ((params)=> {
-                return request.post(source,params);
-            });
-        }
-        const result = yield call(fetch,{
-            [pageProps.current]:page.current,
-            [pageProps.pageSize]:page.pageSize,
-            ...fixedParams,
-            ...params
-        });
-        if(pageProps.current in result){
-            page.current = result[pageProps.current];
-        }
-        if(pageProps.pageSize in result){
-            page.pageSize = result[pageProps.pageSize];
-        }
-        page.total = result[pageProps.total];
-        page.data = result[dataProp];
-        if(callbacks.onDataLoaded)callbacks.onDataLoaded(page,params);
-        yield put({
-            type:'_update',
-            payload:{
-                name,
-                page
-            }
-        });
-    }catch (e) {
-        yield put({
-            type:'error',
-            payload:{
-                name,
-                error:e
-            }
-        });
-        if(callbacks.onError)callbacks.onError(e);
-        // throw e;
-    }finally {
-        yield put({
-            type:'loading',
-            payload:{
-                name,
-                isLoading:false
-            }
-        });
-    }
-    return page;
-}
-
-function check(name,state) {
-    if(typeof name !== 'string') throw new TypeError('Argument [name] must be a string,But got a '+name);
-    if(!state.page[name])throw new Error(name+' is not fount,May not be initialized or has been destroyed!');
 }

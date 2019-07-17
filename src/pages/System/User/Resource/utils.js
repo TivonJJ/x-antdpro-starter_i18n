@@ -1,27 +1,7 @@
 import { PermissionsUtil } from '@/utils';
 
-export function getPermissionByDNA(permissions,dna){
-    let found = null;
-    loopPermissions(permissions,(item)=>{
-        if(item.dna === dna){
-            found=item;
-        }
-    });
-    return found;
-}
 
-export function filterPermissions(permissions,filterValue) {
-    if(!filterValue)return [];
-    const filteredKeys = [];
-    loopPermissions(permissions,item=>{
-        if (item.name && item.name.indexOf(filterValue) > -1 && item.dna.length>1) {
-            filteredKeys.push(item.dna);
-        }
-    });
-    return filteredKeys;
-}
-
-export function sortPermissions(permissions,info) {
+export const sortPermissions = (permissions,info)=> {
     const dropKey = info.node.props.eventKey;
     const dragKey = info.dragNode.props.eventKey;
     const dropPos = info.node.props.pos.split('-');
@@ -34,6 +14,7 @@ export function sortPermissions(permissions,info) {
             if (item.children) {
                 return loop(item.children, key, callback);
             }
+            return null;
         });
     };
     let dragObj = null;
@@ -60,8 +41,20 @@ export function sortPermissions(permissions,info) {
         });
     }
     return permissions;
-}
-
+};
+export const loopPermissions = (permissions,callback)=>{
+    function loop(data,parent){
+        data.forEach((item, index, arr) => {
+            callback(item, index, arr,parent);
+            if (item.children) {
+                return loop(item.children,item);
+            }
+            return null;
+        });
+    }
+    loop(permissions);
+    return permissions;
+};
 export const insertPermission = (permissions,permission,level)=>{
     let found = null;
     if(!permission){
@@ -82,12 +75,12 @@ export const insertPermission = (permissions,permission,level)=>{
             status:1,
             res_url:'uri'
         };
-        if(level===0){//没有任何菜单的情况下创建
+        if(level===0){// 没有任何菜单的情况下创建
             arr.push(addItem);
-        }else if(level===1){//创建同级
+        }else if(level===1){// 创建同级
             addItem.res_type = permission.res_type;
             arr.splice(index+1, 0, addItem);
-        }else {//创建二级菜单
+        }else {// 创建二级菜单
             addItem.res_type = {'Folder':'Menu','Menu':'Action','Action':'Action'}[permission.res_type] || addItem.res_type;
             if(!item.children)item.children = [];
             item.children.push(addItem);
@@ -98,15 +91,23 @@ export const insertPermission = (permissions,permission,level)=>{
     return null;
 };
 
-export const loopPermissions = (permissions,callback)=>{
-    loop(permissions);
-    function loop(data,parent){
-        data.map((item, index, arr) => {
-            callback(item, index, arr,parent);
-            if (item.children) {
-                return loop(item.children,item);
-            }
-        });
-    }
-    return permissions;
-};
+export function getPermissionByDNA(permissions,dna){
+    let found = null;
+    loopPermissions(permissions,(item)=>{
+        if(item.dna === dna){
+            found=item;
+        }
+    });
+    return found;
+}
+
+export function filterPermissions(permissions,filterValue) {
+    if(!filterValue)return [];
+    const filteredKeys = [];
+    loopPermissions(permissions,item=>{
+        if (item.name && item.name.indexOf(filterValue) > -1 && item.dna.length>1) {
+            filteredKeys.push(item.dna);
+        }
+    });
+    return filteredKeys;
+}

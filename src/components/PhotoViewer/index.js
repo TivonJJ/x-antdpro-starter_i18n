@@ -1,4 +1,4 @@
-"use strict";
+/* eslint-disable react/no-multi-comp */
 import React, {Component, Fragment} from 'react';
 import Viewer from 'react-viewer';
 import PropTypes from 'prop-types';
@@ -11,10 +11,13 @@ class Item extends React.Component {
         downloadUrl: PropTypes.string,
         defaultSize: PropTypes.object,
     };
+
     static contextTypes = {
         photoViewerGroup: PropTypes.any,
     };
+
     $key = Date.now() + Math.random();
+
     componentWillMount() {
         const {context,props} = this;
         const {photoViewerGroup} = context;
@@ -28,13 +31,8 @@ class Item extends React.Component {
             });
         }
     }
-    componentWillUnmount() {
-        const {photoViewerGroup} = this.context;
-        if(photoViewerGroup){
-            photoViewerGroup.remove(this.$key)
-        }
-    }
-    componentWillReceiveProps(nextProps, nextContext) {
+
+    componentWillReceiveProps(nextProps) {
         if(this.props.src !== nextProps.src
             || this.props.alt !== nextProps.alt
             || this.props.downloadUrl !== nextProps.downloadUrl
@@ -52,6 +50,13 @@ class Item extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        const {photoViewerGroup} = this.context;
+        if(photoViewerGroup){
+            photoViewerGroup.remove(this.$key)
+        }
+    }
+
     onClick=(...args)=>{
         const {onClick} = this.props;
         const {photoViewerGroup} = this.context;
@@ -60,10 +65,11 @@ class Item extends React.Component {
         }
         if(onClick)onClick(...args)
     };
+
     render() {
         const {src,children,...resetProps} = this.props;
-        if(children && (null==src || ''===src))return children;
-        return <img src={src} {...resetProps} onClick={this.onClick}/>
+        if(children && (src==null || src===''))return children;
+        return <img alt={''} src={src} {...resetProps} onClick={this.onClick}/>
     }
 }
 
@@ -73,9 +79,11 @@ class PhotoViewer extends Component {
         activeIndex:0,
         images:[],
     };
+
     static childContextTypes = {
         photoViewerGroup: PropTypes.any,
     };
+
     getChildContext() {
         return {
             photoViewerGroup: {
@@ -113,19 +121,23 @@ class PhotoViewer extends Component {
             },
         };
     }
+
     openViewer=(index)=>{
         this.setState({visible:true,activeIndex:index})
     };
+
     closeViewer=()=>{
         this.setState({visible:false})
     };
+
     onViewerMounted=(instance)=>{
         const {className} = this.props;
         if(instance && className){
             const container = instance.container || instance.defaultContainer;
-            if(container)container.className += ' '+className
+            if(container)container.className += ` ${className}`
         }
     };
+
     render() {
         const {children,...resetProps} = this.props;
         return (

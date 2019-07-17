@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 import React, { Fragment } from 'react';
 import PropsTypes from 'prop-types';
 import withRouter from 'umi/withRouter';
@@ -14,11 +15,15 @@ const SeesawViewRouter = withRouter(class extends React.PureComponent {
         onResume: PropsTypes.func,
         forceRender: PropsTypes.bool, // 是否强制渲染路由，如果打开的子页面，父页面也会被隐藏渲染
     };
+
     static defaultProps={
         forceRender:false
     };
-    shouldRenderRoot = this.props.match.isExact; // 判断是否渲染父级，避免直接进入子路由父级也会被渲染出来
-    componentWillReceiveProps(nextProps, nextContext) {
+
+    shouldRenderRoot = this.props.match.isExact;
+
+ // 判断是否渲染父级，避免直接进入子路由父级也会被渲染出来
+    componentWillReceiveProps(nextProps) {
         if(nextProps.match.isExact)this.shouldRenderRoot = true;
         if(this.props.match.isExact !== nextProps.match.isExact){
             if(nextProps.match.isExact && this.props.onResume){
@@ -26,15 +31,14 @@ const SeesawViewRouter = withRouter(class extends React.PureComponent {
             }
         }
     }
+
     render() {
         const isRoot = this.props.match.isExact;
         let {child:children,children:root,childProps,forceRender} = this.props;
         if(childProps && children.props.children){
             const childrenWithProps = React.Children.map(children.props.children,(item=>{
                 const _render = item.props.render;
-                return React.cloneElement(item,{render:props=>{
-                        return _render({...props,...childProps});
-                    }})
+                return React.cloneElement(item,{render:props=>_render({...props,...childProps})})
             }));
             children = React.cloneElement(children,{children:childrenWithProps})
         }
@@ -43,7 +47,7 @@ const SeesawViewRouter = withRouter(class extends React.PureComponent {
             <div style={{ display: isRoot ? '' : 'none' }} className={'seesaw-route'}>{root}</div>
             }
             {!isRoot&&<div className={'seesaw-route'}>{children}</div>}
-        </Fragment>
+               </Fragment>
     }
 });
 
@@ -54,17 +58,20 @@ function createSeesawView(options={},RootComponent) {
                 options.onResume.call(this.seesawViewRootRef,match);
             }
         };
+
         render() {
             let childProps = options.childProps;
             if(typeof childProps === 'function'){
                 childProps = childProps(this.props);
             }
             return (
-                <SeesawViewRouter child={this.props.children}
-                                  childProps={childProps}
-                                  forceRender={options.forceRender}
-                                  onResume={this.onResume}>
-                    <RootComponent {...this.props} ref={ref=>this.seesawViewRootRef=ref}/>
+                <SeesawViewRouter
+                    child={this.props.children}
+                    childProps={childProps}
+                    forceRender={options.forceRender}
+                    onResume={this.onResume}
+                >
+                    <RootComponent {...this.props} ref={ref => {this.seesawViewRootRef = ref}}/>
                 </SeesawViewRouter>
             )
         }
@@ -73,7 +80,5 @@ function createSeesawView(options={},RootComponent) {
 }
 
 export default function SeesawView(options) {
-    return function (RootComponent){
-        return createSeesawView(options,RootComponent)
-    };
+    return (RootComponent)=> createSeesawView(options,RootComponent)
 };

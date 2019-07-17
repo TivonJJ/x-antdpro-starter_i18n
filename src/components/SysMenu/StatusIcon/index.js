@@ -1,7 +1,6 @@
-"use strict";
 import React from 'react';
-import Task from './Task'
 import { Tooltip } from 'antd';
+import Task from './Task'
 
 const StatusIconMap = {
     '/task':Task
@@ -13,9 +12,9 @@ export const getComponent = (menu,props,title)=>{
         let comp = <Component menu={menu} location={props.location} title={title}/>;
         const options = Component.Options || {};
         if(!options.noTitleTips){
-            comp = <Tooltip placement="bottom" title={title}>
+            comp = <Tooltip placement={"bottom"} title={title}>
                 <div>{comp}</div>
-            </Tooltip>
+                   </Tooltip>
         }
         return comp;
     }

@@ -11,7 +11,8 @@ import EasyTable from '@/components/EasyTable';
 class Filter extends Component {
     handleSubmit=(evt)=>{
         evt.preventDefault();
-        this.props.form.validateFields((errors, values) => {
+        const {form,demoTable} = this.props;
+        form.validateFields((errors, values) => {
             if(errors)return;
             // 时间格式转换
             if(values.date && values.date.length===2){
@@ -19,11 +20,12 @@ class Filter extends Component {
                 values.end_date = values.date[1].format('YYYY-MM-DD');
                 values.date = undefined;
             }
-            this.props.demoTable.fetch(removeEmptyProperty(values))
+            demoTable.fetch(removeEmptyProperty(values))
         })
     };
+
     render() {
-        const {getFieldDecorator} = this.props.form;
+        const {form:{getFieldDecorator}} = this.props;
         const formItemLayout = {
             labelCol:{ span: 7 },
             wrapperCol: { span: 17 }
@@ -33,41 +35,41 @@ class Filter extends Component {
             <Form onSubmit={this.handleSubmit}>
                 <Row>
                     <Col {...collItemLayout}>
-                        <Form.Item label={<FormattedMessage id={'Model.demo.no'}/>} {...formItemLayout}>
+                        <Form.Item label={<FormattedMessage id={'Model.demo.no'} />} {...formItemLayout}>
                             {getFieldDecorator('no',{
                             })(
-                                <Input placeholder={formatMessage({id:'Page.demo.search.numberPlaceholder'})}/>
+                                <Input placeholder={formatMessage({id:'Page.demo.search.numberPlaceholder'})} />
                             )}
                         </Form.Item>
                     </Col>
                     <Col {...collItemLayout}>
-                        <Form.Item label={<FormattedMessage id={'Model.demo.name'}/>} {...formItemLayout}>
+                        <Form.Item label={<FormattedMessage id={'Model.demo.name'} />} {...formItemLayout}>
                             {getFieldDecorator('name',{
                             })(
-                                <Input placeholder={formatMessage({id:'Page.demo.search.namePlaceholder'})}/>
+                                <Input placeholder={formatMessage({id:'Page.demo.search.namePlaceholder'})} />
                             )}
                         </Form.Item>
                     </Col>
                     <Col {...collItemLayout}>
-                        <Form.Item label={<FormattedMessage id={'Model.demo.amount'}/>} {...formItemLayout}>
+                        <Form.Item label={<FormattedMessage id={'Model.demo.amount'} />} {...formItemLayout}>
                             {getFieldDecorator('amount',{
                             })(
-                                <InputNumber min={0} style={{width:'100%'}}/>
+                                <InputNumber min={0} style={{width:'100%'}} />
                             )}
                         </Form.Item>
                     </Col>
                     <Col {...collItemLayout}>
-                        <Form.Item label={<FormattedMessage id={'Model.demo.date'}/>} {...formItemLayout}>
+                        <Form.Item label={<FormattedMessage id={'Model.demo.date'} />} {...formItemLayout}>
                             {getFieldDecorator('date',{
                             })(
-                                <DatePicker.RangePicker/>
+                                <DatePicker.RangePicker />
                             )}
                         </Form.Item>
                     </Col>
                 </Row>
                 <div className={'text-right'}>
                     <Form.Item>
-                       <Button type={'primary'} htmlType={'submit'}><FormattedMessage id={'Common.message.search'}/></Button>
+                       <Button type={'primary'} htmlType={'submit'}><FormattedMessage id={'Common.message.search'} /></Button>
                     </Form.Item>
                 </div>
             </Form>

@@ -1,9 +1,15 @@
-"use strict";
-import { fetchTasks } from '../services/task';
-import { createPagination } from '../utils';
 import {notification} from 'antd';
 import {formatMessage} from 'umi/locale';
+import { fetchTasks } from '../services/task';
+import { createPagination } from '../utils';
 
+
+function createTaskPagination() {
+    return createPagination({
+        showSizeChanger:false,
+        showQuickJumper:false
+    })
+}
 export default {
     namespace:'task',
     state: {
@@ -50,15 +56,8 @@ export default {
         resetTaskPage(state){
             return {
                 ...state,
-                tasksPage:createTaskPagination()
+                tasksPage: createTaskPagination()
             }
         },
     }
-}
-
-function createTaskPagination() {
-    return createPagination({
-        showSizeChanger:false,
-        showQuickJumper:false
-    })
 }

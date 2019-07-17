@@ -2,9 +2,9 @@ import React, { PureComponent, createElement } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import { Breadcrumb, Tabs, Skeleton, Icon } from 'antd';
 import classNames from 'classnames';
+import router from 'umi/router';
 import styles from './index.less';
 import { urlToList } from '@/utils';
-import router from 'umi/router';
 
 const { TabPane } = Tabs;
 export const getBreadcrumb = (breadcrumbNameMap, url) => {
@@ -112,7 +112,7 @@ export default class PageHeader extends PureComponent {
         });
         // Add home breadcrumbs to your head
         extraBreadcrumbItems.unshift(
-            <Breadcrumb.Item key="home">
+            <Breadcrumb.Item key={"home"}>
                 {createElement(
                     linkElement,
                     {
@@ -217,8 +217,11 @@ export default class PageHeader extends PureComponent {
                     >
                         {breadcrumb}
                         <div className={styles.detail}>
-                            {showBack && <a className={styles.backIcon}
-                                            onClick={() => router.goBack()}><Icon type="left-circle-o"/></a>}
+                            {showBack && <a
+className={styles.backIcon}
+                                            onClick={() => router.goBack()}
+                            ><Icon type={"left-circle-o"}/>
+                                         </a>}
                             {logo && <div className={styles.logo}>{logo}</div>}
                             <div className={styles.main}>
                                 <div className={styles.row}>

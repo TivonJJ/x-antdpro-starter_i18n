@@ -1,17 +1,18 @@
 import React from 'react';
 import {Card} from 'antd';
-import style from './style.less'
 import {FormattedMessage, formatMessage} from 'umi/locale'
 import {ServicePlatform} from '@/constants/logs';
 import DateFormat from '@/components/DateFormat';
 import EasyTable from '@/components/EasyTable';
 import { getLogs } from '@/services/basic';
 import Detail from './detail';
+import style from './style.less'
 
 export default class LogsTable extends React.Component {
     showDetailView = (item) => {
         this.detail.show(item);
     };
+
     render() {
         const columns = [
             {
@@ -23,7 +24,7 @@ export default class LogsTable extends React.Component {
             }, {
                 title: formatMessage({id: 'Page.system.logs.label.platform'}),
                 dataIndex: 'platform',
-                render: (id, item) => formatMessage({id: ServicePlatform[id]})
+                render: (id) => formatMessage({id: ServicePlatform[id]})
             }, {
                 title: formatMessage({id: 'Page.system.logs.label.operationType'}),
                 dataIndex: 'operation'
@@ -35,18 +36,23 @@ export default class LogsTable extends React.Component {
                 dataIndex: 'description'
             }, {
                 title: formatMessage({id: 'Page.system.logs.label.operation'}),
-                render: (item) => <a onClick={() => this.showDetailView(item)}><FormattedMessage
-                    id={'Common.status.detail'}/></a>
+                render: (item) => (
+                    <a onClick={() => this.showDetailView(item)}>
+                        <FormattedMessage id={'Common.status.detail'}/>
+                    </a>
+                )
             },
         ];
         return (
             <Card bordered={false} className={style.layoutVerticalSpace}>
-                <EasyTable name={'logsDataTable'}
-                           columns={columns}
-                           rowKey={'id'}
-                           autoFetch
-                           source={getLogs}/>
-                <Detail ref={ref => this.detail = ref}/>
+                <EasyTable
+                    name={'logsDataTable'}
+                    columns={columns}
+                    rowKey={'id'}
+                    autoFetch
+                    source={getLogs}
+                />
+                <Detail ref={ref=>{this.detail = ref}}/>
             </Card>
         );
     }

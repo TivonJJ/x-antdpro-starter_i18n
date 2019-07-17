@@ -1,4 +1,3 @@
-'use strict';
 import React from 'react';
 import { compose, withProps } from 'recompose';
 import {
@@ -7,25 +6,20 @@ import {
     GoogleMap,
 } from "react-google-maps";
 import config from 'config';
-const mapConfig = config.googleMap;
 import qs from 'querystring';
 import { Spin } from 'antd';
 
-GoogleMap.create = function(options) {
-    return function (WrappedComponent){
-        return createMap(options,WrappedComponent)
-    };
-};
+const mapConfig = config.googleMap;
 
 export function createMap(options={},ChildComponent) {
     return compose(
         withProps({
-            googleMapURL: options.googleMapURL || mapConfig.url+'?'+qs.stringify({
+            googleMapURL: options.googleMapURL || `${mapConfig.url}?${qs.stringify({
                 key:mapConfig.key,
                 version:mapConfig.version,
                 libraries:mapConfig.libraries,
                 language:'en-US'
-            }),
+            })}`,
             loadingElement:<div style={{ height: `100%` }}><Spin/></div>,
             containerElement:<div style={{ height: options.height || 400 }}/>,
             mapElement:<div style={{ height: `100%` }}/>,
@@ -38,6 +32,8 @@ export function createMap(options={},ChildComponent) {
     )(props =>(<ChildComponent {...props}/>));
 }
 
+GoogleMap.create = (options)=> (WrappedComponent)=> createMap(options,WrappedComponent);
+
 GoogleMap.geocodeLatLng = (latlng)=> {
     const geocoder = new google.maps.Geocoder();
     return new Promise((resolve, reject)=>{
@@ -49,7 +45,7 @@ GoogleMap.geocodeLatLng = (latlng)=> {
                     reject(new Error('No results found'));
                 }
             } else {
-                reject(new Error('Geocoder failed due to: ' + status));
+                reject(new Error(`Geocoder failed due to: ${  status}`));
             }
         });
     });
@@ -65,7 +61,7 @@ GoogleMap.geocodeAddress = (address)=> {
                     reject(new Error('No results found'));
                 }
             } else {
-                reject(new Error('Geocoder failed due to: ' + status));
+                reject(new Error(`Geocoder failed due to: ${  status}`));
             }
         });
     });

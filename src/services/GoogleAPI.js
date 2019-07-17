@@ -1,6 +1,6 @@
-'use strict';
 import axios from 'axios';
 import config from 'config';
+
 const googleMapConfig = config.googleMap;
 
 export async function getTimeZoneByLatLng(latLng) {
@@ -13,8 +13,8 @@ export async function getTimeZoneByLatLng(latLng) {
     }).then(res=>{
         if(res.data.status === 'OK'){
             return res.data;
-        }else {
-            return Promise.reject(new Error(res.data.status))
         }
+            return Promise.reject(new Error(res.data.status))
+        
     })
 }

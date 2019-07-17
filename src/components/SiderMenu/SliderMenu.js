@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import styles from './index.less';
 import BaseMenu, { getMenuMatches } from './BaseMenu';
 import { urlToList } from '@/utils';
-import { formatMessage } from 'umi/locale';
 import GlobalLogo from '@/components/GlobalLogo';
 
 const { Sider } = Layout;
@@ -87,7 +86,7 @@ export default class SiderMenu extends PureComponent {
                 trigger={null}
                 collapsible
                 collapsed={collapsed}
-                breakpoint="lg"
+                breakpoint={"lg"}
                 onCollapse={onCollapse}
                 width={256}
                 theme={theme}
@@ -96,7 +95,7 @@ export default class SiderMenu extends PureComponent {
                 <GlobalLogo {...this.props}/>
                 <BaseMenu
                     {...this.props}
-                    mode="inline"
+                    mode={"inline"}
                     handleOpenChange={this.handleOpenChange}
                     onOpenChange={this.handleOpenChange}
                     style={{ padding: '16px 0', width: '100%' }}

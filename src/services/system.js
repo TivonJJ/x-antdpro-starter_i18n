@@ -19,9 +19,9 @@ function decoratePermission(list=[]) {
     return {tree,existsPermissionsID};
 }
 function mapPermissions(list=[]){
-    const IDMap = {},
-        DNAMap = {};
-    list.map(item=>{
+    const IDMap = {};
+    const DNAMap = {};
+    list.forEach(item=>{
         IDMap[String(item.res_id)] = item;
         DNAMap[item.dna] = item;
     });
@@ -59,10 +59,10 @@ export async function getPermissionsByRoleId(roleId){
 export async function getUsers(params) {
     return request.post('user/list',removeEmptyProperty(params));
 }
-export async function getUserByRole  (role_id){
-    return request.post('basis/role/roleUserList',{role_id}).then(res=>res.data[0])
+export async function getUserByRole(roleId){
+    return request.post('basis/role/roleUserList',{roleId}).then(res=>res.data[0])
 }
-export async function setUserToRole  (data){
+export async function setUserToRole(data){
     return request.post('basis/role/allocRole',data)
 }
 export async function deleteRole(id){
