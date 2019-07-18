@@ -1,13 +1,13 @@
 export default {
     googleMap:{
         url:'https://maps.googleapis.com/maps/api/js',
-        key:'AIzaSyCYEFqoLjlYysFG50xkaficNKcgY7YQudA',
-        apiKey:'AIzaSyAbd4MvhlR6X4OO335YaA-lqNocCL9SzZs',
+        key:'',
+        apiKey:'',
         version:'3.exp',
         libraries:'geometry,drawing,places'
     },
     baiduMap:{
-        key:'T6WSUgGDYaANjiSXidVHvTkZksDjdSiI',
+        key:'',
         version:'2.0'
     }
 }
