@@ -113,8 +113,10 @@ class BasicLayout extends BaseLayout {
                 }
             }else if(paths.length===1){
                 const routeMenus = routeMap[this.state.currentSys];
-                const firstRoute = findFirstChild(routeMenus.children);
-                if(firstRoute)router.replace(firstRoute.route);
+                if(routeMenus){
+                    const firstRoute = findFirstChild(routeMenus.children);
+                    if(firstRoute)router.replace(firstRoute.route);
+                }
             }
         }
     };
