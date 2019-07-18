@@ -19,7 +19,7 @@ export default class UserLayout extends BaseLayout {
                         <Card bordered={false} className={styles.contentCard}>
                             <div className={styles.top}>
                                 <div className={styles.header}>
-                                    <img alt={"logo"} className={styles.logo} src={getPublicPath('img/app-title-log.png')} />
+                                    <img alt={"logo"} className={styles.logo} src={getPublicPath('img/app-title-logo.png')} />
                                     <div className={styles.sysName}>{formatMessage({id:'App.appName'})}</div>
                                 </div>
                             </div>
