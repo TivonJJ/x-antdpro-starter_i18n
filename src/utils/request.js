@@ -30,7 +30,7 @@ function createDefaultRequest() {
                 code:data.code,
                 message:data.msg,
                 response,
-                type:'NetError'
+                type:'RequestError'
             };
             return Promise.reject(error);
         }
@@ -40,7 +40,7 @@ function createDefaultRequest() {
             const err = {
                 code:r.code,
                 message:r.message,
-                type:'NetError'
+                type:'RequestError'
             };
             return Promise.reject(err);
         }
@@ -50,7 +50,7 @@ function createDefaultRequest() {
             message:`[${status}]${response.statusText}`,
             code:status,
             response,
-            type:'NetError'
+            type:'RequestError'
         };
         return Promise.reject(error);
     });
