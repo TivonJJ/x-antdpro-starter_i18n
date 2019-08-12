@@ -1,0 +1,37 @@
+@import '~@/styles/mixins';
+
+:global{
+    .comp-RichText{
+        ul{
+            list-style: disc;
+        }
+        ol{
+            list-style: decimal;
+        }
+        li{
+            list-style: inherit;
+        }
+        &.active{
+            .active();
+        }
+        &.in-view_mode{
+            .w-e-toolbar{
+                display: none;
+            }
+            .w-e-text-container{
+                height: auto !important;
+                border: none !important;
+            }
+            .w-e-text{
+                overflow-y: visible !important;
+            }
+        }
+    }
+}
+
+.active(@color: @outline-color) {
+    border-color: ~`colorPalette('@{color}', 5) `;
+    border-right-width: @border-width-base !important;
+    outline: 0;
+    box-shadow: @input-outline-offset @outline-blur-size @outline-width fade(@color, 20%);
+}

@@ -32,7 +32,7 @@ export default class GlobalHeader extends PureComponent {
     render() {
         const { collapsed,collapsable=true, isMobile, currentUser,onSysMenuClick,theme } = this.props;
         return (
-            <div className={`${styles.header} ${theme==='light'?styles.light:''}`}>
+            <div className={`${styles.header} ${styles[theme]}`}>
                 <Row type={'flex'}>
                     <Col span={2} className={styles.headerLeft}>
                         {isMobile && (
@@ -41,11 +41,11 @@ export default class GlobalHeader extends PureComponent {
                             </Link>
                         )}
                         {collapsable&&(
-                            <Icon
-                                className={styles.trigger}
-                                type={collapsed ? 'menu-unfold' : 'menu-fold'}
-                                onClick={this.toggle}
-                            />
+                            <div className={styles.trigger} onClick={this.toggle}>
+                                <Icon
+                                    type={collapsed ? 'menu-unfold' : 'menu-fold'}
+                                />
+                            </div>
                         )}
                     </Col>
                     <Col span={18} className={styles.headerCenter}>

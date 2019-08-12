@@ -24,6 +24,7 @@ export default class GlobalHeaderRight extends PureComponent {
         const {
             currentUser,
             theme,
+            isMobile
         } = this.props;
         let className = styles.right;
         if (theme === 'dark') {
@@ -44,13 +45,19 @@ export default class GlobalHeaderRight extends PureComponent {
             <div className={className}>
                 <Dropdown overlay={menu}>
                     <div className={`${styles.action} ${styles.account}`}>
-                      <Avatar
-                          size={"small"}
-                          className={styles.avatar}
-                          src={currentUser.avatar}
-                          alt={"avatar"}
-                      />
-                      <span className={styles.name}>{currentUser.real_name}</span>
+                        <Avatar
+                            size={isMobile?'small':'large'}
+                            title={currentUser.real_name}
+                            className={styles.avatar}
+                            style={{
+                                backgroundColor:currentUser.avatar.bgColor,
+                                color:currentUser.avatar.color
+                            }}
+                            src={currentUser.avatar.src}
+                            alt={currentUser.real_name}
+                        >
+                            {currentUser.avatar.content}
+                        </Avatar>
                     </div>
                 </Dropdown>
             </div>

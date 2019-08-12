@@ -2,7 +2,7 @@
 
 .header {
     height: @layout-header-height;
-    padding: 0 12px 0 0;
+    padding: 0 24px 0 0;
     background: @layout-header-background;
     color: white;
     box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
@@ -18,67 +18,62 @@
     }
 }
 
-.logo {
-    height: @layout-header-height;
-    line-height: 58px;
-    vertical-align: top;
-    display: inline-block;
-    padding: 0 0 0 24px;
-    cursor: pointer;
-    font-size: 20px;
-    img {
-        display: inline-block;
-        vertical-align: middle;
-    }
+.headerLeft{
+    min-width: 50px;
+    max-width: 70px;
+    height: 100%;
+}
+.headerCenter{
+    flex: auto;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 100%;
+}
+.headerRight{
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 42px;
+    min-width: 42px;
+    height: 100%;
 }
 
 .menu {
+    overflow: hidden;
+    white-space: nowrap;
+
     :global(.anticon) {
         margin-right: 8px;
     }
     :global(.ant-dropdown-menu-item) {
         width: 160px;
     }
-}
-
-i.trigger {
-    font-size: 20px;
-    cursor: pointer;
-    transition: all 0.3s, padding 0s;
-    padding: 22px 24px;
-    &:hover {
-        background: @layout-header_hover_bg;
+    :global(.ant-badge) {
+        color: inherit;
     }
 }
 
-.headerLeft{
-    min-width: 100px;
-    max-width: 100px;
-}
-.headerCenter{
-    flex: 1;
-    -webkit-flex: 1;
-    -ms-flex: 1;
-    overflow: hidden;
-}
-.headerRight{
-    min-width: 100px;
-    max-width: 130px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+.trigger {
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.65);
+    &:hover {
+        background: @layout-header_hover_bg;
+        color: #fff;
+    }
+    >i{
+        font-size: 20px;
+        transition: all 0.3s, padding 0s;
+        margin: 0 24px;
+        vertical-align: middle;
+    }
 }
 
 .right {
     height: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
     .action {
         cursor: pointer;
-        display: inline-block;
-        vertical-align: middle;
         transition: all 0.3s;
-        padding: 0 12px;
         > i {
             font-size: 18px;
             vertical-align: middle;
@@ -93,58 +88,49 @@ i.trigger {
     }
     .account {
         .avatar {
-            margin-right: @design-gutter;
-            color: @primary-color;
+            color: @white;
             background: rgba(255, 255, 255, 0.85);
-            display: inline-block;
             vertical-align: middle;
-        }
-        .name{
         }
     }
 }
 
 .dark {
+    height: 64px;
     .action {
         color: rgba(255, 255, 255, 0.85);
         > i {
             color: rgba(255, 255, 255, 0.85);
         }
-        &:hover,
-        &:global(.ant-popover-open) {
-            background: @primary-color;
+    }
+    .trigger{
+        color: rgba(255, 255, 255, 0.65);
+        &:hover{
+            color: #fff;
         }
-        :global(.ant-badge) {
-            color: rgba(255, 255, 255, 0.85);
+    }
+}
+
+.light{
+    .trigger {
+        color: rgba(0, 0, 0, 0.65);
+        &:hover {
+            background: @layout-header_hover_bg_light;
+            color: @primary-color;
         }
     }
 }
 
 @media only screen and (max-width: @screen-md) {
     .header {
-        :global(.ant-divider-vertical) {
-            vertical-align: unset;
-        }
-        .name {
-            display: none;
-        }
-        i.trigger {
-            padding: 22px 12px;
-        }
         .logo {
             padding-left: 12px;
             padding-right: 12px;
             position: relative;
         }
-        .right {
-            position: absolute;
-            right: 12px;
-            top: 0;
-            .account {
-                .avatar {
-                    margin-right: 0;
-                }
-            }
-        }
+    }
+    .headerRight{
+        max-width: 24px;
+        min-width: 24px;
     }
 }
