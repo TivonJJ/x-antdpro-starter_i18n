@@ -1,34 +1,18 @@
-/* eslint-disable react/no-multi-comp */
+'use strict';
 import React, { Fragment } from 'react';
-import { Button, Icon, message, Modal, Spin, Upload } from 'antd';
+import { Button, Icon, message, Modal, Spin, Upload, notification } from 'antd';
 import PropTypes from 'prop-types';
 import request from '@/utils/request';
 import { FormattedMessage,formatMessage } from 'umi/locale';
 import { joinPath } from '@/utils';
-import classnames from 'classnames';
 import styles from './index.less';
 import controllable from "@/components/react-controllables";
-
-// 上传场景，标识上传文件是用于什么的
-const Scene = {
-    LZ_QR_LOGO : 1,// 立招二维码logo图片
-    LZ_QR_BLANK : 2,// 立招二维码白码
-    BUSINESS_LICENSE : {fileType:3,ocrType:1}, // 商户/代理商营业执照照片
-    LEGAL_IDCARD : {fileType:4,ocrType:2}, // 法人证件照
-    CERTIFICATE_OF_PUBLIC_ACCOUNT : 5, // 对公账户开户证明
-    BANK_CARD: {fileType:6,ocrType:3}, // 银行卡照片
-    AUTHORIZER_IDCARD : {fileType:7,ocrType:2}, // 授权人身份证照片
-    ATTORNEY4AUTHORIZED_SETTLEMENT: 8,// 授权结算委托书
-    SHOP_ENVIRONMENT :9,// 店铺环境照片
-    PARTNER_DISTRIBUTION_AGREEMENT:10,// 合作伙伴合作/分润协议
-    MER_ADDITIONAL_INFO:11, // 商户附加资料
-    EXPENDITURE_BILL_ADJUSTMENT:12, // 分润账单调差文件
-};
+import classnames from 'classnames';
+import Scene from './Scene';
 
 @controllable(['value'])
 class FileUploader extends React.Component {
     static propTypes = {
-        name: PropTypes.string,
         scene : PropTypes.oneOfType([PropTypes.number,PropTypes.string,PropTypes.object]),
         allowFileExt : PropTypes.array,
         maxFileSize : PropTypes.number,
@@ -37,34 +21,24 @@ class FileUploader extends React.Component {
         wrappedComponentRef: PropTypes.func,
         showLoading: PropTypes.bool,
         onFileSelect: PropTypes.func,
-        onError: PropTypes.func,
         showUploadList: PropTypes.bool
     };
-
     static defaultProps = {
         name : 'file_data',
         onError : (err) =>{message.error(err.message);},
         action: 'basis/file/upload',
         autoUpload: true,
         showLoading: true,
-        showUploadList: false,
-        onFileSelect(){},
-        wrappedComponentRef:null,
-        maxFileSize:null,
-        allowFileExt:null,
-        scene:undefined
+        showUploadList: false
     };
-
     state = {
         uploading : false,
         file:null
     };
-
     componentDidMount() {
         if(this.props.wrappedComponentRef)this.props.wrappedComponentRef(this)
     }
-
-    beforeUpload = () =>{
+    beforeUpload = (file,form) =>{
         const {autoUpload,onError} = this.props;
         if(autoUpload){
             setTimeout(()=>{
@@ -75,23 +49,21 @@ class FileUploader extends React.Component {
         }
         return false;
     };
-
     handleChange=({file,fileList})=>{
         const {onFileSelect} = this.props;
         this.setState({file});
         if(onFileSelect)onFileSelect(file,fileList);
     };
-
     check=()=>{
         const {allowFileExt, maxFileSize} = this.props;
         const {file} = this.state;
         if(!file)throw new Error('无待上传文件');
         if (maxFileSize && file.size/1024 > maxFileSize) {
-            throw new Error(formatMessage({ id : 'Validator.fileSize' },{ size : `${maxFileSize/1024}M` }));
+            throw new Error(formatMessage({ id : 'Validator.fileSize' },{ size : (maxFileSize/1024)+'M' }));
         }
         if(allowFileExt){
             const {name=''} = file;
-            const extName = name.substring(name.lastIndexOf('.')+1,name.length);
+            const extName = name.substring(name.lastIndexOf('.')+1,name.length).toLowerCase();
             const isAllowFile = allowFileExt.find(item=>item.toLowerCase()===extName);
             if (!isAllowFile) {
                 throw new Error(formatMessage({
@@ -100,26 +72,24 @@ class FileUploader extends React.Component {
             }
         }
     };
-
     upload=()=>{
         const {file} = this.state;
         const {onChange,action,beforeUpload,afterUpload, responseInValue, name, scene, data} = this.props;
         try{
             this.check();
         }catch (error) {
-            const err = {error,file};
-            return Promise.reject(err);
+            return Promise.reject({error,file});
         }
         let sceneCode = scene;
         if(typeof sceneCode === 'object'){
             sceneCode = scene.fileType;
         }
         const params = {...data};
-        if(sceneCode != null){
+        if(null != sceneCode){
             params.file_id = sceneCode;
         }
         const formData = new FormData();
-        Object.keys(params).forEach(key =>{
+        Object.keys(params).map(key =>{
             formData.append(key, params[key]);
         });
         formData.append(name,file);
@@ -135,14 +105,12 @@ class FileUploader extends React.Component {
             }, error =>{
                 file.status = 'error';
                 file.response = error.message;
-                const err= {error,file};
-                reject(err)
+                reject({error,file})
             }).finally(() =>{
                 this.setState({ uploading : false });
             });
         });
     };
-
     handleRemove=()=>{
         if(this.state.file){
             this.setState({file:null})
@@ -150,36 +118,28 @@ class FileUploader extends React.Component {
             this.props.onChange('');
         }
     };
-
     render(){
         const { children,onChange,showLoading, ...restProps } = this.props;
         const { uploading,file } = this.state;
-        const fileList = [];
-        if (file) {
-            fileList.push(file);
-        } else if (restProps.value) {
-            fileList.push({
-                uid: restProps.value,
-                status: 'done',
+        let fileList = file?[file]:(restProps.value?[
+            {
+                uid:restProps.value,
+                status:'done',
                 // url: joinPath(FileUploader.BaseUrlPath,restProps.value),
-                name: restProps.value,
-            });
-        }
-        return (
-            <Upload
-                {...restProps}
-                fileList={fileList}
-                onChange={this.handleChange}
-                onRemove={this.handleRemove}
-                beforeUpload={this.beforeUpload}
-            >
-                {children?
-                    <Spin spinning={showLoading&&uploading}>{children}</Spin>
-                    :
-                    null
-                }
-            </Upload>
-        )
+                name:restProps.value
+            }
+        ]:[]);
+        return <Upload {...restProps}
+                       fileList={fileList}
+                       onChange={this.handleChange}
+                       onRemove={this.handleRemove}
+                       beforeUpload={this.beforeUpload}>
+            {children?
+                <Spin spinning={showLoading&&uploading}>{children}</Spin>
+                :
+                null
+            }
+        </Upload>;
     }
 }
 
@@ -190,7 +150,6 @@ class Image extends React.Component {
         OCRScanning: false,
         fileList: []
     };
-
     static propTypes = {
         scene : PropTypes.oneOfType([PropTypes.number,PropTypes.string,PropTypes.object]).isRequired,
         allowFileExt : PropTypes.array,
@@ -198,39 +157,33 @@ class Image extends React.Component {
         action: PropTypes.string,
         showAllowFileTypes:PropTypes.bool,
         ocr: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({
-            callback: PropTypes.func,// 回调
-            type: PropTypes.number,// 图片识别类
-            isBack: PropTypes.bool,// 是否背面
-            buttonText: PropTypes.string,// 识别按钮的文字
-            extraRequestData: PropTypes.object,// 额外的请求参数
-            hidden: PropTypes.bool,// 是否隐藏识别按钮
-            disabled: PropTypes.bool,// 是否禁用识别按钮
+            callback: PropTypes.func,//回调
+            type: PropTypes.number,//图片识别类
+            isBack: PropTypes.bool,//是否背面
+            buttonText: PropTypes.string,//识别按钮的文字
+            extraRequestData: PropTypes.object,//额外的请求参数
+            hidden: PropTypes.bool,//是否隐藏识别按钮
+            disabled: PropTypes.bool,//是否禁用识别按钮
+            shouldGetExtraPaper: PropTypes.bool,//是否获取额外的文字，使用普通文字识别整个图片文字
         })]),
     };
-
     static defaultProps={
-        maxFileSize:null,
         allowFileExt:['jpg','jpeg','png'],
         showAllowFileTypes:false,
-        action:undefined,
-        ocr:null
     };
-
-    /* isImage=(path)=>{
+    /*isImage=(path)=>{
         if(!path)return false;
         const ext = path.substr(path.lastIndexOf('.')+1).toLowerCase();
         return ['jpg','jpeg','png','bmp','ico'].indexOf(ext) !== -1;
-    }; */
+    };*/
     handleChange = (resp) =>{
         this.props.onChange(resp.file_key);
     };
-
     handleRemove=()=>{
         this.setState({fileList:[]});
         this.props.onChange('');
     };
-
-    handlePreview = (/*file*/) => {
+    handlePreview = (file) => {
         // if(!this.isImage(file.url)){
         //     window.open(file.url)
         // }else {
@@ -239,16 +192,13 @@ class Image extends React.Component {
             });
         // }
     };
-
     closePreview=()=>{
         this.setState({
             previewVisible: false,
         });
     };
-
     OCRScan=()=>{
-        const {scene} = this.props;
-        let {ocr} = this.props;
+        let {ocr,scene} = this.props;
         if(typeof ocr==='function'){
             ocr = {callback:ocr};
         }
@@ -257,37 +207,54 @@ class Image extends React.Component {
             extraRequestData,
             isBack,
             callback=()=>{},
+            shouldGetExtraPaper=false
         } = ocr;
         this.setState({OCRScanning:true});
         const params = {
             file_key: this.props.value,
-            image_type:type,
+            image_type: type,
             is_font: isBack?0:1,
+            extra_basic_general: shouldGetExtraPaper ? 1:2,
             ...extraRequestData,
         };
         return request.post('basis/ocr/paper',params).then(res=>{
             const data = res.data[0] || {};
-            Object.keys(data).forEach(key=>{
+            Object.keys(data).map(key=>{
                 if(!data[key] || data[key] === '无'){
                     delete data[key]
                 }
             });
             callback(null,data,params);
+            if(shouldGetExtraPaper &&
+                data.basic_general_result
+                && data.basic_general_result.words_result &&
+                data.basic_general_result.words_result.length>0
+            ){
+                const list = data.basic_general_result.words_result.map((item,index)=>(
+                    <p key={index}>{item.words}</p>
+                ));
+                notification.open({
+                    duration: null,
+                    message: '识别到的更多内容',
+                    description:(
+                        <div>
+                            {list}
+                        </div>
+                    )
+                });
+            }
         },err=>{
             callback(err,null,params)
         }).finally(()=>{
             this.setState({OCRScanning:false});
         });
     };
-
     handleFileSelect=(file)=>{
         this.setState({fileList:[file]})
     };
-
     render(){
         const { value,ocr,scene,showAllowFileTypes,className } = this.props;
-        const {previewVisible,OCRScanning} = this.state;
-        let {fileList} = this.state;
+        let {previewVisible,OCRScanning,fileList} = this.state;
         if(!scene)return null;
         let preview = '';
         if(value){
@@ -300,79 +267,71 @@ class Image extends React.Component {
         }
         const showOCRButton = ocr && value && !ocr.hidden;
         const disabled = !!preview || this.props.disabled;
-        return (
-            <Fragment>
-                <FileUploader
-                    {...this.props}
-                    className={classnames(styles.imgUploader,{[styles.disabled]:disabled},className)}
-                    responseInValue
-                    onChange={this.handleChange}
-                    onRemove={this.handleRemove}
-                    onPreview={this.handlePreview}
-                    onFileSelect={this.handleFileSelect}
-                    disabled={disabled}
-                    listType={"picture-card"}
-                >
-                    {preview ?
-                        <div className={styles.previewBox}>
-                            <a
-                                className={styles.thumbnail}
-                                href={preview}
-                                target={'_blank'}
-                                // ref={'noopener noreferrer'}
-                            >
-                                <img alt={''} src={preview}/>
+        return <Fragment>
+            <FileUploader
+                {...this.props}
+                className={classnames(styles.imgUploader,{[styles.disabled]:disabled},className)}
+                responseInValue
+                onChange={this.handleChange}
+                onRemove={this.handleRemove}
+                onPreview={this.handlePreview}
+                onFileSelect={this.handleFileSelect}
+                disabled={disabled}
+                listType="picture-card"
+            >
+                {preview ?
+                    <div className={styles.previewBox}
+                         onClick={()=>this.handlePreview(fileList[0])}>
+                        <a className={styles.thumbnail}
+                           href={preview}
+                           target={'_blank'}
+                           ref={'noopener noreferrer'}>
+                            <img src={preview}/>
+                        </a>
+                        <div className={styles.actions}>
+                            {/*<a target={'_blank'}
+                               title={'预览文件'}
+                               onClick={()=>this.handlePreview(fileList[0])}>
+                                <Icon type={'eye-o'}/>
+                            </a>*/}
+                            <a target={'_blank'}
+                               title={'删除文件'}
+                               onClick={(evt) => {
+                                   evt.stopPropagation();
+                                   this.handleRemove(fileList[0]);
+                               }
+                               }>
+                                <Icon type={'delete'} theme="twoTone" twoToneColor="#eb2f96"/>
                             </a>
-                            <div className={styles.actions}>
-                                <a
-                                    target={'_blank'}
-                                    title={'预览文件'}
-                                    onClick={()=>this.handlePreview(fileList[0])}
-                                >
-                                    <Icon type={'eye-o'}/>
-                                </a>
-                                <a
-                                    target={'_blank'}
-                                    title={'删除文件'}
-                                    onClick={()=>this.handleRemove(fileList[0])}
-                                >
-                                    <Icon type={'delete'}/>
-                                </a>
-                            </div>
                         </div>
-                        :
-                        <div>
-                            <Icon type={"plus"} style={{ fontSize: 32, color: '#999' }}/>
-                            <div className={"ant-upload-text"}><FormattedMessage id={'Common.message.upload'}/></div>
-                        </div>
-                    }
-                </FileUploader>
-                <div style={{clear:'both'}}>
-                    {showAllowFileTypes&&
-                    <div className={styles.fileTypeTip}>
-                        <FormattedMessage
-                            id={'Component.fileUploader.allowTypes'}
-                            values={{types:this.props.allowFileExt.join(',')}}
-                        />
                     </div>
-                    }
-                    {showOCRButton &&
+                    :
                     <div>
-                        <Button
-                            type={'button'}
+                        <Icon type="plus" style={{ fontSize: 32, color: '#999' }}/>
+                        <div className="ant-upload-text"><FormattedMessage id={'Common.message.upload'}/></div>
+                    </div>
+                }
+            </FileUploader>
+            <div style={{clear:'both'}}>
+                {showAllowFileTypes&&
+                <div className={styles.fileTypeTip}>
+                    <FormattedMessage id={'Component.fileUploader.allowTypes'}
+                                      values={{types:this.props.allowFileExt.join(',')}}/>
+                </div>
+                }
+                {showOCRButton &&
+                <div>
+                    <Button type={'button'}
                             loading={OCRScanning}
                             disabled={ocr.disabled}
-                            onClick={this.OCRScan}
-                        >{ocr.label||'图片信息识别'}
-                        </Button>
-                    </div>
-                    }
+                            onClick={this.OCRScan}>{ocr.label||'图片信息识别'}</Button>
                 </div>
-                <Modal visible={previewVisible} footer={null} onCancel={this.closePreview}>
-                    <img alt={''} style={{ width: '100%' }} src={preview} />
-                </Modal>
-            </Fragment>
-        );
+                }
+            </div>
+            <Modal visible={previewVisible} footer={null} onCancel={this.closePreview}>
+                <img style={{ width: '100%',marginTop:12 }} src={preview} />
+            </Modal>
+        </Fragment>;
     }
 }
 
